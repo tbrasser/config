@@ -1,0 +1,5 @@
+sensor:
+  - platform: waqi
+    token: !secret waqi_token
+    locations:
+      - !secret home_city

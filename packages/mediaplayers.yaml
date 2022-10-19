@@ -1,0 +1,35 @@
+#spotify:
+#client_id: !secret spotify_id
+#client_secret: !secret spotify_secret
+
+# spotcast:
+#   sp_dc: !secret sp_dc
+#   sp_key: !secret sp_key
+
+binary_sensor:
+  - platform: ping
+    host: 10.9.8.59
+    name: Mi TV Woonkamer
+    count: 1
+    scan_interval: 15
+switch:
+  - platform: wake_on_lan
+    mac: d4:5e:ec:95:5b:48
+    name: Mi TV Woonkamer
+    host: 10.9.8.59
+    broadcast_address: 10.9.8.255
+media_player:
+  # android tv & cast integrations are setup using the ui
+  # media_player.android_tv_10_9_8_59
+  # media_player.woonkamer_cast
+  - platform: universal
+    name: woonkamer
+    children:
+      - media_player.woonkamer_cast
+      - media_player.android_tv_10_9_8_59
+    commands:
+      turn_on:
+        service: switch.turn_on
+        target:
+          entity_id: switch.mi_tv_woonkamer
+    device_class: tv

@@ -1,0 +1,6 @@
+template:
+  - binary_sensor:
+      - name: "beweging keuken tablet"
+        state: "{{ states('light.fire_tablet_screen') }}"
+        device_class: motion
+        unique_id: beweging_keuken_tablet

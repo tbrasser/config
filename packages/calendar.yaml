@@ -1,0 +1,9 @@
+calendar:
+  - platform: caldav
+    url: !secret calendar_thomas_url
+    username: !secret calendar_thomas_user
+    password: !secret calendar_thomas_password
+  - platform: caldav
+    username: !secret calendar_frederieke_user
+    password: !secret calendar_frederieke_password
+    url: https://caldav.icloud.com

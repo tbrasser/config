@@ -1,0 +1,39 @@
+sensor:
+  # Time Date
+  - platform: time_date
+    display_options:
+      - time
+      - date
+      - date_time
+      - date_time_iso
+      - time_date
+      - time_utc
+      - beat
+
+  # System Monitor
+  - platform: systemmonitor
+    resources:
+      - type: disk_use
+        arg: /home
+      - type: disk_free
+        arg: /home
+      - type: disk_use_percent
+        arg: /home
+      - type: memory_free
+      - type: memory_use
+      - type: memory_use_percent
+      - type: network_in
+        arg: eth0
+      - type: network_out
+        arg: eth0
+      - type: throughput_network_in
+        arg: eth0
+      - type: throughput_network_out
+        arg: eth0
+      - type: ipv4_address
+        arg: eth0
+      - type: packets_in
+        arg: eth0
+      - type: packets_out
+        arg: eth0
+      - type: processor_use

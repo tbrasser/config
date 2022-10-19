@@ -1,0 +1,17 @@
+# nest: deprecated in yaml
+#   client_id: !secret nest_client_id
+#   client_secret: !secret nest_client_secret
+#   # "Project ID" in the Device Access Console (not Cloud Project ID!)
+#   project_id: !secret nest_project_id
+
+template:
+  - trigger:
+      - platform: device
+        device_id: !secret google_nest_camera_device_id
+        domain: nest
+        type: camera_person
+    binary_sensor:
+      - name: "Motion Eetkamera"
+        state: "{{ true }}"
+        auto_off: 5
+        device_class: motion

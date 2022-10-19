@@ -1,0 +1,52 @@
+template:
+  - sensor:
+      - name: "Keuken Timer 1"
+        unique_id: kitchen_speaker_timer
+        icon: mdi:timer
+        state: >
+          {% set entity = 'sensor.keuken_speaker_timers' %}
+          {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+            {% set status = state_attr(entity,'timers')[0].status %}
+            {% if status == 'set' %} active
+            {% elif status == 'paused' %} paused
+            {% elif status == 'waiting' %} waiting
+            {% else %} idle
+            {% endif %}
+          {% endif %}
+        attributes:
+          duration: >
+            {% set entity = 'sensor.keuken_speaker_timers' %}
+            {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+              {{ state_attr(entity,'timers')[0].duration }}
+            {% endif %}
+          end_time: >
+            {% set entity = 'sensor.keuken_speaker_timers' %}
+            {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+              {{ state_attr(entity,'timers')[0].local_time_iso }}
+            {% endif %}
+          integration: google_home
+      - name: "Keuken Timer 2"
+        unique_id: kitchen_speaker_2_timer
+        icon: mdi:timer
+        state: >
+          {% set entity = 'sensor.kitchen_speaker_timers' %}
+          {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+            {% set status = state_attr(entity,'timers')[1].status %}
+            {% if status == 'set' %} active
+            {% elif status == 'paused' %} paused
+            {% elif status == 'waiting' %} waiting
+            {% else %} idle
+            {% endif %}
+          {% endif %}
+        attributes:
+          duration: >
+            {% set entity = 'sensor.kitchen_speaker_timers' %}
+            {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+              {{ state_attr(entity,'timers')[1].duration }}
+            {% endif %}
+          end_time: >
+            {% set entity = 'sensor.kitchen_speaker_timers' %}
+            {% if state_attr(entity,'timers')|lower not in ['','[]','unknown','unavailable','none'] %}
+              {{ state_attr(entity,'timers')[1].local_time_iso }}
+            {% endif %}
+          integration: google_home
