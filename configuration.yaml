@@ -1,0 +1,44 @@
+default_config:
+homeassistant:
+  packages: !include_dir_named packages
+  customize: !include customize.yaml
+  auth_providers: !include auth_providers.yaml
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js # https://github.com/thomasloven/lovelace-card-mod#performance-improvements
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+config_editor:
+magic_areas:
+stream:
+readme:
+emulated_hue:
+  expose_by_default: false
+  entities:
+    light.diningroom_ceiling10_night_light:
+      name: "Eetkamer plafond"
+      hidden: false
+    light.dining_corner:
+      name: "Eetkamer corner lamp"
+      hidden: false
+    light.dining_sofa_ceiling:
+      name: "Eetkamer corner plafond"
+      hidden: false
+    light.hoek:
+      name: "Eetkamer vloerlamp"
+      hidden: false
+    light.lavalamp:
+      name: "Lavalamp"
+      hidden: false
+lovelace_gen: !include lovelace_vars.yaml
+lovelace:
+  mode: yaml
+  resources: !include resources.yaml
+tts: [platform: google_translate]
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

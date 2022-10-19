@@ -1,0 +1,176 @@
+- id: '1635241164401'
+  alias: New Automation
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.lavalamp
+    to: 'On'
+    for:
+      hours: 8
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.lavalamp
+  - service: notify.notify
+    data:
+      message: 'Turned off because it has been on for 8 hours. '
+      title: 'Lavalamp '
+  mode: restart
+- id: '1636214178243'
+  alias: 'Washer finished cycle '
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: 2f49ef255d2d31d08989070b0c4ef410
+    entity_id: binary_sensor.washer_wash_completed
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_thomas_phone
+    data:
+      message: "\U0001F300 De was is klaar! "
+  - service: notify.mobile_app_frederieke_iphone
+    data:
+      message: "\U0001F300 De was is klaar! "
+  mode: single
+- id: '1651831665100'
+  alias: Dashboard auto refresh
+  description: ''
+  trigger:
+  - platform: event
+    event_type: lovelace_updated
+  condition: []
+  action:
+  - service: browser_mod.lovelace_reload
+    data: {}
+  mode: single
+- id: '1653402216389'
+  alias: Ring deurbel met oude gong
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.front_door_ding_2
+    to: 'on'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 59c86400590de25e456588a86b8e5ae5
+    entity_id: switch.doorbell_downstairs
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - type: turn_off
+    device_id: 59c86400590de25e456588a86b8e5ae5
+    entity_id: switch.doorbell_downstairs
+    domain: switch
+  mode: single
+- id: '1653461112548'
+  alias: Doorbell cam actionable nitification
+  description: ''
+  use_blueprint:
+    path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
+    input:
+      notification_title: Iemand aan de deur!
+      doorbell_button: siren.doorbell_downstairs
+      doorbell_cam: camera.03cabcc9_ring_mqtt
+      notify_dev: notify.mobile_app_thomas_phone
+      uri_: /dwains-dashboard/devices#camera
+- id: '1653554412347'
+  alias: Doorbell cam actionable nitification fre
+  description: ''
+  use_blueprint:
+    path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
+    input:
+      notification_title: Iemand aan de deur!
+      doorbell_button: siren.doorbell_downstairs
+      doorbell_cam: camera.03cabcc9_ring_mqtt
+      notify_dev: notify.mobile_app_frederieke_iphone
+      uri_: /dwains-dashboard/devices#camera
+- id: '1653934725357'
+  alias: Stop media als TV uitgezet wordt
+  description: ''
+  trigger:
+  - platform: device
+    device_id: bcac3f1fabdc32d269b104756263537f
+    domain: select
+    entity_id: select.diningroom_hub_activities
+    type: current_option_changed
+    to: PowerOff
+  condition: []
+  action:
+  - service: media_player.media_stop
+    data: {}
+    target:
+      entity_id:
+      - media_player.eetkamer_tv
+      - media_player.android_tv_10_9_8_92
+      - media_player.diningroom_media
+      area_id: eetkamer
+  mode: single
+- id: '1657483816969'
+  alias: 'Set Adaptive lighting sleep mode '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.sleep_mode
+  condition: []
+  action:
+  - service: switch.toggle
+    data: {}
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_ceiling_lights
+  mode: single
+- id: '1661091775628'
+  alias: Set theme at startup
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: frontend.set_theme
+    data:
+      name: Mushroom
+  mode: single
+- id: '1663018175468'
+  alias: Buiten verlichting
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: '1'
+    id: sunrise
+  - platform: sun
+    event: sunset
+    offset: '-1'
+    id: sunset
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: sunrise
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.tuin_lights
+    - conditions:
+      - condition: trigger
+        id: sunset
+      sequence:
+      - service: light.turn_on
+        data: {}
+        target:
+          entity_id: light.tuin_lights
+  mode: single

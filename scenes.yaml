@@ -1,0 +1,23 @@
+- id: '1633874402509'
+  name: Random
+  entities:
+    light.smart_rgb_led_strip:
+      supported_color_modes:
+      - brightness
+      - hs
+      - onoff
+      color_mode: hs
+      brightness: 255
+      hs_color:
+      - 285
+      - 42.8
+      rgb_color:
+      - 227
+      - 145
+      - 255
+      xy_color:
+      - 0.329
+      - 0.209
+      friendly_name: Tuin Strip
+      supported_features: 0
+      state: 'on'
