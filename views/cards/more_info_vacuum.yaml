@@ -1,0 +1,51 @@
+# lovelace_gen
+title: Winston
+card:
+  type: custom:xiaomi-vacuum-map-card
+  preset_name: Boven
+  entity: vacuum.winston
+  map_source:
+    camera: camera.winston_upstairs
+  calibration_source:
+    camera: true
+  append_icons: true
+  icons:
+    - icon: mdi:home-floor-0
+      tooltip: Beneden
+      tap_action:
+        action: call-service
+        service: vacuum.send_command
+        service_data:
+          entity_id: vacuum.winston
+          command: load_multi_map
+          params: 1
+  map_modes:
+    - template: vacuum_clean_zone
+    - template: vacuum_clean_zone_predefined
+      predefined_selections:
+        - zones: [[25500, 25500, 26500, 26500]]
+    - template: vacuum_goto
+  additional_presets:
+    - preset_name: Beneden
+      entity: vacuum.winston
+      map_source:
+        camera: camera.winston_downstairs
+      calibration_source:
+        camera: true
+      append_icons: true
+      icons:
+        - icon: mdi:home-floor-1
+          tooltip: Boven
+          tap_action:
+            action: call-service
+            service: vacuum.send_command
+            service_data:
+              entity_id: vacuum.winston
+              command: load_multi_map
+              params: 0
+      map_modes:
+        - template: vacuum_clean_zone
+        - template: vacuum_clean_zone_predefined
+          predefined_selections:
+            - zones: [[27500, 27500, 28500, 28500]]
+        - template: vacuum_goto

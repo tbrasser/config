@@ -1,0 +1,114 @@
+# lovelace_gen
+{% for room in _global.rooms %}
+- title: {{ room.name}}
+  theme: mushroom
+  subview: true
+  path: "{{ room.name }}"
+  type: panel
+  cards:
+    - type: vertical-stack
+      cards:
+        - !include cards/header.yaml
+        - type: custom:layout-card
+          layout_type: masonry
+          layout: !include cards/layout.yaml
+          cards:
+            - type: custom:auto-entities
+              filter:
+                include:
+                  - domain: sensor
+                    entity_id: sensor.*_timer
+                    attributes:
+                      integration: google_home
+                exclude:
+                  - state: unavailable
+                  - state: ""
+                  - state: idle
+              sort:
+                method: name
+                ignore_case: true
+              show_empty: false
+              card:
+                type: custom:timer-bar-card
+            - !include
+              - cards/media_player.yaml
+              - room: {{ room.name }}
+            # - !include
+            #   - cards/room_lights.yaml
+            #   - room: {{ room.name }}
+            - !include
+              - cards/room_plants.yaml
+              - room: {{ room.name }}
+            {% if room.name == 'keuken' %}
+            - type: custom:stack-in-card
+              cards:
+                - type: custom:check-button-card
+                  entity: sensor.check_kattenbak
+                  card_mod:
+                    style: |
+                      :host {
+                        padding-top: 8px !important;
+                        padding-bottom: 4px !important;
+                        padding-right: 8px !important;
+                        /* overflow: hidden; */
+                      } 
+                  width: 70%
+                  due: false
+                  icon: phu:litterbox
+                  title: "Kattenbak:"
+                  display_limit: days
+                  severity:
+                    - value: 3 days
+                      color: Yellow
+                    - value: 4 days
+                      color: Orange
+                    - value: 5 days
+                      color: Red
+                  text:
+                    day: dag
+                    days: dagen
+                    hour: uur
+                    hours: uur
+                    minute: minuut
+                    minutes: minuten
+                    less_than: minder dan
+                    more_than: meer dan
+                    ago: geleden
+                    due_in: over
+                    over_by: over met
+                - type: custom:check-button-card
+                  card_mod:
+                    style: |
+                      :host {
+                        padding-top: 4px !important;
+                        padding-bottom: 8px !important;
+                        padding-right: 8px !important;
+                        /* overflow: hidden; */
+                      } 
+                  entity: sensor.check_kattenwater
+                  width: 70%
+                  due: false
+                  icon: mdi:water
+                  title: "Fontein:"
+                  display_limit: days
+                  severity:
+                    - value: 6 days
+                      color: Yellow
+                    - value: 7 days
+                      color: Orange
+                    - value: 8 days
+                      color: Red
+                  text:
+                    day: dag
+                    days: dagen
+                    hour: uur
+                    hours: uur
+                    minute: minuut
+                    minutes: minuten
+                    less_than: minder dan
+                    more_than: meer dan
+                    ago: geleden
+                    due_in: over
+                    over_by: over met
+            {% endif %}
+{% endfor %}

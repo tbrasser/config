@@ -1,0 +1,196 @@
+# lovelace_gen
+type: custom:state-switch
+entity: user
+default: default
+view_layout:
+  grid-area: header
+states:
+  tablet1:  # android tablets (wider)
+    type: custom:mushroom-chips-card
+    chips:
+      {% if view == "main" %}
+      - type: template
+        icon: mdi:heart
+        icon_color: red
+        tap_action:
+          action: none
+      {% else %}
+      - type: action
+        icon: mdi:home
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.navigate
+            data:
+              path: main
+      {% endif %}
+      - type: alarm-control-panel
+        entity: alarm_control_panel.alarm
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Beveiliging
+              content: !include security.yaml
+      - type: entity
+        entity: sensor.count_lights_on
+        icon_color: amber
+        icon: mdi:lightbulb
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Verlichting
+              content: !include lights_on.yaml
+      {% raw %}
+      - type: template
+        entity: sensor.uitgegeven_vandaag
+        content: "{{ states.sensor.te_besteden_per_dag.state|float - states.sensor.uitgegeven_vandaag.state|float }}"
+        icon_color: >
+          {% if states.sensor.uitgegeven_vandaag.state|float > states.sensor.te_besteden_per_dag.state|float %}
+            red
+          {% else %}
+            green
+          {% endif %}
+        icon: "{% if states.sensor.te_besteden_per_dag.state|float < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}" 
+      {% endraw %}
+      - type: entity
+        entity: vacuum.winston
+        icon_color: red
+        icon: mdi:robot-vacuum
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Winston
+              content: !include winston.yaml
+      - type: weather
+        entity: weather.buienradar
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Weer
+              content: !include weather.yaml
+      - type: template
+        entity: sensor.time
+        content: "{{ "{{" }} states.sensor.time.state {{ "}}" }}"
+    alignment: center
+  default:  # phones etc
+    type: custom:mushroom-chips-card
+    chips:
+      {% if view == "main" %}
+      - type: template
+        icon: mdi:heart
+        icon_color: red
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Overzicht
+              content: !include feed.yaml
+      {% else %}
+      - type: action
+        icon: mdi:home
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.navigate
+            data:
+              path: main
+      {% endif %}
+      - type: alarm-control-panel
+        entity: alarm_control_panel.alarm
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Beveiliging
+              content: !include security.yaml
+      - type: entity
+        entity: zone.home
+        icon: mdi:map
+        icon_color: brown
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Locatie
+              content: !include location.yaml
+      - type: entity
+        entity: sensor.count_lights_on
+        icon_color: amber
+        icon: mdi:lightbulb
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Verlichting
+              content: !include lights_on.yaml
+      {% raw %}
+      - type: template
+        entity: sensor.uitgegeven_vandaag
+        content: "{{ states.sensor.te_besteden_per_dag.state|float - states.sensor.uitgegeven_vandaag.state|float }}"
+        icon_color: >
+          {% if states.sensor.uitgegeven_vandaag.state|float > states.sensor.te_besteden_per_dag.state|float %}
+            red
+          {% else %}
+            green
+          {% endif %}
+        icon: "{% if states.sensor.te_besteden_per_dag.state|float < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
+      {% endraw %}
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Geld
+              content: !include finance.yaml
+      - type: entity
+        entity: vacuum.winston
+        icon_color: red
+        icon: mdi:robot-vacuum
+        content_info: none
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Winston
+              content: !include winston.yaml
+      - type: weather
+        entity: weather.buienradar
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              title: Weer
+              content: !include weather.yaml
+    alignment: center
+# card_mod:
+#   style: |
+#     :host {
+#       z-index: 999;
+#       position: sticky;
+#       position: -webkit-sticky;
+#       top: var(--header-height);
+#     }
+      
+      
+      
+    
+  

@@ -1,0 +1,28 @@
+# lovelace_gen
+
+- title: Home
+  theme: mushroom
+  path: main
+  type: panel
+  cards:
+    - type: vertical-stack
+      cards:
+        - !include 
+          - cards/header.yaml
+          - view: main
+        # - type: custom:layout-card
+        #   layout_type: masonry
+        #   layout: !include cards/layout.yaml
+        #   cards:
+            # - type: grid
+            #   columns: 2
+            #   square: false
+            #   cards:
+
+              # {% for room in _global.rooms %}
+              #   - !include 
+              #     - cards/room_card.yaml
+              #     - room: "{{ room.name }}"
+              #       icon: "{{ room.icon }}"
+              #       color: "{{ room.color }}"
+              # {% endfor %}

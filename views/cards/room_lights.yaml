@@ -1,0 +1,21 @@
+# lovelace_gen
+type: custom:auto-entities
+card:
+  type: vertical-stack
+card_param: cards
+show_empty: false
+filter:
+  include:
+    - domain: light
+      area: "{{ room }}"
+      options:
+        type: custom:mushroom-light-card
+        show_brightness_control: true
+        show_color_temp_control: true
+        show_color_control: true
+        use_light_color: true
+        collapsible_controls: true
+        double_tap_action:
+          action: toggle
+        tap_action:
+          action: more-info

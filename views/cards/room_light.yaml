@@ -1,0 +1,14 @@
+# lovelace_gen
+type: custom:mushroom-light-card
+show_brightness_control: true
+show_color_temp_control: true
+show_color_control: true
+use_light_color: true
+collapsible_controls: true
+fill_container: false
+double_tap_action:
+  action: toggle
+tap_action:
+  action: more-info
+entity: "{{ (jsondata | fromjson)['entity'] }}"
+name: "{{ (jsondata | fromjson)['name'] }}"

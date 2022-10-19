@@ -1,0 +1,8 @@
+type: vertical-stack
+cards:
+  - type: map
+    entities:
+      - entity: person.frederieke
+      - entity: person.thomas
+      - entity: zone.home
+    hours_to_show: 8
