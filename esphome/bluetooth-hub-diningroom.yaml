@@ -1,0 +1,8 @@
+substitutions:
+  location: diningroom
+  
+packages:
+  defaults: !include includes/defaults.yaml
+  blehub:   !include includes/bluetooth-hub.yaml
+  # plants:   !include includes/plants.yaml
+  # airqual:  !include includes/ikea-vindriktning.yaml

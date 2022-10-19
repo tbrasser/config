@@ -1,0 +1,6 @@
+substitutions:
+  location: livingroom
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/powerstrip.yaml

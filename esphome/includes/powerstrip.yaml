@@ -1,0 +1,123 @@
+substitutions:
+  name: powerstrip
+
+esphome:
+  name: ${name}-${location}
+  platform: ESP8266
+  board: esp01_1m
+
+captive_portal:
+
+switch:
+  - platform: gpio
+    name: "${name} ${location} Socket 1"
+    icon: mdi:power-socket-eu
+    id: relay1
+    pin:
+      number: GPIO15
+      inverted: False
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+    - switch.turn_on: red_led
+    on_turn_off:
+      - if:
+          condition:
+            and:
+              - switch.is_off: relay2
+              - switch.is_off: relay3
+              - switch.is_off: relay4
+          then:
+            - switch.turn_off: red_led
+
+  - platform: gpio
+    name: "${name} ${location} Socket 2"
+    icon: mdi:power-socket-eu
+    id: relay2
+    pin:
+      number: GPIO5
+      inverted: False
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+    - switch.turn_on: red_led
+    on_turn_off:
+      - if:
+          condition:
+            and:
+              - switch.is_off: relay1
+              - switch.is_off: relay3
+              - switch.is_off: relay4
+          then:
+            - switch.turn_off: red_led
+
+  - platform: gpio
+    name: "${name} ${location} Socket 3"
+    icon: mdi:power-socket-eu
+    id: relay3
+    pin:
+      number: GPIO14
+      inverted: False
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+    - switch.turn_on: red_led
+    on_turn_off:
+      - if:
+          condition:
+            and:
+              - switch.is_off: relay1
+              - switch.is_off: relay2
+              - switch.is_off: relay4
+          then:
+            - switch.turn_off: red_led
+
+  - platform: gpio
+    name: "${name} ${location} Socket 4"
+    icon: mdi:power-socket-eu
+    id: relay4
+    pin:
+      number: GPIO12
+      inverted: False
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+    - switch.turn_on: red_led
+    on_turn_off:
+      - if:
+          condition:
+            and:
+              - switch.is_off: relay1
+              - switch.is_off: relay2
+              - switch.is_off: relay3
+          then:
+            - switch.turn_off: red_led
+
+  - platform: gpio
+    name: "${name} ${location} USB Ports"
+    icon: mdi:usb
+    id: relay5
+    pin:
+      number: GPIO4
+      inverted: False
+    restore_mode: RESTORE_DEFAULT_ON
+  
+  - platform: gpio
+    internal: true
+    id: red_led
+    pin:
+      number: GPIO3
+      inverted: True
+
+binary_sensor:
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO13
+      mode: INPUT_PULLUP
+      inverted: False
+    internal: true
+    on_press:
+      - switch.toggle: relay5
+
+status_led:
+  id: blue_led
+  pin:
+    number: GPIO0
+    inverted: True

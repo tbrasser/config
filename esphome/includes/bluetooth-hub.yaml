@@ -1,0 +1,18 @@
+substitutions:
+  name: bluetooth-hub
+esphome:
+  name: ${name}-${location}
+  project:
+    name: esphome.bluetooth-proxy
+    version: "1.0"
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: arduino
+improv_serial:
+captive_portal:
+esp32_ble_tracker:
+  scan_parameters:
+    active: true
+bluetooth_proxy:
+  active: true

@@ -1,0 +1,9 @@
+*
+!.gitignore
+!configuration.yaml
+!ui-lovelace.yaml
+!esphome/
+!esphome/*.yaml
+!esphome/includes/
+!esphome/includes/*.yaml
+!packages/
