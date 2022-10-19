@@ -1,9 +1,37 @@
+# Ignore everything except this file
 *
 !.gitignore
+
+# Add config
+!README.md
 !configuration.yaml
-!ui-lovelace.yaml
+!automations.yaml
+!scripts.yaml 
+!scenes.yaml
+!customize.yaml
+!groups.yaml
+
+
+# Add esphome
 !esphome/
 !esphome/*.yaml
 !esphome/includes/
 !esphome/includes/*.yaml
+
+# Add packages
 !packages/
+!packages/*.yaml
+
+# Add lovelace
+!ui-lovelace.yaml
+!resources.yaml
+!lovelace_vars.yaml
+!views/
+!views/*.yaml
+!views/cards
+!views/cards/*.yaml
+
+# Add appdaemon
+!appdaemon/
+!appdaemon/apps/
+!appdaemon/apps/apps.yaml
