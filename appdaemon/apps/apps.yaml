@@ -1,0 +1,29 @@
+---
+bar_controller:
+  module: controllerx
+  class: HueDimmerZ2MLightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: hue_remote
+  light:
+    name: bar_ceiling
+    mode: mqtt
+
+eetkamer_controller:
+  module: controllerx
+  class: Philips929003017102Z2MLightController
+  integration: 
+    name: z2m
+    listen_to: mqtt
+  controller: hue in wall switch
+  light: hallway_upstairs
+
+woonkamer_controller:
+  module: controllerx
+  class: PTM215XLightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: niko_switch
+  light: light.woonkamer_basis
