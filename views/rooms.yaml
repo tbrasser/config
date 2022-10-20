@@ -1,17 +1,12 @@
 # lovelace_gen
 {% for room in _global.rooms %}
-- title: {{ room.name}}
-  theme: mushroom
-  subview: true
-  path: "{{ room.name }}"
-  type: panel
+- type: panel
+  path: {{ room.name }}
   cards:
     - type: vertical-stack
       cards:
-        - !include cards/header.yaml
+        - !include .cards/header.yaml
         - type: custom:layout-card
-          layout_type: masonry
-          layout: !include cards/layout.yaml
           cards:
             - type: custom:auto-entities
               filter:
@@ -31,13 +26,25 @@
               card:
                 type: custom:timer-bar-card
             - !include
-              - cards/media_player.yaml
+              - .cards/media_player.yaml
               - room: {{ room.name }}
-            # - !include
-            #   - cards/room_lights.yaml
-            #   - room: {{ room.name }}
+            {% for light in room.lights %}
+            - type: custom:mushroom-light-card
+              show_brightness_control: true
+              show_color_temp_control: true
+              show_color_control: true
+              use_light_color: true
+              collapsible_controls: true
+              fill_container: false
+              double_tap_action:
+                action: toggle
+              tap_action:
+                action: more-info
+              entity: "{{ light.entity }}"
+              name: "{{ light.name }}"
+            {% endfor %}
             - !include
-              - cards/room_plants.yaml
+              - .cards/room_plants.yaml
               - room: {{ room.name }}
             {% if room.name == 'keuken' %}
             - type: custom:stack-in-card

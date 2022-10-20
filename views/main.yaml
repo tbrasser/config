@@ -1,0 +1,25 @@
+# lovelace_gen
+- type: panel
+  path: main
+  cards:
+    - type: vertical-stack
+      cards:
+        - !include 
+          - .cards/header.yaml
+          - view: main
+        - type: custom:layout-card
+          layout_type: custom:horizontal-layout
+          layout:
+            width: 150
+            max_width: 200
+            max_cols: 4
+            margin: 0
+            reflow: true
+          cards:
+            {% for room in _global.rooms %}
+            - !include
+              - .cards/room_card.yaml
+              - room: {{ room.name }}
+                icon: {{ room.icon }}
+                color: {{ room.color }}
+            {% endfor %}

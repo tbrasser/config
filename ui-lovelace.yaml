@@ -1,1 +1,17 @@
+title: Thuis
+resources: !include resources.yaml
 views: !include_dir_merge_list views/
+kiosk_mode:
+  user_settings:
+    - users:
+        - "Frederieke"
+        - "tablet1"
+      hide_header: true
+      ignore_entity_settings: true
+    - users:
+        - "Thomas"
+      hide_header: true
+  entity_settings:
+    - entity:
+        input_boolean.show_header: 'on'
+      hide_header: false
