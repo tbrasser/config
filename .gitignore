@@ -28,8 +28,8 @@
 !lovelace_vars.yaml
 !views/
 !views/*.yaml
-!views/cards
-!views/cards/*.yaml
+!views/.cards/
+!views/.cards/*.yaml
 
 # Add appdaemon
 !appdaemon/
