@@ -2,11 +2,38 @@
 {% for room in _global.rooms %}
 - type: panel
   path: {{ room.name }}
+  subview: true
   cards:
     - type: vertical-stack
       cards:
-        - !include .cards/header.yaml
+        - type: custom:mod-card
+          card_mod:
+            style: |
+              :host {
+                z-index: 999;
+                position: sticky;
+                position: -webkit-sticky;
+                top: 0;
+                background: none;
+                --ha-card-border-width: 0 !important;
+              }
+          card:
+            type: custom:state-switch
+            entity: mediaquery
+            states:
+              "(min-width: 501px)":
+                !include
+                - .cards/sticky.yaml
+                - view: "{{ room.name }}"
+                  position: both
+              "all":
+                !include
+                - .cards/sticky.yaml
+                - view: "{{ room.name }}"
+                  position: header
         - type: custom:layout-card
+          layout_type: custom:masonry-layout
+          layout: !include .cards/layout.yaml
           cards:
             - type: custom:auto-entities
               filter:
@@ -28,37 +55,123 @@
             - !include
               - .cards/media_player.yaml
               - room: {{ room.name }}
+            - type: conditional
+              conditions:
+                - entity: media_player.{{ room.name }}
+                  state: "playing"
+              card:
+                type: custom:gap-card
+                height: 0
+                size: 3
             {% for light in room.lights %}
-            - type: custom:mushroom-light-card
-              show_brightness_control: true
-              show_color_temp_control: true
-              show_color_control: true
-              use_light_color: true
-              collapsible_controls: true
-              fill_container: false
-              double_tap_action:
-                action: toggle
-              tap_action:
-                action: more-info
+            {% if light.type == 'onoff' %}
+            - type: tile
               entity: "{{ light.entity }}"
-              name: "{{ light.name }}"
+              show_entity_picture: false
+              name: "{{ light.name|capitalize }}"
+            {% else %}
+            - type: custom:vertical-stack-in-card
+              cards:
+                - type: tile
+                  entity: "{{ light.entity }}"
+                  show_entity_picture: false
+                  name: "{{ light.name|capitalize }}"
+                  card_mod:
+{% raw %}
+                    style: |
+                      ha-card {
+                        background: none;
+                        box-shadow: none;
+                        {% if is_state(config.entity, 'on') %}
+                        {% set r = state_attr(config.entity, 'rgb_color')[0] %}
+                        {% set g = state_attr(config.entity, 'rgb_color')[1] %}
+                        {% set b = state_attr(config.entity, 'rgb_color')[2] %}
+                        --primary-text-color: rgb({{r}}, {{g}}, {{b}});
+                        --secondary-text-color: rgba({{r}}, {{g}}, {{b}},0.5);
+                        {% endif %}
+                      }
+                      ha-tile-icon {
+                        {% if is_state(config.entity, 'on') %}
+                        --icon-color: rgb({{r}}, {{g}}, {{b}}) !important;
+                        --shape-color: rgba({{r}}, {{g}}, {{b}},0.2) !important;
+                        {% endif %}
+                      }
+{% endraw %}
+                - type: conditional
+                  conditions:
+                    - entity: "{{ light.entity }}"
+                      state: 'on'
+                  card:
+                    type: custom:mushroom-light-card
+                    entity: "{{ light.entity }}"
+                    use_light_color: true
+                    show_brightness_control: true
+                    {% if light.type == 'rgb' %}
+                    show_color_temp_control: false
+                    show_color_control: true
+                    {% endif %}
+                    {% if light.type == 'cct' %} 
+                    show_color_temp_control: true
+                    show_color_control: false
+                    {% endif %}
+                    {% if light.type == 'dimmable' %}
+                    show_color_temp_control: false
+                    show_color_control: false
+                    {% endif %}
+                    collapsible_controls: false
+                    fill_container: true
+                    icon_type: none
+                    primary_info: none
+                    secondary_info: none
+                    double_tap_action:
+                      action: toggle
+                    tap_action:
+                      action: more-info
+                    hold_action:
+                      action: navigate
+                      navigation_path: /lovelace/lights
+{% raw %}
+                    card_mod:
+                      style: |
+                        ha-card {
+                          margin-top: -15px;
+                          background: none;
+                          box-shadow: none;
+                          {% if is_state(config.entity, 'on') %}
+                          --primary-text-color: rgb({{ state_attr(config.entity,'rgb_color') [0] }}, {{ state_attr(config.entity,'rgb_color') [1] }}, {{ state_attr(config.entity,'rgb_color') [2] }});
+                          {% endif %}
+                          }
+                        }
+{% endraw %}
+              card_mod:
+                style: |
+                  ha-card {
+                    {{ "{%" }} if is_state('{{ light.entity }}', 'on') {{ "%}" }}
+                        background: rgba({{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [0] {{ "}}" }},
+                                {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [1] {{ "}}" }},
+                                {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [2] {{ "}}" }},0.1);
+                    {{ "{%" }} endif {{ "%}" }}
+                  }
+            {% endif %}
             {% endfor %}
-            - !include
-              - .cards/room_plants.yaml
-              - room: {{ room.name }}
+            {% for plant in room.plants %}
+            - type: custom:flower-card
+              entity: "{{ plant.entity }}"
+              show_bars:
+                - temperature
+                - moisture
+                - illuminance
+                - conductivity
+              {% if room.area == 'buiten' %}
+                - dli
+                - humidity
+              {% endif %}
+            {% endfor %}
             {% if room.name == 'keuken' %}
-            - type: custom:stack-in-card
+            - type: custom:vertical-stack-in-card
               cards:
                 - type: custom:check-button-card
                   entity: sensor.check_kattenbak
-                  card_mod:
-                    style: |
-                      :host {
-                        padding-top: 8px !important;
-                        padding-bottom: 4px !important;
-                        padding-right: 8px !important;
-                        /* overflow: hidden; */
-                      } 
                   width: 70%
                   due: false
                   icon: phu:litterbox
@@ -83,15 +196,10 @@
                     ago: geleden
                     due_in: over
                     over_by: over met
+                - type: custom:gap-card
+                  height: 6
+                  size: 1
                 - type: custom:check-button-card
-                  card_mod:
-                    style: |
-                      :host {
-                        padding-top: 4px !important;
-                        padding-bottom: 8px !important;
-                        padding-right: 8px !important;
-                        /* overflow: hidden; */
-                      } 
                   entity: sensor.check_kattenwater
                   width: 70%
                   due: false
@@ -118,4 +226,23 @@
                     due_in: over
                     over_by: over met
             {% endif %}
+        - type: custom:mod-card
+          card_mod:
+            style: |
+              :host {
+                z-index: 999;
+                position: sticky;
+                position: -webkit-sticky;
+                bottom: 0;
+                --ha-card-border-width: 0 !important;
+              }
+          card:
+            type: custom:state-switch
+            entity: mediaquery
+            states:
+              "(max-width: 500px)":
+                !include 
+                - .cards/sticky.yaml
+                - view: "{{ room.name }}"
+                  position: footer
 {% endfor %}

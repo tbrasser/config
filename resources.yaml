@@ -1,6 +1,10 @@
 - url: /browser_mod.js
   type: module
 # HACS
+- url: /hacsfiles/lovelace-tab-redirect-card/tab-redirect-card.js
+  type: module
+- url: /hacsfiles/battery-state-card/battery-state-card.js
+  type: module
 - url: /hacsfiles/kb-better-graph-colors/kb-better-graph-colors.js
   type: module 
 - url: /hacsfiles/lovelace-flower-card/flower-card.js
@@ -58,9 +62,13 @@
 - type: module
   url: /hacsfiles/stack-in-card/stack-in-card.js
 - type: module
+  url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+- type: module
   url: /hacsfiles/lovelace-auto-entities/auto-entities.js
 - type: module
   url: /hacsfiles/light-entity-card/light-entity-card.js
+- type: module
+  url: /hacsfiles/scheduler-card/scheduler-card.js
 # FONTS
 - url: "https://fonts.googleapis.com/css?family=DM Sans"
   type: css

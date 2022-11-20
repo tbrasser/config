@@ -55,6 +55,10 @@
   trigger:
   - platform: state
     entity_id:
+    - binary_sensor.front_door_ding
+    to: 'on'
+  - platform: state
+    entity_id:
     - binary_sensor.front_door_ding_2
     to: 'on'
   condition: []
@@ -130,18 +134,6 @@
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_ceiling_lights
   mode: single
-- id: '1661091775628'
-  alias: Set theme at startup
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: frontend.set_theme
-    data:
-      name: Mushroom
-  mode: single
 - id: '1663018175468'
   alias: Buiten verlichting
   description: ''
@@ -181,7 +173,7 @@
     path: seamus65/wallpanel-battery-management.yaml
     input:
       battery: sensor.tablet2_battery_level
-      charger: switch.powerstrip_livingroom_socket_4
+      charger: switch.powerstrip_livingroom_socket_2
 - id: '1666218976691'
   alias: Cast to Google Hub Bijkeuken
   description: ''
@@ -189,4 +181,38 @@
     path: local/cast-and-re-cast-a-lovelace-view-to-a-google-hub.yaml
     input:
       player: media_player.opslag
-      url: http://10.9.8.30:8123/lovelace
+      url: http://10.9.8.30:8123/lovelace/opslag
+- id: '1666370845576'
+  alias: Automatic Theme Change
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  - platform: state
+    entity_id: sun.sun
+  condition: []
+  action:
+  - service: browser_mod.set_theme
+    data:
+      theme: default
+      dark: dark
+  mode: single
+- id: '1668711755849'
+  alias: Tag 2833316 is gescand
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: '2833316'
+  - platform: tag
+    tag_id: '2868498'
+  - platform: tag
+    tag_id: '3003698'
+  - platform: tag
+    tag_id: '3003705'
+  condition: []
+  action:
+  - device_id: b5e7f2ee8aac95350be2575dd67ede17
+    domain: mobile_app
+    type: notify
+    message: 'Test '
+  mode: single

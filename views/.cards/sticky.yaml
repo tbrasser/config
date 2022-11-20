@@ -1,0 +1,40 @@
+# lovelace_gen
+type: custom:mushroom-chips-card
+alignment: justify
+card_mod:
+  style: |
+    ha-card {
+      margin: 4px;
+      --chip-border-width: 1px;
+    }
+chips:
+  {% if (position == "footer") or (position == "both") %}
+  {% if view == "main"%}
+  - type: back
+  {% else %}
+  - type: action
+    icon: mdi:home
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace/main
+  {% endif %}
+  {% endif %}
+  {% for headerview in _global.views %}
+  {% if (headerview.position == position) or (position == "both") %}
+  {% if headerview.name == view %}
+  - type: back
+  {% else %}
+  - tap_action:
+      action: navigate
+      navigation_path: /lovelace/{{ headerview.name }}
+    {% for key in headerview.chip|list %}
+    {{ key }}: {{ headerview.chip[key]|tojson }}
+    {% endfor %}
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+  {% if (position == "header") or (position == "both") %}
+  - type: template
+    entity: sensor.time
+    content: '{{ "{{" }} states.sensor.time.state {{ "}}" }}'
+  {% endif %}

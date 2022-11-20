@@ -1,6 +1,6 @@
 template:
   - binary_sensor:
-      - name: "beweging keuken tablet"
-        state: "{{ states('light.fire_tablet_screen') }}"
+      - name: "sense tablet1"
+        state: '{{ is_state("switch.tablet1_screensaver", "off") }}' 
         device_class: motion
-        unique_id: beweging_keuken_tablet
+        unique_id: sense_tablet1

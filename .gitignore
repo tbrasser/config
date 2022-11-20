@@ -11,7 +11,6 @@
 !customize.yaml
 !groups.yaml
 
-
 # Add esphome
 !esphome/
 !esphome/*.yaml
@@ -35,3 +34,10 @@
 !appdaemon/
 !appdaemon/apps/
 !appdaemon/apps/apps.yaml
+
+# Add blueprints
+!blueprints/
+!blueprints/automation/
+!blueprints/automation/**/*.yaml
+!blueprints/script/
+!blueprints/script/**/*.yaml

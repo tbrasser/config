@@ -10,8 +10,8 @@ esp32:
     type: esp-idf
     sdkconfig_options:
       CONFIG_FREERTOS_UNICORE: y
-      CONFIG_MBEDTLS_CERTIFICATE_BUNDLE: n
-      CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL: n
+      # CONFIG_MBEDTLS_CERTIFICATE_BUNDLE: n
+      # CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL: n
     advanced:
       ignore_efuse_mac_crc: true
 
@@ -20,13 +20,13 @@ output:
     pin: GPIO19
     id: output_warm
     power_supply: power
-    min_power: 0.13
+#    min_power: 0.13
     max_power: 0.82
   - platform: ledc
     pin: GPIO21
     id: output_cold
     power_supply: power
-    min_power: 0.13
+#    min_power: 0.13
     max_power: 0.82
 
   - platform: ledc
@@ -78,4 +78,4 @@ light:
     red: output_red
     green: output_green
     blue: output_blue
-    # gamma_correct: 0
+    gamma_correct: 0

@@ -1,39 +1,111 @@
+views:
+  - name: security
+    position: footer
+    chip:
+      type: alarm-control-panel
+      entity: alarm_control_panel.alarm
+  - name: location
+    position: footer
+    chip:
+      type: template
+      icon: mdi:heart
+      icon_color: red
+  - name: lights
+    position: footer
+    chip:
+      type: entity
+      entity: sensor.count_lights_on
+      icon_color: amber
+      icon: mdi:lightbulb
+  - name: finance
+    position: header
+    chip:
+      type: template
+      entity: sensor.uitgegeven_vandaag
+      content: '{{ states.sensor.te_besteden_per_dag.state|float - states.sensor.uitgegeven_vandaag.state|float }}'
+      icon_color: >
+        {% if states.sensor.uitgegeven_vandaag.state|float > states.sensor.te_besteden_per_dag.state|float %}
+          red
+        {% else %}
+          green
+        {% endif %}
+      icon: '{% if states.sensor.te_besteden_per_dag.state|float < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}'
+  - name: winston
+    position: header
+    chip:
+      type: entity
+      entity: vacuum.winston
+      icon_color: red
+      icon: mdi:robot-vacuum
+  - name: plants
+    position: header
+    chip:
+      type: action
+      icon_color: light-green
+      icon: mdi:sprout
+  - name: weather
+    position: header
+    chip:
+      type: weather
+      entity: weather.buienradar
+      show_temperature: true
+# - name: time
+# - name: media
+
 rooms:
   - name: woonkamer
     area: beneden
     icon: hue:room-living
     #icon: phu:living-room
     color: red
+    plants:
+      - entity: plant.pannenkoekenplant
+        name: Pannenkoekenplant
     lights:
       - entity: light.woonkamer_tafeltje
         name: Tafeltje
+        type: cct
       - entity: light.glitterlamp_socket
         name: Glitterlamp
+        type: onoff
       - entity: light.livingroom_desk
         name: Bureau
+        type: cct
       - entity: light.livingroom_ceiling
         name: Plafond
+        type: cct
   - name: eetkamer
     area: boven
     icon: hue:room-dining
     color: orange
+    plants:
+      - entity: plant.rubberplant
+        name: Rubberplant
     lights:
       - entity: light.eetkamer_kamerlamp
         name: Kamerlamp
+        type: cct
       - entity: light.powerstrip_diningroom_socket_2
         name: Staande Lamp
+        type: onoff
       - entity: light.powerstrip_diningroom_socket_4
         name: Lavalamp
+        type: onoff
       - entity: light.dining_corner
         name: Bank Tafeltje
+        type: cct
       - entity: light.diningroom_ceiling10_ambient_light
         name: Plafond Sfeer
+        type: rgb
       - entity: light.diningroom_ceiling10_ceiling_light
         name: Tafel Fel
+        type: cct
       - entity: light.diningroom_ceiling10_night_light
         name: Tafel Dim
+        type: dimmable
       - entity: light.dining_sofa_ceiling
         name: Bank Plafond
+        type: cct
   - name: bar
     area: beneden
     icon: mdi:glass-cocktail
@@ -41,17 +113,23 @@ rooms:
     lights:
       - entity: light.bar_ceiling
         name: Plafond
+        type: cct
   - name: keuken
     area: boven
     icon: hue:room-kitchen
     #icon: phu:kitchen
     color: yellow
+    plants:
+      - entity: plant.basilicum
+        name: Basilicum
     lights:
       - entity: light.afzuigkap
         name: Afzuigkap
+        type: cct
       - entity: light.kitchen_upstairs
         name: Plafond
-
+        type: cct
+    
   - name: inloopkast
     icon: mdi:wardrobe
     color: indigo
@@ -59,8 +137,10 @@ rooms:
     lights:
       - entity: light.tradfri_driver
         name: Kleding
+        type: dimmable
       - entity: light.closet_ceiling
         name: Plafond
+        type: cct
   - name: opslag
     icon: hue:room-storage
     color: pink
@@ -68,6 +148,7 @@ rooms:
     lights:
       - entity: light.storage_ceiling
         name: Plafond
+        type: cct
   - name: slaapkamer
     #icon: phu:bedroom
     icon: hue:room-bedroom
@@ -76,8 +157,10 @@ rooms:
     lights:
       - entity: light.nachtkastje
         name: Nachtkastje
+        type: cct
       - entity: light.g95_filament
         name: Plafond
+        type: cct
   - name: kantoor
     #icon: phu:office
     icon: hue:room-office
@@ -86,15 +169,21 @@ rooms:
     lights:
       - entity: light.office_ceiling
         name: Plafond
+        type: cct
       - entity: light.bureaulamp_kantoor
         name: Bureau
+        type: cct
   - name: toilet
     icon: hue:room-toilet
     color: brown
     area: beneden
+    plants:
+      - entity: plant.kerstcactus
+        name: Kerstcactus
     lights:
       - entity: light.bathroom_downstairs
         name: Plafond
+        type: cct
   - name: badkamer
     icon: hue:room-bathroom
     #icon: phu:bathroom
@@ -103,16 +192,22 @@ rooms:
     lights:
       - entity: light.bathroom_ceiling
         name: Plafond
+        type: cct
   - name: tuin
     icon: phu:garden
     #icon: hue:room-outdoors
     color: teal
     area: buiten
+    plants:
+      - entity: plant.geum
+        name: Geum
     lights:
       - entity: light.garden_string
         name: Lampjes
+        type: onoff
       - entity: light.garden_strip
         name: Ledstrip
+        type: rgb
   - name: voortuin
     #icon: hue:room-front-door
     icon: phu:driveway
@@ -126,15 +221,21 @@ rooms:
     lights:
       - entity: light.laundry_closet_lights
         name: Verlichting
+        type: dimmable
   - name: trap
     icon: hue:room-stairs
     color: amber
     area: beide
+    plants:
+      - entity: plant.yucca
+        name: Yucca
     lights:
       - name: Beneden
         entity: light.a60_pa_wifilic_ty_cct_970716_2
+        type: cct
       - entity: light.a60_pa_wifilic_ty_cct_970716
         name: Boven
+        type: cct
   - name: gang
     area: beide
     color: light-blue
@@ -142,8 +243,10 @@ rooms:
     lights:
       - entity: light.hallway_downstairs
         name: Beneden
+        type: cct
       - entity: light.hallway_upstairs
         name: Boven
+        type: cct
     
   # mush-rgb-red: 244, 67, 54
   # mush-rgb-pink: 233, 30, 99

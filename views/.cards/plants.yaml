@@ -1,0 +1,16 @@
+# lovelace_gen
+{% for room in _global.rooms %}
+{% for plant in room.plants %}
+- type: custom:flower-card
+  entity: "{{ plant.entity }}"
+  show_bars:
+    - temperature
+    - moisture
+    - illuminance
+    - conductivity
+    {% if room.area == 'buiten' %}
+    - dli
+    - humidity
+    {% endif %}
+{% endfor %}
+{% endfor %}

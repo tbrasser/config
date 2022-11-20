@@ -4,8 +4,6 @@ type: custom:auto-entities
 card:
   type: vertical-stack
 card_param: cards
-view_layout:
-  grid-area: main2
 show_empty: false
 filter:
   include:
@@ -14,9 +12,14 @@ filter:
       options:
         type: custom:flower-card
         show_bars:
-          - brigthness
-          - humidity
+          - illuminance
+          # - humidity
           - moisture
           - conductivity
           - temperature
-          - dli
+          # - dli
+        card_mod:
+          style: |
+            host: {
+              margin-top: 0px;
+            }

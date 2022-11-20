@@ -1,14 +1,14 @@
-type: entities
-entities:
-  - entity: sensor.bunq_t_f
-    name: Balans
-    secondary_info: none
-  - entity: sensor.te_besteden_per_dag
-    name: Dagelijks budget
-    icon: mdi:calendar-today
-    secondary_info: none
-  - entity: sensor.uitgegeven_vandaag
-    name: Vandaag uitgegeven
-    icon: mdi:cash-fast
-  - entity: input_number.offset_rekening
-    name: Offset rekening
+- type: entities
+  entities:
+    - entity: sensor.bunq_t_f
+      name: Balans
+      secondary_info: none
+    - entity: sensor.te_besteden_per_dag
+      name: Dagelijks budget
+      icon: mdi:calendar-today
+      secondary_info: none
+    - entity: sensor.uitgegeven_vandaag
+      name: Vandaag uitgegeven
+      icon: mdi:cash-fast
+    - entity: input_number.offset_rekening
+      name: Offset rekening

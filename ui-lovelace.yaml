@@ -10,6 +10,7 @@ kiosk_mode:
       ignore_entity_settings: true
     - users:
         - "Thomas"
+        #- "tablet1" 
       hide_header: true
   entity_settings:
     - entity:

@@ -1,101 +1,6 @@
 # lovelace_gen
 
 type: custom:stack-in-card
-cards:
-  - type: custom:mushroom-template-card
-    primary: "{{ room|capitalize }}"
-    {# secondary: '{{ "{{" }} states("sensor.temperatuur_{{ room }}") | round(0) {{ "}}" }} °C' #}
-    secondary: " "
-    icon: "{{ icon }}"
-    entity: "light.{{ room }}_lights"
-    icon_color: '{{ "{{" }} "{{ color }}" if is_state(entity, "on") else "disabled" {{ "}}" }}'
-    fill_container: true
-    layout: horizontal
-    multiline_secondary: false
-    card_mod:
-      style: |
-        :host([dark-mode]) {
-          background: none;
-        } 
-        :host {
-          background: none;
-          --mush-icon-size: 128px;
-          --mush-icon-symbol-size: 0.3em;
-          --mush-icon-border-radius: 0%;
-          height: 44px;
-          margin-left: -48px !important;
-          /* overflow: hidden; */
-        }
-        ha-card: {
-          margin-top: -16px !important;
-        }
-        mushroom-shape-icon:
-          $:
-            .shape ha-icon
-              {
-                --icon-animation: blink 1.5s linear infinite;
-              }
-              @keyframes blink {
-                50% {opacity: 0;}
-              }
-        .:
-          ha-card {
-            top: -66px;
-            background: none;
-          }
-          mushroom-shape-icon {
-            --shape-color: none !important;
-            top: 20px !important;
-          }
-    double_tap_action:
-      action: toggle
-    hold_action:
-      action: more-info
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.navigate
-        data:
-          path: "{{ room }}"
-    # tap_action:
-    #   action: navigate
-    #   navigation_path: "{{ room }}"
-  - type: custom:mushroom-chips-card
-    chips:
-      - type: conditional
-        conditions:
-          - entity: media_player.{{ room }}
-            state_not: 'off'
-        chip:
-          type: entity
-          entity: media_player.{{ room }}
-          content_info: none
-          tap_action:
-            action: more-info
-      - type: entity
-        entity: binary_sensor.deuren_{{ room }}
-        content_info: none
-        tap_action:
-          action: more-info
-      - type: entity
-        entity: binary_sensor.beweging_{{ room }}
-        content_info: none
-        tap_action:
-          action: more-info
-    alignment: end
-    card_mod:
-      style: |
-        :host([dark-mode]) {
-          background: none;
-        } 
-        :host {
-          background: none;
-        }
-        ha-card {
-          --chip-box-shadow: none;
-          --chip-background: none;
-          --chip-spacing: 0;
-        }
 card_mod:
   style: |
     ha-card([dark-mode]){
@@ -113,3 +18,104 @@ card_mod:
         background: rgba(var(--rgb-primary-text-color), 0.025);
       {{ "{%" }} endif {{ "%}" }}
     }
+cards:
+  - type: custom:mushroom-template-card
+    primary: "{{ room|capitalize }}"
+    {# secondary: '{{ "{{" }} states("sensor.temperatuur_{{ room }}") | round(0) {{ "}}" }} °C' #}
+    secondary: " "
+    icon: "{{ icon }}"
+    entity: "light.{{ room }}_lights"
+    icon_color: '{{ "{{" }} "{{ color }}" if is_state(entity, "on") else "disabled" {{ "}}" }}'
+    fill_container: true
+    layout: horizontal
+    multiline_secondary: false
+    # badge_icon: '{{ "{{" }} mdi:led-strip-variant if is_state(light.accent_lights_{{ room }}, "on") else mdi:led-strip-variant-off {{ "}}" }}'
+    card_mod:
+      style: |
+        :host([dark-mode]) {
+          background: none;
+          --ha-card-border-width: 0 !important;
+        } 
+        :host {
+          background: none;
+          --mush-icon-size: 128px;
+          --mush-icon-symbol-size: 0.3em;
+          --mush-icon-border-radius: 0%;
+          height: 44px;
+          margin-left: -48px !important;
+          /* overflow: hidden; */
+          --ha-card-border-width: 0 !important;
+        }
+        ha-card: {
+          margin-top: -16px !important;
+          --ha-card-border-width: 0 !important;
+        }
+        .:
+          ha-card {
+            top: -66px;
+            background: none;
+            --ha-card-border-width: 0 !important;
+          }
+          mushroom-shape-icon {
+            --shape-color: none !important;
+            top: 20px !important;
+          }
+    double_tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.navigate
+        data:
+          path: "{{ room }}"
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: conditional
+        conditions:
+          - entity: media_player.{{ room }}
+            state: 'playing'
+        chip:
+          type: entity
+          entity: media_player.{{ room }}
+          content_info: none
+          tap_action:
+            action: more-info
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.deuren_{{ room }}
+            state: 'open'
+        chip:
+          type: entity
+          entity: binary_sensor.deuren_{{ room }}
+          content_info: none
+          tap_action:
+            action: more-info
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.beweging_{{ room }}
+            state: 'on'
+        chip:
+          type: entity
+          entity: binary_sensor.beweging_{{ room }}
+          content_info: none
+          tap_action:
+            action: more-info
+    alignment: end
+    card_mod:
+      style: |
+        :host([dark-mode]) {
+          background: none;
+          --ha-card-border-width: 0 !important;
+        } 
+        :host {
+          background: none;
+          --ha-card-border-width: 0 !important;
+        }
+        ha-card {
+          --chip-background: none;
+          --chip-border-width: 0;
+          --chip-spacing: 0;
+          --chip-box-shadow: 0px;
+        }

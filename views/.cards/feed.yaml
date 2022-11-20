@@ -1,11 +1,10 @@
-type: custom:home-feed-card
-card_id: main_feed
-show_empty: false
-more_info_on_tap: true
-state_color: true
-entities:
-  - binary_sensor.voordeur_contact
-  - binary_sensor.tuindeur_contact
-  - person.frederieke
-  - person.thomas
-  
+- type: custom:home-feed-card
+  card_id: main_feed
+  show_empty: false
+  more_info_on_tap: true
+  state_color: true
+  entities:
+    - binary_sensor.voordeur_contact
+    - binary_sensor.tuindeur_contact
+    - person.frederieke
+    - person.thomas
