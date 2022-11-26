@@ -1,0 +1,13 @@
+- type: tile
+  entity: input_boolean.sleep_mode
+- type: tile
+  entity: input_boolean.show_header
+- type: custom:scheduler-card
+  view_layout:
+    grid-column: auto / span 2
+  include:
+    - automation
+    - light
+    - vacuum
+  exclude: []
+

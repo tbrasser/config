@@ -1,4 +1,6 @@
 - type: custom:home-feed-card
+  view_layout:
+    grid-column: auto / span 2
   card_id: main_feed
   show_empty: false
   more_info_on_tap: true
@@ -9,6 +11,8 @@
     - person.frederieke
     - person.thomas
 - type: map
+  view_layout:
+    grid-column: auto / span 2
   entities:
     - entity: person.frederieke
     - entity: person.thomas

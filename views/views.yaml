@@ -1,5 +1,7 @@
 # lovelace_gen
 {% for view in _global.views %}
+{% if view.name == "main" %}
+{% else %}
 - type: panel
   path: {{ view.name }}
   subview: true
@@ -31,7 +33,7 @@
                 - view: {{ view.name }}
                   position: header
         - type: custom:layout-card
-          layout_type: custom:masonry-layout
+          layout_type: custom:grid-layout
           layout: !include .cards/layout.yaml
           cards: !include .cards/{{ view.name }}.yaml
         - type: custom:mod-card
@@ -53,4 +55,5 @@
                 - .cards/sticky.yaml
                 - view: {{ view.name }}
                   position: footer
+{% endif %}
 {% endfor %}

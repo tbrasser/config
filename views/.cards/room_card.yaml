@@ -1,5 +1,4 @@
 # lovelace_gen
-
 type: custom:stack-in-card
 card_mod:
   style: |

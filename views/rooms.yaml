@@ -32,10 +32,12 @@
                 - view: "{{ room.name }}"
                   position: header
         - type: custom:layout-card
-          layout_type: custom:masonry-layout
+          layout_type: custom:grid-layout
           layout: !include .cards/layout.yaml
           cards:
             - type: custom:auto-entities
+              view_layout:
+                grid-column: auto / span 2
               filter:
                 include:
                   - domain: sensor
@@ -52,17 +54,28 @@
               show_empty: false
               card:
                 type: custom:timer-bar-card
-            - !include
-              - .cards/media_player.yaml
-              - room: {{ room.name }}
             - type: conditional
+              view_layout:
+                grid-column: auto / span 2
+                grid-row: auto / span 4
               conditions:
                 - entity: media_player.{{ room.name }}
                   state: "playing"
               card:
-                type: custom:gap-card
-                height: 0
-                size: 3
+                !include
+                - .cards/media_player.yaml
+                - room: {{ room.name }}
+                  state: playing
+            - type: conditional
+              conditions:
+                - entity: media_player.{{ room.name }}
+                  state_not: "playing"
+              card:
+                !include
+                - .cards/media_player.yaml
+                - room: {{ room.name }}
+                  state: not_playing
+            {% if "lights" in room %}
             {% for light in room.lights %}
             {% if light.type == 'onoff' %}
             - type: tile
@@ -70,39 +83,47 @@
               show_entity_picture: false
               name: "{{ light.name|capitalize }}"
             {% else %}
-            - type: custom:vertical-stack-in-card
-              cards:
-                - type: tile
-                  entity: "{{ light.entity }}"
-                  show_entity_picture: false
-                  name: "{{ light.name|capitalize }}"
-                  card_mod:
+            - type: conditional
+              conditions:
+                - entity: "{{ light.entity }}"
+                  state: "off"
+              card:
+                type: tile
+                entity: "{{ light.entity }}"
+                show_entity_picture: false
+                name: "{{ light.name|capitalize }}"
+            - type: conditional
+              view_layout:
+                grid-column: auto / span 2
+                grid-row: auto / span 2
+              conditions:
+                - entity: "{{ light.entity }}"
+                  state: "on"
+              card:
+                type: custom:vertical-stack-in-card
+                cards:
+                  - type: tile
+                    entity: "{{ light.entity }}"
+                    show_entity_picture: false
+                    name: "{{ light.name|capitalize }}"
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: none;
+                          box-shadow: none;
 {% raw %}
-                    style: |
-                      ha-card {
-                        background: none;
-                        box-shadow: none;
-                        {% if is_state(config.entity, 'on') %}
-                        {% set r = state_attr(config.entity, 'rgb_color')[0] %}
-                        {% set g = state_attr(config.entity, 'rgb_color')[1] %}
-                        {% set b = state_attr(config.entity, 'rgb_color')[2] %}
-                        --primary-text-color: rgb({{r}}, {{g}}, {{b}});
-                        --secondary-text-color: rgba({{r}}, {{g}}, {{b}},0.5);
-                        {% endif %}
-                      }
-                      ha-tile-icon {
-                        {% if is_state(config.entity, 'on') %}
-                        --icon-color: rgb({{r}}, {{g}}, {{b}}) !important;
-                        --shape-color: rgba({{r}}, {{g}}, {{b}},0.2) !important;
-                        {% endif %}
-                      }
+                          {% set r = state_attr(config.entity, 'rgb_color')[0] %}
+                          {% set g = state_attr(config.entity, 'rgb_color')[1] %}
+                          {% set b = state_attr(config.entity, 'rgb_color')[2] %}
+                          --primary-text-color: rgb({{r}}, {{g}}, {{b}});
+                          --secondary-text-color: rgba({{r}}, {{g}}, {{b}},0.5);
+                        }
+                        ha-tile-icon {
+                          --icon-color: rgb({{r}}, {{g}}, {{b}}) !important;
+                          --shape-color: rgba({{r}}, {{g}}, {{b}},0.2) !important;
 {% endraw %}
-                - type: conditional
-                  conditions:
-                    - entity: "{{ light.entity }}"
-                      state: 'on'
-                  card:
-                    type: custom:mushroom-light-card
+                        }
+                  - type: custom:mushroom-light-card
                     entity: "{{ light.entity }}"
                     use_light_color: true
                     show_brightness_control: true
@@ -137,25 +158,24 @@
                           margin-top: -15px;
                           background: none;
                           box-shadow: none;
-                          {% if is_state(config.entity, 'on') %}
                           --primary-text-color: rgb({{ state_attr(config.entity,'rgb_color') [0] }}, {{ state_attr(config.entity,'rgb_color') [1] }}, {{ state_attr(config.entity,'rgb_color') [2] }});
-                          {% endif %}
                           }
                         }
 {% endraw %}
-              card_mod:
-                style: |
-                  ha-card {
-                    {{ "{%" }} if is_state('{{ light.entity }}', 'on') {{ "%}" }}
-                        background: rgba({{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [0] {{ "}}" }},
-                                {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [1] {{ "}}" }},
-                                {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [2] {{ "}}" }},0.1);
-                    {{ "{%" }} endif {{ "%}" }}
-                  }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: rgba({{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [0] {{ "}}" }}, {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [1] {{ "}}" }}, {{ "{{" }} state_attr('{{ light.entity }}','rgb_color') [2] {{ "}}" }},0.1);
+                    }
             {% endif %}
             {% endfor %}
+            {% endif %}
+            {% if "plants" in room %}
             {% for plant in room.plants %}
             - type: custom:flower-card
+              view_layout:
+                grid-column: auto / span 2
+                grid-row: auto / span 3
               entity: "{{ plant.entity }}"
               show_bars:
                 - temperature
@@ -167,8 +187,12 @@
                 - humidity
               {% endif %}
             {% endfor %}
+            {% endif %}
             {% if room.name == 'keuken' %}
             - type: custom:vertical-stack-in-card
+              view_layout:
+                grid-column: auto / span 2
+                grid-row: auto / span 2
               cards:
                 - type: custom:check-button-card
                   entity: sensor.check_kattenbak
@@ -196,9 +220,6 @@
                     ago: geleden
                     due_in: over
                     over_by: over met
-                - type: custom:gap-card
-                  height: 6
-                  size: 1
                 - type: custom:check-button-card
                   entity: sensor.check_kattenwater
                   width: 70%

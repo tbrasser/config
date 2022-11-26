@@ -1,35 +1,12 @@
-- id: '1635241164401'
-  alias: New Automation
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: light.lavalamp
-    to: 'On'
-    for:
-      hours: 8
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
-      entity_id: light.lavalamp
-  - service: notify.notify
-    data:
-      message: 'Turned off because it has been on for 8 hours. '
-      title: 'Lavalamp '
-  mode: restart
 - id: '1636214178243'
   alias: 'Washer finished cycle '
-  description: ''
+  description: 'Notify on phones that washer has finished a cycle.'
   trigger:
   - type: turned_on
     platform: device
     device_id: 2f49ef255d2d31d08989070b0c4ef410
     entity_id: binary_sensor.washer_wash_completed
     domain: binary_sensor
-  condition: []
   action:
   - service: notify.mobile_app_thomas_phone
     data:
@@ -37,17 +14,6 @@
   - service: notify.mobile_app_frederieke_iphone
     data:
       message: "\U0001F300 De was is klaar! "
-  mode: single
-- id: '1651831665100'
-  alias: Dashboard auto refresh
-  description: ''
-  trigger:
-  - platform: event
-    event_type: lovelace_updated
-  condition: []
-  action:
-  - service: browser_mod.lovelace_reload
-    data: {}
   mode: single
 - id: '1653402216389'
   alias: Ring deurbel met oude gong
@@ -61,7 +27,6 @@
     entity_id:
     - binary_sensor.front_door_ding_2
     to: 'on'
-  condition: []
   action:
   - type: turn_on
     device_id: 59c86400590de25e456588a86b8e5ae5
@@ -78,27 +43,25 @@
     domain: switch
   mode: single
 - id: '1653461112548'
-  alias: Doorbell cam actionable nitification
-  description: ''
+  alias: Deurbel Notificatie Thomas
   use_blueprint:
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
       doorbell_button: siren.doorbell_downstairs
-      doorbell_cam: camera.03cabcc9_ring_mqtt
+      doorbell_cam: camera.front_door_snapshot
       notify_dev: notify.mobile_app_thomas_phone
-      uri_: /dwains-dashboard/devices#camera
+      uri_: /lovelace/security
 - id: '1653554412347'
-  alias: Doorbell cam actionable nitification fre
-  description: ''
+  alias: Deurbel Notificatie Fre
   use_blueprint:
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
       doorbell_button: siren.doorbell_downstairs
-      doorbell_cam: camera.03cabcc9_ring_mqtt
+      doorbell_cam: camera.front_door_snapshot
       notify_dev: notify.mobile_app_frederieke_iphone
-      uri_: /dwains-dashboard/devices#camera
+      uri_: /lovelace/security
 - id: '1653934725357'
   alias: Stop media als TV uitgezet wordt
   description: ''
@@ -109,16 +72,14 @@
     entity_id: select.diningroom_hub_activities
     type: current_option_changed
     to: PowerOff
-  condition: []
   action:
   - service: media_player.media_stop
     data: {}
     target:
       entity_id:
-      - media_player.eetkamer_tv
+      - media_player.eetkamer
       - media_player.android_tv_10_9_8_92
-      - media_player.diningroom_media
-      area_id: eetkamer
+      - media_player.eetkamer_2
   mode: single
 - id: '1657483816969'
   alias: 'Set Adaptive lighting sleep mode '
@@ -132,7 +93,7 @@
   - service: switch.toggle
     data: {}
     target:
-      entity_id: switch.adaptive_lighting_sleep_mode_ceiling_lights
+      entity_id: switch.adaptive_lighting_sleep_mode_overhead_lights
   mode: single
 - id: '1663018175468'
   alias: Buiten verlichting
@@ -215,4 +176,85 @@
     domain: mobile_app
     type: notify
     message: 'Test '
+  mode: single
+- id: '1668984750889'
+  alias: Bathroom fan on when light on or humidity above 70
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.thp_bathroom_humidity
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    above: 70
+  - platform: state
+    entity_id:
+    - light.bathroom_ceiling
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: state
+    entity_id: fan.badkamer_ventilatie
+    state: 'off'
+  action:
+  - service: fan.turn_on
+    data: {}
+    target:
+      entity_id: fan.badkamer_ventilatie
+  mode: single
+- id: '1669029776875'
+  alias: Turn Bathroom fan off when humidity < 70 and light is off
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.thp_bathroom_humidity
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    below: 70
+  - platform: time_pattern
+    minutes: '15'
+  condition:
+  - condition: state
+    entity_id: light.bathroom_ceiling
+    state: 'off'
+  - condition: numeric_state
+    entity_id: sensor.thp_bathroom_humidity
+    below: 70
+  action:
+  - service: fan.turn_off
+    data: {}
+    target:
+      entity_id: fan.badkamer_ventilatie
+  mode: single
+- id: '1669029958958'
+  alias: Bathroom switch toggle light
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.shelly_1_bathroom
+  condition: []
+  action:
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.bathroom_ceiling
+  mode: single
+- id: '1669125280981'
+  alias: 'Lampen aan als schoonmaakster er is '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - device_tracker.router_e2_14_a0_76_75_63
+    to: home
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.random
+    metadata: {}
   mode: single

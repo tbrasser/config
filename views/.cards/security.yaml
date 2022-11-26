@@ -7,6 +7,9 @@
   name: ' '
   layout: vertical
   show_keypad: true
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 2
 - type: picture-entity
   entity: binary_sensor.sense_voortuin
   camera_image: camera.03cabcc9_ring_mqtt
@@ -17,7 +20,13 @@
       data:
         entity: camera.03cabcc9_ring_mqtt
   name: Voordeur
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 3
 - type: picture-entity
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 3
   entity: binary_sensor.sense_eetkamer
   camera_image: camera.eetkamera
   camera_view: live
@@ -32,6 +41,9 @@
     action: navigate
     navigation_path: /lovelace/eetkamer
 - type: conditional
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 3
   conditions:
     - entity: binary_sensor.tablet1_plugged_in
       state: "on"
@@ -48,6 +60,9 @@
         data:
           entity: camera.tablet1
 - type: picture-entity
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 3
   entity: binary_sensor.sense_keuken
   camera_image: camera.cat_cam
   camera_view: live

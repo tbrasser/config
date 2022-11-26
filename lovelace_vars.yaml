@@ -1,4 +1,9 @@
 views:
+  - name: main
+    position: footer
+    chip:
+      type: action
+      icon: mdi:home
   - name: security
     position: footer
     chip:
@@ -49,7 +54,12 @@ views:
       type: weather
       entity: weather.buienradar
       show_temperature: true
-# - name: time
+  - name: time
+    position: header
+    chip:
+      type: template
+      entity: sensor.time
+      content: '{{ states.sensor.time.state }}'
 # - name: media
 
 rooms:
@@ -74,6 +84,9 @@ rooms:
       - entity: light.livingroom_ceiling
         name: Plafond
         type: cct
+    devices:
+      - type: tile
+        entity: switch.ps5_606_power
   - name: eetkamer
     area: boven
     icon: hue:room-dining
@@ -129,7 +142,9 @@ rooms:
       - entity: light.kitchen_upstairs
         name: Plafond
         type: cct
-    
+    devices:
+      - type: tile
+        entity: switch.something
   - name: inloopkast
     icon: mdi:wardrobe
     color: indigo
@@ -166,6 +181,9 @@ rooms:
     icon: hue:room-office
     color: light-blue
     area: boven
+    plants:
+      - entity: plant.pannenkoekenplant_2
+        name: Pannenkoekenplant
     lights:
       - entity: light.office_ceiling
         name: Plafond
@@ -173,6 +191,13 @@ rooms:
       - entity: light.bureaulamp_kantoor
         name: Bureau
         type: cct
+    devices:
+      - type: tile
+        entity: 3dprinter
+      - type: tile
+        entity: printer
+      - type: tile
+        entity: win7pc
   - name: toilet
     icon: hue:room-toilet
     color: brown
@@ -193,6 +218,9 @@ rooms:
       - entity: light.bathroom_ceiling
         name: Plafond
         type: cct
+    devices:
+      - type: tile
+        entity: fan.badkamer_ventilatie
   - name: tuin
     icon: phu:garden
     #icon: hue:room-outdoors
@@ -213,7 +241,6 @@ rooms:
     icon: phu:driveway
     color: teal
     area: buiten
-    lights: []
   - name: washok
     icon: hue:room-laundry
     color: cyan
@@ -222,6 +249,9 @@ rooms:
       - entity: light.laundry_closet_lights
         name: Verlichting
         type: dimmable
+    devices:
+      - type: tile
+        entity: switch.washing_machine
   - name: trap
     icon: hue:room-stairs
     color: amber

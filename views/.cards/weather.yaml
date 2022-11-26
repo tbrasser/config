@@ -1,5 +1,7 @@
 
 - type: custom:hourly-weather
+  view_layout:
+    grid-column: auto / span 2
   entity: weather.openweathermap
   name: ' '
   num_segments: '12'
@@ -7,6 +9,8 @@
   label_spacing: '2'
   icons: true
 - type: custom:neerslag-card
+  view_layout:
+    grid-column: auto / span 2
   entities:
     - sensor.neerslag_buienradar_regen_data
     - sensor.neerslag_buienalarm_regen_data
