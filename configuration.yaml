@@ -3,6 +3,12 @@ homeassistant:
   packages: !include_dir_named packages
   customize: !include customize.yaml
   auth_providers: !include auth_providers.yaml
+  media_dirs:
+    media: /media
+
+shell_command:
+  mount_music: "mkdir -p /mnt/media;ln -s /mnt/media /media/;mount -t cifs -o username=thomas,password=Bs6kYhap@71 //10.0.0.10/media/music /mnt/media"
+
 frontend:
   themes: !include_dir_merge_named themes
   extra_module_url: [/hacsfiles/lovelace-card-mod/card-mod.js]
@@ -13,7 +19,16 @@ config_editor:
 magic_areas:
 stream:
 readme:
-lovelace_gen: !include lovelace_vars.yaml
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key
+  country: NL
+sensor:
+  - platform: spotcast
+    country: NL
+lovelace_gen:
+  views: !include lovelace_views.yaml
+  rooms: !include lovelace_rooms.yaml
 lovelace:
   mode: yaml
   resources: !include resources.yaml
@@ -22,3 +37,5 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+logger:
+  default: warning

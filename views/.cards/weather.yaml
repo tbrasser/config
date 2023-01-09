@@ -1,18 +1,24 @@
-
+- type: custom:clock-weather-card
+  entity: weather.openweathermap
+  view_layout:
+    grid-column-end: span 2
+    grid-row-end: span 405
 - type: custom:hourly-weather
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
+    grid-row-end: span 134
   entity: weather.openweathermap
   name: ' '
-  num_segments: '12'
+  num_segments: '6'
   offset: '0'
-  label_spacing: '2'
+  #label_spacing: '1'
   icons: true
 - type: custom:neerslag-card
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
+    grid-row-end: span 200
   entities:
     - sensor.neerslag_buienradar_regen_data
     - sensor.neerslag_buienalarm_regen_data
   title: null
-  autozoom: true
+  autozoom: false

@@ -3,7 +3,11 @@ substitutions:
 
 esphome:
   name: ${location}-${name}
-
+  # Workaround to fix the boot loop if BLE is enabled
+  # See https://github.com/syssi/esphome-yeelight-ceiling-light#known-bugs
+  on_loop:
+    - lambda: "vTaskDelay(10/portTICK_PERIOD_MS);"
+  
 esp32:
   board: esp32doit-devkit-v1
   framework:

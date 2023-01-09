@@ -1,18 +1,19 @@
 - type: custom:home-feed-card
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
   card_id: main_feed
   show_empty: false
   more_info_on_tap: true
   state_color: true
   entities:
+    - binary_sensor.front_door_ding_2
     - binary_sensor.voordeur_contact
     - binary_sensor.tuindeur_contact
     - person.frederieke
     - person.thomas
 - type: map
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
   entities:
     - entity: person.frederieke
     - entity: person.thomas

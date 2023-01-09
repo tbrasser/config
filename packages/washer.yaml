@@ -12,7 +12,7 @@ sensor:
           {% elif is_state('sensor.washer_run_state', 'Standby') %}
             -:--
           {% else %}
-            {{ state_attr('sensor.washer', 'remain_time') }}
+            {{ state_attr('sensor.washer', 'remain_time')|replace(':00', '', 1) }}
           {% endif %}
 
       blank:

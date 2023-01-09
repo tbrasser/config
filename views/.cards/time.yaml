@@ -4,10 +4,25 @@
   entity: input_boolean.show_header
 - type: custom:scheduler-card
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
   include:
     - automation
     - light
     - vacuum
+    - input_boolean
   exclude: []
-
+- type: custom:auto-entities
+  view_layout:
+    grid-column-end: span 2
+  card:
+    type: custom:layout-card
+    layout_type: custom:grid-layout
+    view_layout:
+      grid-template-columns: subgrid
+      grid-template-rows: subgrid
+  card_param: cards
+  filter:
+    include:
+      - domain: automation
+        options:
+          type: tile

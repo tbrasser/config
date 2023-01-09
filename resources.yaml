@@ -1,19 +1,23 @@
 - url: /browser_mod.js
   type: module
+- url: /local/style.css
+  type: css
 # HACS
-- url: /hacsfiles/lovelace-tab-redirect-card/tab-redirect-card.js
+- url: /hacsfiles/lovelace-more-info-card/more-info-card.js
+  type: module
+- url: /hacsfiles/spotify-card/spotify-card.js
+  type: module
+- url: /hacsfiles/lovelace-animated-background/animated-background.js
   type: module
 - url: /hacsfiles/battery-state-card/battery-state-card.js
   type: module
-- url: /hacsfiles/kb-better-graph-colors/kb-better-graph-colors.js
-  type: module 
-- url: /hacsfiles/lovelace-flower-card/flower-card.js
-  type: module 
-- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js 
+- url: /hacsfiles/clock-weather-card/clock-weather-card.js
   type: module
-- url: /hacsfiles/surveillance-card/surveillance-card.js
+- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=4
   type: module
-- url: /hacsfiles/lovelace-state-switch/state-switch.js
+- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js
+  type: module
+- url: /hacsfiles/lovelace-state-switch/state-switch.js?v=4
   type: module
 - type: module
   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
@@ -55,12 +59,8 @@
   url: /hacsfiles/lovelace-card-tools/card-tools.js
 - type: module
   url: /hacsfiles/lovelace-layout-card/layout-card.js
-- type: module
-  url: /hacsfiles/button-card/button-card.js
-- type: module
-  url: /hacsfiles/decluttering-card/decluttering-card.js
-- type: module
-  url: /hacsfiles/stack-in-card/stack-in-card.js
+# - type: module
+#   url: /hacsfiles/button-card/button-card.js
 - type: module
   url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
 - type: module
@@ -79,4 +79,6 @@
 - url: "https://fonts.googleapis.com/css?family=Nunito"
   type: css
 - url: "https://fonts.googleapis.com/css?family=Raleway"
+  type: css
+- url: https://fonts.googleapis.com/css?family=Comfortaa&display=swap
   type: css

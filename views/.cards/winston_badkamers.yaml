@@ -1,0 +1,33 @@
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.winston
+camera: camera.winston_downstairs
+title: Badkamers
+map_source:
+  camera: camera.winston_downstairs
+calibration_source:
+  camera: true
+append_icons: true
+icons:
+  - icon: mdi:home-floor-0
+    tooltip: Boven
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        entity_id: vacuum.winston
+        command: load_multi_map
+        params: 0
+  - icon: mdi:home-floor-1
+    tooltip: Beneden
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        entity_id: vacuum.winston
+        command: load_multi_map
+        params: 1
+map_locked: true
+vacuum_platform: default
+map_modes:
+  - template: vacuum_clean_zone
+  - template: vacuum_follow_path

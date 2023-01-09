@@ -1,6 +1,6 @@
 - type: entities
   view_layout:
-    grid-column: auto / span 2
+    grid-column-end: span 2
   entities:
     - entity: sensor.bunq_t_f
       name: Balans

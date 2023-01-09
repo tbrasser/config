@@ -13,11 +13,71 @@ bar_controller:
 eetkamer_controller:
   module: controllerx
   class: Philips929003017102Z2MLightController
-  integration: 
+  integration:
     name: z2m
     listen_to: mqtt
   controller: hue in wall switch
   light: hallway_upstairs
+
+eetkamer_controller_1:
+  module: controllerx
+  class: ROB2000070LightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: "0xb4e3f9fffeefab82"
+  light: light.eetkamer_kamerlamp
+  actions:
+    - on_1
+    - off_1
+    - brightness_move_up_1
+    - brightness_move_down_1
+    - brightness_stop_1
+
+eetkamer_controller_2:
+  module: controllerx
+  class: ROB2000070LightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: "0xb4e3f9fffeefab82"
+  light: light.sofa
+  actions:
+    - on_2
+    - off_2
+    - brightness_move_up_2
+    - brightness_move_down_2
+    - brightness_stop_2
+
+eetkamer_controller_3:
+  module: controllerx
+  class: ROB2000070Z2MLightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: "0xb4e3f9fffeefab82"
+  light: hallway_upstairs
+  actions:
+    - on_3
+    - off_3
+    - brightness_move_up_3
+    - brightness_move_down_3
+    - brightness_stop_3
+
+eetkamer_controller_4:
+  module: controllerx
+  class: ROB2000070LightController
+  integration:
+    name: z2m
+    listen_to: mqtt
+  controller: "0xb4e3f9fffeefab82"
+  light: light.leeshoek
+  actions:
+    - on_4
+    - off_4
+    - brightness_move_up_4
+    - brightness_move_down_4
+    - brightness_stop_4
 
 woonkamer_controller:
   module: controllerx

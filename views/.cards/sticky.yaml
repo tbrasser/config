@@ -2,20 +2,46 @@
 type: custom:mushroom-chips-card
 alignment: justify
 card_mod:
+  class: sticky
   style: |
+    :host {
+      z-index: 999;
+      position: sticky;
+      position: -webkit-sticky;
+      {% if position == "footer" %}
+      bottom: 0;
+      {% else %}
+      top: 0;
+      {% endif %}
+    }
     ha-card {
+      background: none;
       {% if position == "footer" %}
       margin: 0 4px 4px 4px;
       {% else %}
       margin: 4px 4px 0 4px;
       {% endif %}
+      --ha-card-border-width: 0 !important;
       --chip-border-width: 1px;
+      --chip-height: 48px; 
+      --chip-border-radius: 24px;
     }
 chips:
   {% for headerview in _global.views %}
   {% if (headerview.position == position) or (position == "both") %}
   {% if headerview.name == view %}
+  {% if view == "main" %}
+  - type: action
+    icon: mdi:tablet-dashboard
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: script.start_url
+        data:
+          browser_id: THIS
+  {% else %}
   - type: back
+  {% endif %} 
   {% else %}
   - tap_action:
       action: navigate
@@ -26,4 +52,3 @@ chips:
   {% endif %}
   {% endif %}
   {% endfor %}
-

@@ -1,37 +1,14 @@
 # lovelace_gen
 {% for room in _global.rooms %}
 {% if 'plants' in room %}
-- type: vertical-stack
-  view_layout:
-    grid-column: auto / span 2
-  cards:
-    - type: custom:mod-card
-      card_mod:
-        style: |
-          :host {
-            --mush-title-padding: 0 0 0 12px;
-            --mush-title-spacing: 0;
-            --ha-card-border-width: 0;
-          }
-      card:
-        type: custom:mushroom-title-card
-        alignment: start
-        subtitle: '{{ room.name|capitalize }}'
-    {% for plant in room.plants %}
-    - type: custom:flower-card
-      entity: "{{ plant.entity }}"
-      show_bars:
-        - temperature
-        - moisture
-        - illuminance
-        - conductivity
-        {% if room.area == 'buiten' %}
-        - dli
-        - humidity
-        {% endif %}
-    - type: custom:gap-card
-      size: 1
-      height: 0
-    {% endfor %}
+{% for plant in room.plants %}
+- !include
+  - plant.yaml
+  - entity: {{ plant.entity }}
+    battery: {{ plant.battery }}
+    media: {{ room.media }}
+    room: {{ room.name }}
+    view: plants
+{% endfor %}
 {% endif %}
 {% endfor %}
