@@ -7,7 +7,7 @@ homeassistant:
     media: /media
 
 shell_command:
-  mount_music: "mkdir -p /mnt/media;ln -s /mnt/media /media/;mount -t cifs -o username=thomas,password=Bs6kYhap@71 //10.0.0.10/media/music /mnt/media"
+  mount_music: !secret mount_music
 
 frontend:
   themes: !include_dir_merge_named themes
