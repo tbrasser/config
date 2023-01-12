@@ -12,9 +12,11 @@
           ha-card {
             border-radius: 0px !important;
             border-width: 0px !important;
+            {% if view.name != 'weather' %} 
             {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
             background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" ) {{ "}}" }}' );
             {{ "{%" }} endif {{ "%}" }}
+            {% endif %}
           }
       card:
         type: custom:state-switch

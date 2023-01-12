@@ -1,12 +1,15 @@
 sensor:
   - platform: template
     sensors:
+      winston_floor_beta:
+        value_template: >
+          {{ state_attr('camera.winston_upstairs', 'rooms').20 }}
       winston_floor:
         friendly_name: Winston verdieping
         value_template: >
-          {% if (state_attr('camera.winston_upstairs', 'charger').a) > 73 %}
+          {% if (state_attr('camera.winston_upstairs', 'charger').a) < 74 %}
           {{ "boven" }}
-          {% elif (state_attr('camera.winston_upstairs', 'charger').a) < 74 %}
+          {% elif (state_attr('camera.winston_upstairs', 'charger').a) > 73 %}
           {{ "beneden" }}
           {% else %}
           {{ "badkamers" }}

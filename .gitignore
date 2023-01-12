@@ -24,11 +24,14 @@
 # Add lovelace
 !ui-lovelace.yaml
 !resources.yaml
-!lovelace_vars.yaml
+!lovelace_rooms.yaml
+!lovelace_views.yaml
 !views/
 !views/*.yaml
 !views/.cards/
 !views/.cards/*.yaml
+!themes/
+!themes/transparent.yaml
 
 # Add appdaemon
 !appdaemon/
