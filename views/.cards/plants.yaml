@@ -1,0 +1,14 @@
+# lovelace_gen
+{% for room in _global.rooms %}
+{% if 'plants' in room %}
+{% for plant in room.plants %}
+- !include
+  - plant.yaml
+  - entity: {{ plant.entity }}
+    battery: {{ plant.battery }}
+    media: {{ room.media }}
+    room: {{ room.name }}
+    view: plants
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,468 @@
+- name: woonkamer
+  area: beneden
+  icon: hue:room-living
+  color: red
+  media: media_player.woonkamer
+  plants:
+    - entity: plant.kerstboom
+      battery: sensor.plant_sensor_f607_battery
+    - entity: plant.pannenkoekenplant
+      battery: sensor.plant_sensor_f38a_battery
+  lights:
+    - entity: light.lsc_g125_gold
+      name: Plafond
+      type: cct
+    - entity: light.lsc_stringlight_ww
+      name: Kerstboom
+      type: onoff
+    - entity: light.woonkamer_tafeltje
+      name: Tafeltje
+      type: cct
+    - entity: light.glitterlamp
+      name: Glitterlamp
+      type: onoff
+    - entity: light.candle_gold_2
+      name: Bureaulamp
+      type: cct
+  devices:
+    - type: tile
+      entity: switch.ps5_606_power
+      view_layout:
+        grid-row-end: span 74
+- name: eetkamer
+  area: boven
+  icon: hue:room-dining
+  media: media_player.eetkamer
+  color: orange
+  plants:
+    - entity: plant.rubberplant
+      battery: sensor.plant_sensor_f5c0_battery
+  lights:
+    - entity: light.diningroom_ceiling10_ceiling_light
+      name: Tafel Fel
+      type: cct
+    - entity: light.diningroom_ceiling10_night_light
+      name: Tafel Dim
+      type: dimmable
+    - entity: light.diningroom_ceiling10_ambient_light
+      name: Plafond Sfeer
+      type: rgb
+    - entity: light.sofa
+      name: Bank Plafond
+      type: cct
+    - entity: light.powerstrip_diningroom_socket_2
+      name: Staande Lamp
+      type: onoff
+    - entity: light.eetkamer_kamerlamp
+      name: Kamerlamp
+      type: cct
+    - entity: light.powerstrip_diningroom_socket_4
+      name: Lavalamp
+      type: onoff
+    - entity: light.leeshoek
+      name: Bank Tafeltje
+      type: cct
+  devices:
+    - type: tile
+      entity: sensor.diningroom_particulate_matter_2_5um_concentration
+      view_layout:
+        grid-row-end: span 74
+- name: bar
+  area: beneden
+  icon: mdi:glass-cocktail
+  color: lime
+  lights:
+    - entity: light.bar_ceiling
+      name: Plafond
+      type: cct
+- name: keuken
+  area: boven
+  icon: hue:room-kitchen
+  color: yellow
+  media: media_player.mass_keuken
+  plants:
+    - entity: plant.basilicum
+      battery: sensor.plant_sensor_b2f8_battery
+    - entity: plant.laurier
+      battery: sensor.plant_sensor_1455_battery
+  lights:
+    - entity: light.kitchen_upstairs
+      name: Plafond
+      type: cct
+    - entity: light.afzuigkap
+      name: Afzuigkap
+      type: cct
+  devices:
+    - type: custom:mushroom-template-card
+      icon: phu:litterbox
+      primary: Kattenbak
+      icon_color: grey
+      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
+      entity: input_datetime.kattenbak
+      badge_color: red
+      view_layout:
+        grid-row-end: span 76
+      hold_action:
+        action: more-info
+      tap_action:
+        action: call-service
+        service: script.reset_reminder
+        data:
+          dagen: 3
+        target:
+          entity_id: input_datetime.kattenbak
+        confirmation:
+          text: Geen kakkiejakkie meer?
+      badge_icon: |-
+        {%- set event = as_timestamp(states(config.entity)) %}
+        {%- set now = as_timestamp(now()) %}
+        {% if (now) > (event) %}
+        mdi:exclamation-thick
+        {% endif %}
+      card_mod:
+        style:
+          mushroom-shape-icon$: |
+            .shape {
+              background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 3) }}% 0%, var(--card-background-color) 0% 100%);
+            }
+            .shape:after {
+              content: "";
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              border-radius: 50%;
+              background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
+            }
+          .: |
+            mushroom-badge-icon {
+              top: 30px;
+            }
+    - type: custom:mushroom-template-card
+      icon: mdi:fountain
+      primary: Drinkfontein
+      icon_color: grey
+      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
+      entity: input_datetime.drinkfontein
+      badge_color: red
+      view_layout:
+        grid-row-end: span 76
+      hold_action:
+        action: more-info
+      tap_action:
+        action: call-service
+        service: script.reset_reminder
+        data:
+          dagen: 5
+        target:
+          entity_id: input_datetime.drinkfontein
+        confirmation:
+          text: Drinkfontein bijgevuild?
+      badge_icon: |-
+        {%- set event = as_timestamp(states(config.entity)) %}
+        {%- set now = as_timestamp(now()) %}
+        {% if (now) > (event) %}
+        mdi:exclamation-thick
+        {% endif %}
+      card_mod:
+        style:
+          mushroom-shape-icon$: |
+            .shape {
+              background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 5) }}% 0%, var(--card-background-color) 0% 100%);
+            }
+            .shape:after {
+              content: "";
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              border-radius: 50%;
+              background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
+            }
+          .: |
+            mushroom-badge-icon {
+              top: 30px;
+            }
+- name: inloopkast
+  icon: mdi:wardrobe
+  color: indigo
+  area: beneden
+  lights:
+    - entity: light.walk_in_closet
+      name: Plafond
+      type: cct
+    - entity: light.tradfri_driver
+      name: Kleding
+      type: dimmable
+- name: opslag
+  icon: hue:room-storage
+  color: pink
+  area: boven
+  media: media_player.mass_opslag
+  lights:
+    - entity: light.storage
+      name: Plafond
+      type: cct
+- name: slaapkamer
+  icon: hue:room-bedroom
+  color: purple
+  area: beneden
+  media: media_player.slaapkamer
+  lights:
+    - entity: light.slaapkamer_plafond
+      name: Plafond
+      type: cct
+    - entity: light.nachtkastje
+      name: Nachtkastje
+      type: cct
+- name: kantoor
+  icon: hue:room-office
+  color: light-blue
+  area: boven
+  plants:
+    - entity: plant.pannenkoekenplant_2
+      battery: sensor.plant_sensor_1283_battery
+  lights:
+    - entity: light.office
+      name: Plafond
+      type: cct
+    - entity: light.bureaulamp_kantoor
+      name: Bureau
+      type: cct
+  devices:
+    - type: tile
+      entity: sensor.octoprint_current_state
+      view_layout:
+        grid-row-end: span 74
+    - type: tile
+      entity: sensor.hp_envy_pro_6400_series
+      view_layout:
+        grid-row-end: span 74
+- name: toilet
+  icon: hue:room-toilet
+  color: brown
+  area: beneden
+  plants:
+    - entity: plant.kerstcactus
+      battery: sensor.plant_sensor_f391_battery
+  lights:
+    - entity: light.bathroom_downstairs
+      name: Plafond
+      type: cct
+- name: badkamer
+  icon: hue:room-bathroom
+  color: blue
+  area: boven
+  media: media_player.mass_badkamer
+  lights:
+    - entity: light.badkamer
+      name: Plafond
+      type: cct
+    - entity: light.shelly_1l_bathroom
+      name: Spiegel
+      type: onoff
+  devices:
+    - type: tile
+      entity: binary_sensor.shower_in_use
+      view_layout:
+        grid-row-end: span 74
+    - type: tile
+      entity: fan.badkamer_ventilatie
+      view_layout:
+        grid-row-end: span 74
+- name: tuin
+  icon: phu:garden
+  color: teal
+  area: buiten
+  lights:
+    - entity: light.tuin_lampjes
+      name: Lampjes
+      type: onoff
+    - entity: light.tuin_strip
+      name: Ledstrip
+      type: rgb
+- name: voortuin
+  icon: phu:driveway
+  color: teal
+  area: buiten
+  devices:
+    - type: tile
+      entity: binary_sensor.front_door_ding_2
+      view_layout:
+        grid-row-end: span 74
+- name: washok
+  icon: hue:room-laundry
+  color: cyan
+  area: beneden
+  lights:
+    - entity: light.magic_digital_strip
+      name: Verlichting
+      type: dimmable
+  devices:
+    - type: conditional
+      conditions:
+        - entity: sensor.washer
+          state: "off"
+      card:
+        type: tile
+        entity: sensor.washer
+      view_layout:
+        grid-row-end: span 74
+    - type: conditional
+      view_layout:
+        grid-column-end: span 2
+        grid-row-end: span 148
+      conditions:
+        - entity: sensor.washer
+          state_not: "off"
+      card:
+        type: picture-elements
+        entity: sensor.washer
+        image: /local/hass-combo-card-bg.png
+        elements:
+          - type: image
+            entity: sensor.washer_run_state
+            image: /local/lg-icons/sensing.png
+            state_image:
+              Detecting: /local/lg-icons/sensing-on.png
+            style:
+              top: 33%
+              left: 33%
+              width: 20%
+              image-rendering: crisp
+          - type: image
+            entity: sensor.washer_run_state
+            image: /local/lg-icons/wash.png
+            state_image:
+              Washing: /local/lg-icons/wash-on.png
+            style:
+              top: 33%
+              left: 51%
+              width: 20%
+              image-rendering: crisp
+          - type: image
+            entity: sensor.washer_run_state
+            image: /local/lg-icons/rinse.png
+            state_image:
+              Rinsing: /local/lg-icons/rinse-on.png
+            style:
+              top: 33%
+              left: 69%
+              width: 20%
+              image-rendering: crisp
+          - type: image
+            entity: sensor.washer_run_state
+            image: /local/lg-icons/spin.png
+            state_image:
+              Spinning: /local/lg-icons/spin-on.png
+            style:
+              top: 33%
+              left: 87%
+              width: 20%
+              image-rendering: crisp
+          - type: image
+            entity: sensor.washer
+            image: /local/lg-icons/wifi.png
+            state_image:
+              on: /local/lg-icons/wifi-on.png
+            style:
+              top: 73%
+              left: 32%
+              width: 10%
+              image-rendering: crisp
+          - type: image
+            entity: sensor.washer_door_lock
+            image: /local/lg-icons/lock.png
+            state_image:
+              on: /local/lg-icons/lock-on.png
+            style:
+              top: 73%
+              left: 45%
+              width: 10%
+              image-rendering: crisp
+          - type: state-label
+            entity: sensor.blank
+            prefix: "18:88"
+            style:
+              color: "#555"
+              font-family: segment7
+              font-size: 50px
+              left: 95%
+              top: 74%
+              transform: "translate(-100%,-50%)"
+          - type: state-label
+            entity: sensor.washer_time_display
+            style:
+              color: "#8df427"
+              font-family: segment7
+              font-size: 50px
+              left: 95%
+              top: 74%
+              transform: "translate(-100%,-50%)"
+    - type: custom:mushroom-template-card
+      icon: mdi:tumble-dryer
+      primary: Droger
+      icon_color: grey
+      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
+      entity: input_datetime.droger
+      badge_color: red
+      view_layout:
+        grid-row-end: span 76
+      hold_action:
+        action: more-info
+      tap_action:
+        action: call-service
+        service: script.reset_reminder
+        data:
+          dagen: 30
+        target:
+          entity_id: input_datetime.droger
+        confirmation:
+          text: Filters schoon?
+      badge_icon: |-
+        {%- set event = as_timestamp(states(config.entity)) %}
+        {%- set now = as_timestamp(now()) %}
+        {% if (now) > (event) %}
+        mdi:exclamation-thick
+        {% endif %}
+      card_mod:
+        style:
+          mushroom-shape-icon$: |
+            .shape {
+              background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 30) }}% 0%, var(--card-background-color) 0% 100%);
+            }
+            .shape:after {
+              content: "";
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              border-radius: 50%;
+              background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
+            }
+          .: |
+            mushroom-badge-icon {
+              top: 30px;
+            }
+- name: trap
+  icon: hue:room-stairs
+  color: amber
+  area: beide
+  plants:
+    - entity: plant.yucca
+      battery: sensor.plant_sensor_f56c_battery
+  lights:
+    - entity: light.trap_boven
+      name: Boven
+      type: cct
+    - name: Beneden
+      entity: light.trap_beneden
+      type: cct
+- name: gang
+  area: beide
+  color: light-blue
+  icon: hue:room-hallway
+  lights:
+    - entity: light.hallway_upstairs
+      name: Boven
+      type: dimmable
+    - entity: light.hallway_downstairs
+      name: Beneden
+      type: cct

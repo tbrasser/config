@@ -3,15 +3,19 @@ substitutions:
 
 esphome:
   name: ${location}-${name}
-
+  # Workaround to fix the boot loop if BLE is enabled
+  # See https://github.com/syssi/esphome-yeelight-ceiling-light#known-bugs
+  on_loop:
+    - lambda: "vTaskDelay(10/portTICK_PERIOD_MS);"
+  
 esp32:
   board: esp32doit-devkit-v1
   framework:
     type: esp-idf
     sdkconfig_options:
       CONFIG_FREERTOS_UNICORE: y
-      CONFIG_MBEDTLS_CERTIFICATE_BUNDLE: n
-      CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL: n
+      # CONFIG_MBEDTLS_CERTIFICATE_BUNDLE: n
+      # CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL: n
     advanced:
       ignore_efuse_mac_crc: true
 
@@ -20,13 +24,13 @@ output:
     pin: GPIO19
     id: output_warm
     power_supply: power
-    min_power: 0.13
+#    min_power: 0.13
     max_power: 0.82
   - platform: ledc
     pin: GPIO21
     id: output_cold
     power_supply: power
-    min_power: 0.13
+#    min_power: 0.13
     max_power: 0.82
 
   - platform: ledc
@@ -78,4 +82,4 @@ light:
     red: output_red
     green: output_green
     blue: output_blue
-    # gamma_correct: 0
+    gamma_correct: 0

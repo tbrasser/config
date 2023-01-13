@@ -1,0 +1,152 @@
+transparent:
+  card-mod-theme: transparent
+  ### Layout
+  vertical-stack-card-margin: 0
+  masonry-view-card-margin: 4px 4px 4px
+  card-mod-root: |
+    ha-app-layout {
+      background: url('https://thatkookooguy.github.io/https-assets/bg-kibibit-theme.png') no-repeat fixed center/cover;
+    }
+  card-mod-card-yaml: |
+    .: |
+      ha-card {
+        backdrop-filter: brightness(80%) contrast(90%) blur(16px);
+        -webkit-backdrop-filter: brightness(80%) contrast(90%) blur(16px);
+        transform: translate3d(0,0,0);
+        -webkit-transform: translate3d(0,0,0);
+      }
+      ha-card.type-custom-mod-card {
+        backdrop-filter: unset;
+        -webkit-backdrop-filter: unset;
+      }
+      ha-card.sticky {
+        backdrop-filter: unset;
+        -webkit-backdrop-filter: unset;
+        background: none;
+        --ha-card-border-radius: 0px !important;
+        --ha-card-border-width: 0px;
+        border-radius: 0px !important;
+        border-width: 0px !important;
+      }
+      ha-card.invisible {
+        background: none;
+        backdrop-filter: unset;
+        -webkit-backdrop-filter: unset;
+        --ha-card-border-radius: 0px !important;
+        --ha-card-border-width: 0px;
+        border-radius: 0px !important;
+        border-width: 0px !important;
+      }
+      ha-card.chipbadge:after {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgb(var(--rgb-orange));
+        color: var(--card-background-color);
+        font-weight: bolder;
+        border-radius: 10px;
+        top: -5px;
+        right: -5px;
+        width: max-content;
+        padding-inline: 4px;
+        height: 20px;
+        font-size: 14px;
+      }
+
+  ### Colors and fonts
+  primary-color: rgb(32, 156, 238)
+  accent-color: rgb(255, 159, 9)
+
+  modes:
+    light:
+      ha-card-background: rgba(150, 150, 150, 0.1)
+    dark:
+      ha-card-background: rgba(0, 0, 0, 0.3)
+
+  # Global
+  # background-image: "url('https://thatkookooguy.github.io/https-assets/bg-kibibit-theme.png') no-repeat fixed top center/100vmax"
+  lovelace-background: none # var(--background-image)
+  # background-attachment: fixed
+  light-primary-color: rgb(182, 182, 193)
+  primary-background-color: "#212121"
+  secondary-background-color: rgba(25, 25, 25, 0.7)
+  divider-color: var(--primary-background-color)
+  # Fonts
+  primary-font-family: Raleway
+  paper-font-common-base_-_font-family: "var(--primary-font-family)"
+  paper-font-common-code_-_font-family: "var(--primary-font-family)"
+  paper-font-body1_-_font-family: "var(--primary-font-family)"
+  paper-font-subhead_-_font-family: "var(--primary-font-family)"
+  paper-font-headline_-_font-family: "var(--primary-font-family)"
+  paper-font-caption_-_font-family: "var(--primary-font-family)"
+  paper-font-title_-_font-family: "var(--primary-font-family)"
+  # Text
+  primary-text-color: "#FFF"
+  secondary-text-color: "#d3d3d3"
+  text-primary-color: "#FFF"
+  disabled-text-color: "#555" # XXX: https://github.com/basnijholt/lovelace-ios-dark-mode-theme/issues/2
+  text-dark-color: "#FFF"
+  # Sidebar Menu
+  sidebar-background-color: var(--primary-background-color)
+  sidebar-icon-color: var(--light-primary-color)
+  sidebar-text-color: "#F1F1F1"
+  sidebar-selected-background-color: var(--primary-background-color)
+  sidebar-selected-icon-color: "#FFF" # (light: systemGray5 from iOS light mode, dark: XXX)
+  sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+  # States and Badges
+  state-icon-color: "#FFF"
+  state-icon-active-color: rgba(255, 214, 10, 1)
+  state-icon-unavailable-color: var(--disabled-text-color)
+  # Sliders
+  paper-slider-knob-color: "#FFF"
+  paper-slider-knob-start-color: var(--paper-slider-knob-color)
+  paper-slider-pin-color: var(--paper-slider-knob-color)
+  paper-slider-active-color: "#0984ff" # from Apple systemBlue dark mode
+  paper-slider-secondary-color: var(--paper-slider-knob-color)
+  paper-slider-container-color: rgba(255, 255, 255, 0.5)
+  paper-slider-font-color: "#000"
+  ha-slider-background: none !important
+  # Labels
+  label-badge-background-color: "#23232E"
+  label-badge-text-color: "#F1F1F1"
+  label-badge-red: rgba(255, 159, 9, 0.7) # from Apple systemOrange dark mode
+  # Cards
+  paper-listbox-background-color: var(--primary-background-color)
+  ha-card-border-radius: 20px
+  card-background-color: rgba(25, 25, 25, 1) # More info dialog background, Unused entities table background
+  paper-card-background-color: var(--ha-card-background)
+  # Input fields
+  input-fill-color: "var(--primary-background-color)"
+  input-ink-color: "var(--primary-text-color)"
+  input-idle-line-color: "var(--primary-background-color)"
+  input-hover-line-color: "var(--primary-color)"
+  input-outlined-idle-border-color: "var(--primary-text-color)"
+  input-outlined-hover-border-color: "var(--primary-text-color)"
+  input-label-ink-color: "var(--primary-text-color)"
+  input-dropdown-icon-color: "var(--primary-text-color)"
+  input-disabled-ink-color: rgba(100, 100, 100, 1)
+  # Code Editor
+  code-editor-background-color: var(--primary-background-color) # (main code page background)
+  code-editor-gutter-color: var(--primary-background-color) # (line numbers column background)
+  # Toggles
+  paper-toggle-button-checked-button-color: "#484848"
+  paper-toggle-button-checked-bar-color: "#484848"
+  paper-toggle-button-unchecked-button-color: var(--paper-toggle-button-checked-button-color)
+  paper-toggle-button-unchecked-bar-color: var(--disabled-text-color)
+  # Table row
+  table-row-background-color: var(--primary-background-color)
+  table-row-alternative-background-color: var(--secondary-background-color)
+  # Switches
+  switch-checked-color: "#30d257" # XXX: remove when https://github.com/home-assistant/home-assistant-polymer/pull/4203 is in HA
+  switch-checked-track-color: "#30d158" # from Apple systemGreen dark mode
+  switch-checked-button-color: "#FFF"
+  # Other
+  paper-dialog-background-color: rgba(55, 55, 55, 0.6)
+  paper-item-icon-color: white # also should mini-media-player icon white (but doesn't work by itself)
+  more-info-header-background: rgba(25, 25, 25, 0.5)
+  app-header-background-color: var(--primary-background-color)
+  # Custom
+  mcg-title-letter-spacing: .15em
+  mini-media-player-base-color: white
+  mini-media-player-icon-color: white

@@ -1,0 +1,123 @@
+card_mod:
+  style: |
+    ha-card {
+      display: grid !important;
+      grid-template-columns: subgrid;
+    }
+    .map-wrapper: {
+      grid-column-end: span 2;
+    }
+    .controls-wrapper {
+      grid-column-end: span 2;
+    }
+    .room-16-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-17-wrapper {
+      --map-card-internal-room-outline-line-color: rgba(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-18-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-19-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-20-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.winston
+camera: camera.winston_downstairs
+map_source:
+  camera: camera.winston_downstairs
+calibration_source:
+  camera: true
+append_icons: true
+icons:
+  - icon: mdi:home-floor-1
+    tooltip: Boven
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        entity_id: vacuum.winston
+        command: load_multi_map
+        params: 0
+  - icon: hue:room-bathroom
+    tooltip: Badkamers
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        entity_id: vacuum.winston
+        command: load_multi_map
+        params: 2
+map_locked: true
+vacuum_platform: default
+map_modes:
+  - template: vacuum_clean_segment
+    predefined_selections: # total floor +- x = 10000, y = 5000
+      - id: 16
+        outline: # x = 2700, y = 2350
+          - [27250, 22750]
+          - [27250, 25100] # point 1
+          - [29950, 25100]
+          - [29950, 22750]
+        icon:
+          name: "mdi:wardrobe"
+          x: 28375
+          y: 23825
+      - id: 17
+        outline: # x = 4000, y = 4750
+          - [29950, 22750]
+          - [29950, 27500]
+          - [33950, 27500]
+          - [33950, 22750]
+        icon:
+          name: "hue:room-living"
+          x: 31950
+          y: 25150
+      - id: 18
+        outline: # x = 2700, y = 800
+          - [27250, 25100] # point 1
+          - [27250, 25900]
+          - [29950, 25900]
+          - [29950, 25100]
+      - id: 19
+        outline: # x = 2850, y = 2350
+          - [24400, 22750]
+          - [24400, 25100]
+          - [27250, 25100] # point 1
+          - [27250, 22750]
+        icon:
+          name: "hue:room-bedroom"
+          x: 25950
+          y: 23950
+      - id: 20
+        outline: # x = 2850, y = 2400
+          - [24400, 25100]
+          - [24400, 27500]
+          - [27250, 27500]
+          - [27250, 25100] # point 1
+        icon:
+          name: "mdi:glass-cocktail"
+          x: 25800
+          y: 26025
+  - template: vacuum_clean_zone
+  - template: vacuum_follow_path
+  - template: vacuum_goto

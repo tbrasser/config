@@ -2,120 +2,166 @@
 {% for room in _global.rooms %}
 - type: panel
   path: {{ room.name }}
+  subview: true
   cards:
-    - type: vertical-stack
-      cards:
-        - !include .cards/header.yaml
-        - type: custom:layout-card
-          cards:
-            - type: custom:auto-entities
-              filter:
-                include:
-                  - domain: sensor
-                    entity_id: sensor.*_timer
-                    attributes:
-                      integration: google_home
-                exclude:
-                  - state: unavailable
-                  - state: ""
-                  - state: idle
-              sort:
-                method: name
-                ignore_case: true
-              show_empty: false
-              card:
-                type: custom:timer-bar-card
-            - !include
-              - .cards/media_player.yaml
-              - room: {{ room.name }}
-            {% for light in room.lights %}
-            - type: custom:mushroom-light-card
-              show_brightness_control: true
-              show_color_temp_control: true
-              show_color_control: true
-              use_light_color: true
-              collapsible_controls: true
-              fill_container: false
-              double_tap_action:
-                action: toggle
-              tap_action:
-                action: more-info
-              entity: "{{ light.entity }}"
-              name: "{{ light.name }}"
-            {% endfor %}
-            - !include
-              - .cards/room_plants.yaml
-              - room: {{ room.name }}
-            {% if room.name == 'keuken' %}
-            - type: custom:stack-in-card
-              cards:
-                - type: custom:check-button-card
-                  entity: sensor.check_kattenbak
-                  card_mod:
-                    style: |
-                      :host {
-                        padding-top: 8px !important;
-                        padding-bottom: 4px !important;
-                        padding-right: 8px !important;
-                        /* overflow: hidden; */
-                      } 
-                  width: 70%
-                  due: false
-                  icon: phu:litterbox
-                  title: "Kattenbak:"
-                  display_limit: days
-                  severity:
-                    - value: 3 days
-                      color: Yellow
-                    - value: 4 days
-                      color: Orange
-                    - value: 5 days
-                      color: Red
-                  text:
-                    day: dag
-                    days: dagen
-                    hour: uur
-                    hours: uur
-                    minute: minuut
-                    minutes: minuten
-                    less_than: minder dan
-                    more_than: meer dan
-                    ago: geleden
-                    due_in: over
-                    over_by: over met
-                - type: custom:check-button-card
-                  card_mod:
-                    style: |
-                      :host {
-                        padding-top: 4px !important;
-                        padding-bottom: 8px !important;
-                        padding-right: 8px !important;
-                        /* overflow: hidden; */
-                      } 
-                  entity: sensor.check_kattenwater
-                  width: 70%
-                  due: false
-                  icon: mdi:water
-                  title: "Fontein:"
-                  display_limit: days
-                  severity:
-                    - value: 6 days
-                      color: Yellow
-                    - value: 7 days
-                      color: Orange
-                    - value: 8 days
-                      color: Red
-                  text:
-                    day: dag
-                    days: dagen
-                    hour: uur
-                    hours: uur
-                    minute: minuut
-                    minutes: minuten
-                    less_than: minder dan
-                    more_than: meer dan
-                    ago: geleden
-                    due_in: over
-                    over_by: over met
-            {% endif %}
+    - type: custom:mod-card
+      card_mod:
+        class: invisible
+        style: |
+          ha-card {
+            border-radius: 0px !important;
+            border-width: 0px !important;
+            {{ "{%" }} if state_attr( "{{ room.media }}", "entity_picture" ) != none {{ "%}" }}
+            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "{{ room.media }}", "entity_picture" ) {{ "}}" }}' );
+            {{ "{%" }} endif {{ "%}" }}
+          }
+      card:
+        type: custom:state-switch
+        entity: mediaquery
+        states:
+          '(orientation: landscape)':
+            type: vertical-stack
+            cards:
+              - !include
+                - .cards/sticky.yaml
+                - view: {{ room.name }}
+                  position: both
+              - type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout: !include .cards/layout.yaml
+                cards:
+                  {% if "media" in room %}
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_1
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_2
+                  - !include
+                    - .cards/media_player_active.yaml
+                    - entity: {{ room.media }}
+                  - !include
+                    - .cards/media_player_inactive.yaml
+                    - entity: {{ room.media }}
+                  {% endif %}
+                  - type: conditional
+                    view_layout:
+                      grid-column-end: span 2
+                      grid-row-end: span 126
+                    conditions:
+                      - entity: sensor.winston_room
+                        state: {{ room.name }}
+                      - entity: vacuum.winston
+                        state_not: docked
+                    card:
+                      type: tile
+                      entity: vacuum.winston
+                      features:
+                        - type: vacuum-commands
+                          commands: [start_pause, stop, clean_spot, locate, return_home]
+                  {% if "lights" in room %}
+                  {% for light in room.lights %}
+                  - !include
+                    - .cards/light_active.yaml
+                    - entity: {{ light.entity }}
+                      name: {{ light.name|capitalize }}
+                      type: {{ light.type }}
+                      media: {{ room.media }}
+                      view: {{ room.name }}
+                      orientation: landscape
+                  - !include
+                    - .cards/light_inactive.yaml
+                    - entity: {{ light.entity }}
+                      name: {{ light.name|capitalize }}
+                      type: {{ light.type }}
+                      media: {{ room.media }}
+                      view: {{ room.name }}
+                      orientation: landscape
+                  {% endfor %}
+                  {% endif %}
+                  {% if "devices" in room %}
+                  {% for device in room.devices %}
+                  - {% for key in device|list %}
+                    {{ key }}: {{ device[key]|tojson }}
+                    {% endfor %}
+                  {% endfor %}
+                  {% endif %}
+                  {% if "plants" in room %}
+                  {% for plant in room.plants %}
+                  - !include
+                    - .cards/plant.yaml
+                    - entity: {{ plant.entity }}
+                      battery: {{ plant.battery }}
+                      media: {{ room.media }}
+                      room: {{ room.name }}
+                      view: {{ room.name }}
+                  {% endfor %}
+                  {% endif %}
+          '(orientation: portrait)':
+            type: vertical-stack
+            cards:
+              - !include
+                - .cards/sticky.yaml
+                - view: {{ room.name }}
+                  position: header
+              - type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout: !include .cards/layout.yaml
+                cards:
+                  {% if "media" in room %}
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_1
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_2
+                  - !include
+                    - .cards/media_player_active.yaml
+                    - entity: {{ room.media }}
+                  - !include
+                    - .cards/media_player_inactive.yaml
+                    - entity: {{ room.media }}
+                  {% endif %}
+                  {% if "lights" in room %}
+                  {% for light in room.lights %}
+                  - !include
+                    - .cards/light_active.yaml
+                    - entity: {{ light.entity }}
+                      name: {{ light.name|capitalize }}
+                      type: {{ light.type }}
+                      media: {{ room.media }}
+                      view: {{ room.name }}
+                      orientation: portrait
+                  - !include
+                    - .cards/light_inactive.yaml
+                    - entity: {{ light.entity }}
+                      name: {{ light.name|capitalize }}
+                      type: {{ light.type }}
+                      media: {{ room.media }}
+                      view: {{ room.name }}
+                      orientation: portrait
+                  {% endfor %}
+                  {% endif %}
+                  {% if "devices" in room %}
+                  {% for device in room.devices %}
+                  - {% for key in device|list %}
+                    {{ key }}: {{ device[key]|tojson }}
+                    {% endfor %}
+                  {% endfor %}
+                  {% endif %}
+                  {% if "plants" in room %}
+                  {% for plant in room.plants %}
+                  - !include
+                    - .cards/plant.yaml
+                    - entity: {{ plant.entity }}
+                      battery: {{ plant.battery }}
+                      media: {{ room.media }}
+                      room: {{ room.name }}
+                      view: {{ room.name }}
+                  {% endfor %}
+                  {% endif %}
+              - !include
+                - .cards/sticky.yaml
+                - view: {{ room.name }}
+                  position: footer
 {% endfor %}

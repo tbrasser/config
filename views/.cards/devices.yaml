@@ -1,0 +1,10 @@
+# lovelace_gen
+{% for room in _global.rooms %}
+{% if 'devices' in room %}
+{% for device in room.devices %}
+- {% for key in device|list %}
+  {{ key }}: {{ device[key]|tojson }}
+  {% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -1,11 +1,23 @@
-#spotify:
-#client_id: !secret spotify_id
-#client_secret: !secret spotify_secret
+emulated_hue: # for harmony home control buttons
+  expose_by_default: false
+  entities:
+    light.diningroom_ceiling10_night_light:
+      name: "Eetkamer plafond"
+      hidden: false
+    light.dining_corner:
+      name: "Eetkamer corner lamp"
+      hidden: false
+    light.dining_sofa_ceiling:
+      name: "Eetkamer corner plafond"
+      hidden: false
+    light.hoek:
+      name: "Eetkamer vloerlamp"
+      hidden: false
+    light.lavalamp:
+      name: "Lavalamp"
+      hidden: false
 
-# spotcast:
-#   sp_dc: !secret sp_dc
-#   sp_key: !secret sp_key
-
+## mediaplayer woonkamer ################################
 binary_sensor:
   - platform: ping
     host: 10.9.8.59
@@ -24,12 +36,45 @@ media_player:
   # media_player.woonkamer_cast
   - platform: universal
     name: woonkamer
+    friendly_name: TV
     children:
+      - media_player.woonkamer_jellyfin
+      - media_player.mass_woonkamer_cast
       - media_player.woonkamer_cast
       - media_player.android_tv_10_9_8_59
+     # - media_player.woonkamer_tablet
     commands:
       turn_on:
         service: switch.turn_on
         target:
           entity_id: switch.mi_tv_woonkamer
-    device_class: tv
+  #########################################################
+  - platform: universal
+    name: eetkamer
+    children:
+      - media_player.eetkamer_jellyfin
+      - media_player.mass_eetkamer_cast
+      - media_player.eetkamer_cast
+      - media_player.android_tv_10_9_8_37
+  ### Global
+  - platform: universal
+    name: global
+    children:
+      - media_player.home
+      - media_player.woonkamer
+      - media_player.mass_slaapkamer
+      - media_player.slaapkamer
+      - media_player.eetkamer
+      - media_player.mass_keuken
+      - media_player.keuken
+      - media_player.mass_badkamer
+      - media_player.badkamer
+      - media_player.mass_storage
+      - media_player.storage
+  - platform: universal
+    name: slaapkamer
+    children:
+      - media_player.slaapkamer_jellyfin
+      - media_player.mass_slaapkamer_cast
+      - media_player.slaapkamer_cast
+      - media_player.android_tv_10_9_8_122

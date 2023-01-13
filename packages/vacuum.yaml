@@ -1,16 +1,55 @@
 sensor:
   - platform: template
     sensors:
+      winston_floor_beta:
+        value_template: >
+          {{ state_attr('camera.winston_upstairs', 'rooms').20 }}
       winston_floor:
         friendly_name: Winston verdieping
         value_template: >
-          {% if (state_attr('camera.winston_upstairs', 'charger').a) < 70 %}
+          {% if (state_attr('camera.winston_upstairs', 'charger').a) < 74 %}
           {{ "boven" }}
-          {% elif (state_attr('camera.winston_upstairs', 'charger').a) > 70 %}
+          {% elif (state_attr('camera.winston_upstairs', 'charger').a) > 73 %}
           {{ "beneden" }}
           {% else %}
           {{ "badkamers" }}
           {% endif %}
+      winston_room:
+        friendly_name: Winston Kamer
+        value_template: >
+          {% set floor = states('sensor.winston_floor') %}
+          {% if floor == "beneden" %}
+          {% set room_number = state_attr('camera.winston_downstairs', 'vacuum_room') %}
+          {% if room_number == 16 %}
+          {{ "inloopkast" }}
+          {% elif room_number == 17 %}
+          {{ "woonkamer" }}
+          {% elif room_number == 18 %}
+          {{ "gang" }}
+          {% elif room_number == 19 %}
+          {{ "slaapkamer" }}
+          {% elif room_number == 20 %}
+          {{ "bar" }}
+          {% endif %}
+          {% elif floor == "boven" %}
+          {% set room_number = state_attr('camera.winston_upstairs', 'vacuum_room') %}
+          {% if room_number == 16 %}
+          {{ "eetkamer" }}
+          {% elif room_number == 17 %}
+          {{ "gang" }}
+          {% elif room_number == 18 %}
+          {{ "kantoor" }}
+          {% elif room_number == 19 %}
+          {{ "keuken" }}
+          {% elif room_number == 20 %}
+          {{ "opslag" }}
+          {% endif %}
+          {% elif floor == "badkamers" %}
+          {{ "badkamer" }}
+          {% else %}
+          {{ "onbekend" }}
+          {% endif %}
+
 script:
   vacuum_follow_path:
     mode: single
@@ -88,8 +127,8 @@ camera:
     token: !secret xiaomi_vacuum_token
     username: !secret xiaomi_cloud_username
     password: !secret xiaomi_cloud_password
-    store_map_raw: true
-    store_map_image: true
+    store_map_raw: false
+    store_map_image: false
     store_map_path: /config/tmp
     draw:
       - all

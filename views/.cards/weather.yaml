@@ -1,23 +1,24 @@
-type: custom:stack-in-card
-cards:
-  - type: custom:air-visual-card
-    weather: weather.knmi_home
-    hide_weather: false
-    hide_title: true
-    hide_face: false
-    speed_unit: km/h
-    air_quality_index: sensor.waqi_johannes_geradtsweg_hilversum
-    country: Hilversum
-  - type: custom:hourly-weather
-    entity: weather.openweathermap
-    name: ' '
-    num_segments: '12'
-    offset: '0'
-    label_spacing: '2'
-    icons: false
-  - type: custom:neerslag-card
-    entities:
-      - sensor.neerslag_buienradar_regen_data
-      - sensor.neerslag_buienalarm_regen_data
-    title: null
-    autozoom: true
+- type: custom:clock-weather-card
+  entity: weather.openweathermap
+  view_layout:
+    grid-column-end: span 2
+    grid-row-end: span 405
+- type: custom:hourly-weather
+  view_layout:
+    grid-column-end: span 2
+    grid-row-end: span 134
+  entity: weather.openweathermap
+  name: ' '
+  num_segments: '6'
+  offset: '0'
+  #label_spacing: '1'
+  icons: true
+- type: custom:neerslag-card
+  view_layout:
+    grid-column-end: span 2
+    grid-row-end: span 200
+  entities:
+    - sensor.neerslag_buienradar_regen_data
+    - sensor.neerslag_buienalarm_regen_data
+  title: null
+  autozoom: false

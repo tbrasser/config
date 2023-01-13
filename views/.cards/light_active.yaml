@@ -1,0 +1,64 @@
+# lovelace_gen
+type: conditional
+conditions:
+  - entity: "{{ entity }}"
+    state: "on"
+{% if type == 'onoff' %}
+view_layout: { grid-row-end: span 74 }
+card:
+  type: tile
+  view_layout:
+    grid-row-end: span 74
+  entity: "{{ entity }}"
+  show_entity_picture: false
+  name: "{{ name }}"
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.popup
+      data: !include
+        - popups/light.yaml
+        - entity: "{{ entity }}"
+          name: "{{ name }}"
+          type: "{{ type }}"
+          state: "on"
+          orientation: "{{ orientation }}"
+{% else %}
+view_layout:
+  grid-column-end: span 2
+  grid-row-end: span 126
+card:
+  type: tile
+  entity: "{{ entity }}"
+  name: "{{ name }}"
+  features: [ type: "light-brightness" ]
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.popup
+      data: !include
+        - popups/light.yaml
+        - entity: "{{ entity }}"
+          name: "{{ name }}"
+          type: "{{ type }}"
+          state: "on"
+          orientation: "{{ orientation }}"
+  card_mod:
+    style: |
+      ha-card {
+        {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
+        {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
+        {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
+        box-shadow: none;
+        --primary-text-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }});
+        --secondary-text-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.5);
+        background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
+      }
+      ha-tile-icon {
+        {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
+        {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
+        {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
+        --icon-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }}) !important;
+        --shape-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.2) !important;
+      }
+{% endif %}

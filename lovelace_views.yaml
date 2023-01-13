@@ -1,0 +1,200 @@
+- name: security
+  position: footer
+  chip:
+    type: alarm-control-panel
+    entity: alarm_control_panel.alarm
+    content_info: none
+- name: main
+  position: footer
+  chip:
+    type: action
+    icon: mdi:home
+- name: lights
+  position: footer
+  chip:
+    type: light
+    entity: light.alles
+    content_info: none
+    use_light_color: true
+    icon: mdi:lightbulb
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.popup
+        data:
+          title: Alle lampen
+          right_button: "Aan"
+          right_button_action:
+            service: light.turn_on
+            data:
+              entity_id: light.alles
+          left_button: "Uit"
+          left_button_action:
+            service: light.turn_off
+            data:
+              entity_id: light.alles
+          dismissable: true
+          size: wide
+          card_mod:
+            style:
+              ha-dialog$: |
+                div.mdc-dialog div.mdc-dialog__scrim {
+                  {% set r = state_attr('light.alles', 'rgb_color')[0] %}
+                  {% set g = state_attr('light.alles', 'rgb_color')[1] %}
+                  {% set b = state_attr('light.alles', 'rgb_color')[2] %}
+                  {% set a = (state_attr('light.alles', 'brightness')/255)|round(1) %}
+                  background: rgba({{r}}, {{g}}, {{b}}, {{a}});
+                }
+          content:
+            type: custom:mushroom-chips-card
+            card_mod:
+              class: invisible
+            chips:
+              - type: light
+                entity: light.alles
+                name: Daglicht
+                icon: mdi:weather-sunny
+                content_info: name
+                use_light_color: false
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    kelvin: 5500
+                    transition: 2
+                  target:
+                    entity_id: light.alles
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: rgb(255, 236, 224);
+                      --text-color: black;
+                    }
+              - type: light
+                entity: light.alles
+                name: Focus
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    kelvin: 3500
+                    transition: 2
+                  target:
+                    entity_id: light.alles
+                content_info: name
+                use_light_color: false
+                icon: mdi:lightbulb
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: rgb(255, 196, 137); 
+                      --text-color: black;
+                    }
+              - type: light
+                entity: light.alles
+                icon: mdi:lightbulb
+                name: Gezellig
+                use_light_color: false
+                content_info: name
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    transition: 2
+                    kelvin: 2700
+                  target:
+                    entity_id: light.alles
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: rgb(255, 169, 87); 
+                      --text-color: black;
+                    }
+            alignment: center
+        size: normal
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          {% if (expand(config.entity) | selectattr('state','eq','on') | list | count) > 0 %}
+          content: "{{ expand(config.entity) | selectattr('state','eq','on') | list | count }}";
+          {% endif %} 
+        }
+- name: devices
+  position: footer
+  chip:
+    type: template
+    icon: mdi:wrench-clock
+    icon_color: blue
+- name: location
+  position: footer
+  chip:
+    type: template
+    icon: mdi:heart
+    icon_color: red
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          {% if (states.persistent_notification | selectattr('state','eq','notifying') | list | count) > 0 %}
+          content: "{{ states.persistent_notification | selectattr('state','eq','notifying') | list | count }}";
+          {% endif %} 
+        }
+- name: finance
+  position: header
+  chip:
+    type: template
+    entity: sensor.uitgegeven_vandaag
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          content: "{{ (states.sensor.te_besteden_per_dag.state|float - states.sensor.uitgegeven_vandaag.state|float)|int }}";
+        }
+    icon_color: "{% if states.sensor.uitgegeven_vandaag.state|float > states.sensor.te_besteden_per_dag.state|float %}red{% else %}green{% endif %}"
+    icon: "{% if states.sensor.te_besteden_per_dag.state|float < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
+- name: winston
+  position: header
+  chip:
+    type: entity
+    entity: vacuum.winston
+    icon_color: red
+    icon: mdi:robot-vacuum
+    content_info: none
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          {% if states.vacuum.winston.state != "docked" %}
+          content: "{{ states.sensor.winston_floor.state }}";
+          {% endif %} 
+        }
+- name: plants
+  position: header
+  chip:
+    type: action
+    icon_color: light-green
+    icon: mdi:sprout
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          content: "{{ states.plant | selectattr('state','eq','problem') | list | count }}";
+        }
+- name: weather
+  position: header
+  chip:
+    type: weather
+    entity: weather.buienradar
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          content: "{{ state_attr('weather.buienradar', 'temperature') }}";
+        }
+- name: time
+  position: header
+  chip:
+    type: template
+    entity: sensor.time
+    content: "{{ states.sensor.time.state }}"

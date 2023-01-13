@@ -1,52 +1,129 @@
-type: vertical-stack
-cards:
-  - type: custom:alarmo-card
-    entity: alarm_control_panel.alarm
-    states:
-      armed_away:
-        hide: false
-        button_label: Inschakelen Afwezig                                                      
-      armed_night:
-        hide: false
-        button_label: Inschakelen Nacht
-    use_clear_icon: true
-    keep_keypad_visible: false
-  - type: picture-entity
-    entity: binary_sensor.sense_voortuin
-    camera_image: camera.03cabcc9_ring_mqtt
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.more_info
-        data:
-          entity: camera.03cabcc9_ring_mqtt
-  - type: picture-entity
-    entity: binary_sensor.sense_eetkamer
-    camera_image: camera.eetkamera
-    camera_view: live
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.more_info
-        data:
-          entity: camera.eetkamera
-  - type: picture-entity
+- type: custom:mushroom-alarm-control-panel-card
+  entity: alarm_control_panel.alarm
+  states:
+    - armed_home
+    - armed_away
+    - armed_night
+  name: ' '
+  layout: vertical
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 160
+- type: picture-entity
+  entity: binary_sensor.sense_voortuin
+  camera_image: camera.03cabcc9_ring_mqtt
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.03cabcc9_ring_mqtt
+  name: Voordeur
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+- type: picture-entity
+  entity: binary_sensor.sense_tuin
+  camera_image: camera.10_9_8_30
+  camera_view: live
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.10_9_8_30 
+  name: Tuin
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+- type: picture-entity
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+  entity: binary_sensor.sense_eetkamer
+  camera_image: camera.eetkamera
+  camera_view: live
+  name: Eetkamer
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.eetkamera
+  hold_action:
+    action: navigate
+    navigation_path: /lovelace/eetkamer
+- type: conditional
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+  conditions:
+    - entity: binary_sensor.tablet_1_plugged_in
+      state: "on"
+  card:
+    type: picture-entity
     entity: binary_sensor.sense_keuken
-    camera_image: camera.cat_cam
+    camera_image: camera.tablet1
     camera_view: live
+    name: Tablet 1
     tap_action:
       action: fire-dom-event
       browser_mod:
         service: browser_mod.more_info
         data:
-          entity: camera.cat_cam
-  - type: picture-entity
+          entity: camera.tablet1
+- type: conditional
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+  conditions:
+    - entity: binary_sensor.tablet_2_plugged_in
+      state: "on"
+  card:
+    type: picture-entity
+    entity: binary_sensor.sense_eetkamer
+    camera_image: camera.tablet2
+    camera_view: live
+    name: Tablet 2
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.more_info
+        data:
+          entity: camera.tablet2
+- type: conditional
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+  conditions:
+    - entity: binary_sensor.tablet_3_plugged_in
+      state: "on"
+  card:
+    type: picture-entity
     entity: binary_sensor.sense_woonkamer
-    camera_image: camera.woonkamer_tablet
+    camera_image: camera.tablet3
     camera_view: live
+    name: Tablet 3
     tap_action:
       action: fire-dom-event
       browser_mod:
         service: browser_mod.more_info
         data:
-          entity: camera.woonkamer_tablet
+          entity: camera.tablet3
+- type: picture-entity
+  view_layout:
+    grid-column: auto / span 2
+    grid-row: auto / span 247
+  entity: binary_sensor.sense_keuken
+  camera_image: camera.indoor_camera
+  camera_view: live
+  name: Keuken
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.indoor_camera
+  hold_action:
+    action: navigate
+    navigation_path: /lovelace/keuken

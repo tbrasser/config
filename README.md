@@ -6,8 +6,8 @@ This is my Home Assistant installation.
 
 Description | value
 -- | --
-Number of entities | 970
-Number of sensors | 440
+Number of entities | 1206
+Number of sensors | 532
 
 
 ## My installed extensions:
@@ -37,7 +37,6 @@ Number of sensors | 440
 - [Config Editor](https://github.com/htmltiger/config-editor)
 - [Crypto Tracker](https://github.com/BigNocciolino/CryptoTracker)
 - [Dashcast](https://github.com/AlexxIT/DashCast)
-- [Fully Kiosk Browser](https://github.com/cgarwood/homeassistant-fullykiosk)
 - [Generate Readme](https://github.com/custom-components/readme)
 - [Google Home](https://github.com/leikoilja/ha-google-home)
 - [HACS](https://github.com/hacs/integration)
@@ -70,13 +69,13 @@ Number of sensors | 440
 - [Atomic Calendar Revive](https://github.com/totaldebug/atomic-calendar-revive)
 - [Auto Entities](https://github.com/thomasloven/lovelace-auto-entities)
 - [Bar Card](https://github.com/custom-cards/bar-card)
+- [Battery State Card / Entity Row](https://github.com/maxwroc/battery-state-card)
 - [Better Thermostat Ui](https://github.com/KartoffelToby/better-thermostat-ui-card)
-- [Bootstrap Grid Card](https://github.com/ownbee/bootstrap-grid-card)
-- [Browser Control Card](https://github.com/mathoudebine/homeassistant-browser-control-card)
 - [Button Card](https://github.com/custom-cards/button-card)
 - [Card Mod](https://github.com/thomasloven/lovelace-card-mod)
 - [Card Tools](https://github.com/thomasloven/lovelace-card-tools)
 - [Check Button Card](https://github.com/custom-cards/check-button-card)
+- [Clock Weather Card](https://github.com/pkissling/clock-weather-card)
 - [Config Editor Card](https://github.com/htmltiger/config-editor-card)
 - [Config Template Card](https://github.com/iantrich/config-template-card)
 - [Custom Brand Icons](https://github.com/elax46/custom-brand-icons)
@@ -117,6 +116,7 @@ Number of sensors | 440
 - [State Switch](https://github.com/thomasloven/lovelace-state-switch)
 - [Surveillance Card](https://github.com/custom-cards/surveillance-card)
 - [Swipe Card](https://github.com/bramkragten/swipe-card)
+- [Tab Redirect Card](https://github.com/ben8p/lovelace-tab-redirect-card)
 - [Template Entity Row](https://github.com/thomasloven/lovelace-template-entity-row)
 - [Thermal Comfort Icons](https://github.com/rautesamtr/thermal_comfort_icons)
 - [Thermostat Popup Card](https://github.com/DBuit/thermostat-popup-card)
