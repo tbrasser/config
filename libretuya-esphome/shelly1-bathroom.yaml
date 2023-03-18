@@ -1,0 +1,9 @@
+substitutions:
+  location: bathroom
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/shelly1.yaml
+
+wifi:
+  use_address: 10.9.8.18

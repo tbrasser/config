@@ -12,16 +12,6 @@ binary_sensor:
     entities:
       - binary_sensor.inloopkast_pir_occupancy
   - platform: group
-    name: "beweging badkamer"
-    device_class: motion
-    entities:
-      - binary_sensor.pir_bathroom_occupancy
-  - platform: group
-    name: "beweging keuken"
-    device_class: motion
-    entities:
-      - binary_sensor.beweging_keuken_tablet
-  - platform: group
     name: "beweging trap"
     device_class: motion
     entities:
@@ -65,11 +55,6 @@ binary_sensor:
     entities:
       - binary_sensor.deuren_bar
   - platform: group
-    name: "sense keuken"
-    device_class: occupancy
-    entities:
-      - binary_sensor.beweging_keuken
-  - platform: group
     name: "sense tuin"
     device_class: occupancy
     entities:
@@ -96,8 +81,3 @@ binary_sensor:
     device_class: occupancy
     entities:
       - binary_sensor.deuren_washok
-  - platform: group
-    name: "sense eetkamer"
-    device_class: occupancy
-    entities:
-      - binary_sensor.motion_eetkamera

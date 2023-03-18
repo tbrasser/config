@@ -1,0 +1,12 @@
+# lovelace_gen
+type: conditional
+view_layout:
+  grid-column-end: span 2
+conditions:
+  - entity: sensor.{{ timer }}_timer
+    state_not: unavailable
+  - entity: sensor.{{ timer }}_timer
+    state_not: idle
+card:
+  type: custom:timer-bar-card
+  entity: sensor.{{ timer }}_timer

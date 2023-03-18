@@ -3,15 +3,11 @@ transparent:
   ### Layout
   vertical-stack-card-margin: 0
   masonry-view-card-margin: 4px 4px 4px
-  card-mod-root: |
-    ha-app-layout {
-      background: url('https://thatkookooguy.github.io/https-assets/bg-kibibit-theme.png') no-repeat fixed center/cover;
-    }
   card-mod-card-yaml: |
     .: |
       ha-card {
-        backdrop-filter: brightness(80%) contrast(90%) blur(16px);
-        -webkit-backdrop-filter: brightness(80%) contrast(90%) blur(16px);
+        backdrop-filter: blur(24px) contrast(40%) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) contrast(40%) saturate(200%);
         transform: translate3d(0,0,0);
         -webkit-transform: translate3d(0,0,0);
       }
@@ -53,23 +49,39 @@ transparent:
         height: 20px;
         font-size: 14px;
       }
-
+      mushroom-badge-icon.reminder{
+        top: 30px;
+      }
   ### Colors and fonts
-  primary-color: rgb(32, 156, 238)
-  accent-color: rgb(255, 159, 9)
-
-  modes:
-    light:
-      ha-card-background: rgba(150, 150, 150, 0.1)
-    dark:
-      ha-card-background: rgba(0, 0, 0, 0.3)
-
+  primary-color: rgb(var(--rgb-blue-color))
+  accent-color: rgb(var(--rgb-orange-color))
+  # missing colors
+  rgb-amber-color: 255, 193, 7
+  rgb-black-color: 0, 0, 0
+  rgb-blue-grey-color: 96, 125, 139
+  rgb-blue-color: 33, 150, 243
+  rgb-brown-color: 121, 85, 72
+  rgb-cyan-color: 0, 188, 212
+  rgb-deep-orange-color: 255, 87, 34
+  rgb-deep-purple-color: 103, 58, 183
+  rgb-green-color: 76, 175, 80
+  rgb-grey-color: 158, 158, 158
+  rgb-indigo-color: 63, 81, 181
+  rgb-light-blue-color: 3, 169, 244
+  rgb-light-green-color: 139, 195, 74
+  rgb-lime-color: 205, 220, 57
+  rgb-orange-color: 255, 152, 0
+  rgb-pink-color: 233, 30, 99
+  rgb-purple-color: 156, 39, 176
+  rgb-red-color: 244, 67, 54
+  rgb-teal-color: 0, 150, 136
+  rgb-white-color: 255, 255, 255
+  rgb-yellow-color: 255, 235, 59
+  ha-card-background: rgba(var(--rgb-grey-color), 0.1)
   # Global
-  # background-image: "url('https://thatkookooguy.github.io/https-assets/bg-kibibit-theme.png') no-repeat fixed top center/100vmax"
   lovelace-background: none # var(--background-image)
-  # background-attachment: fixed
   light-primary-color: rgb(182, 182, 193)
-  primary-background-color: "#212121"
+  primary-background-color: rgb(33, 33, 33)
   secondary-background-color: rgba(25, 25, 25, 0.7)
   divider-color: var(--primary-background-color)
   # Fonts

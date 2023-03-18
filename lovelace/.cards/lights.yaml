@@ -1,0 +1,25 @@
+# lovelace_gen
+{% for room in _global.rooms %}
+{% for card in room.cards if 'cards' in room %}
+{% if card.entity|truncate(5, True, '', 0) == 'light' %}
+- !include
+  - light_active.yaml
+  - entity: {{ card.entity }}
+    name: {{ room.name|capitalize }} {{ card.name|capitalize }}
+    type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
+    media: {{ room.media }}
+    room: {{ room.name }}
+    view: lights
+    orientation: {{ orientation }}
+- !include
+  - light_inactive.yaml
+  - entity: {{ card.entity }}
+    name: {{ room.name|capitalize }} {{ card.name|capitalize }}
+    type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
+    media: {{ room.media }}
+    room: {{ room.name }}
+    view: lights
+    orientation: {{ orientation }}
+{% endif %}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,105 @@
+- type: custom:mushroom-alarm-control-panel-card
+  entity: alarm_control_panel.alarm
+  states:
+    - armed_home
+    - armed_away
+    - armed_night
+  name: " "
+  layout: vertical
+  view_layout:
+    grid-column-end: span 2
+- type: picture-entity
+  entity: binary_sensor.area_voortuin
+  camera_image: camera.03cabcc9_ring_mqtt
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.03cabcc9_ring_mqtt
+  name: Voordeur
+  view_layout:
+    grid-column-end: span 2
+- type: custom:webrtc-camera
+  entity: camera.garden
+  ui: true
+  title: Tuin
+  poster: https://home-assistant.io/images/cast/splash.png
+  intersection: 0.75
+  background: true
+  view_layout:
+    grid-column-end: span 2
+- type: picture-entity
+  view_layout:
+    grid-column-end: span 2
+  entity: binary_sensor.area_eetkamer
+  camera_image: camera.eetkamera
+  camera_view: live
+  name: Eetkamer
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.eetkamera
+  hold_action:
+    action: navigate
+    navigation_path: /lovelace/eetkamer
+- type: conditional
+  view_layout:
+    grid-column-end: span 2
+  conditions:
+    - entity: binary_sensor.tablet_1_plugged_in
+      state: "on"
+  card:
+    type: picture-entity
+    entity: binary_sensor.area_keuken
+    camera_image: camera.tablet1
+    camera_view: live
+    name: Tablet 1
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.more_info
+        data:
+          entity: camera.tablet1
+- type: picture-entity
+  entity: binary_sensor.area_eetkamer
+  camera_image: camera.tablet2
+  camera_view: live
+  name: Tablet 2
+  view_layout:
+    grid-column-end: span 2
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: camera.tablet2
+- type: conditional
+  view_layout:
+    grid-column-end: span 2
+  conditions:
+    - entity: binary_sensor.tablet_3_plugged_in
+      state: "on"
+  card:
+    type: picture-entity
+    entity: binary_sensor.area_woonkamer
+    camera_image: camera.tablet3
+    camera_view: live
+    name: Tablet 3
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.more_info
+        data:
+          entity: camera.tablet3
+- type: custom:webrtc-camera
+  entity: camera.catcam
+  ui: true
+  title: Keuken
+  poster: https://home-assistant.io/images/cast/splash.png
+  intersection: 0.75
+  background: true
+  view_layout:
+    grid-column-end: span 2

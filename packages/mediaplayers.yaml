@@ -4,16 +4,16 @@ emulated_hue: # for harmony home control buttons
     light.diningroom_ceiling10_night_light:
       name: "Eetkamer plafond"
       hidden: false
-    light.dining_corner:
+    light.eetkamer_kamerlamp:
       name: "Eetkamer corner lamp"
       hidden: false
-    light.dining_sofa_ceiling:
+    light.sofa:
       name: "Eetkamer corner plafond"
       hidden: false
-    light.hoek:
+    light.stopcontact_2:
       name: "Eetkamer vloerlamp"
       hidden: false
-    light.lavalamp:
+    light.stopcontact_4:
       name: "Lavalamp"
       hidden: false
 
@@ -39,10 +39,9 @@ media_player:
     friendly_name: TV
     children:
       - media_player.woonkamer_jellyfin
-      - media_player.mass_woonkamer_cast
+     # - media_player.mass_woonkamer_cast
       - media_player.woonkamer_cast
       - media_player.android_tv_10_9_8_59
-     # - media_player.woonkamer_tablet
     commands:
       turn_on:
         service: switch.turn_on
@@ -53,7 +52,7 @@ media_player:
     name: eetkamer
     children:
       - media_player.eetkamer_jellyfin
-      - media_player.mass_eetkamer_cast
+     # - media_player.mass_eetkamer_cast
       - media_player.eetkamer_cast
       - media_player.android_tv_10_9_8_37
   ### Global
@@ -62,19 +61,19 @@ media_player:
     children:
       - media_player.home
       - media_player.woonkamer
-      - media_player.mass_slaapkamer
       - media_player.slaapkamer
       - media_player.eetkamer
-      - media_player.mass_keuken
+     # - media_player.mass_keuken
       - media_player.keuken
-      - media_player.mass_badkamer
+      #- media_player.mass_badkamer
       - media_player.badkamer
-      - media_player.mass_storage
-      - media_player.storage
+      #- media_player.mass_opslag
+      - media_player.opslag
   - platform: universal
     name: slaapkamer
     children:
       - media_player.slaapkamer_jellyfin
-      - media_player.mass_slaapkamer_cast
+     # - media_player.mass_slaapkamer_cast
       - media_player.slaapkamer_cast
       - media_player.android_tv_10_9_8_122
+  

@@ -18,100 +18,7 @@
     use_light_color: true
     icon: mdi:lightbulb
     hold_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.popup
-        data:
-          title: Alle lampen
-          right_button: "Aan"
-          right_button_action:
-            service: light.turn_on
-            data:
-              entity_id: light.alles
-          left_button: "Uit"
-          left_button_action:
-            service: light.turn_off
-            data:
-              entity_id: light.alles
-          dismissable: true
-          size: wide
-          card_mod:
-            style:
-              ha-dialog$: |
-                div.mdc-dialog div.mdc-dialog__scrim {
-                  {% set r = state_attr('light.alles', 'rgb_color')[0] %}
-                  {% set g = state_attr('light.alles', 'rgb_color')[1] %}
-                  {% set b = state_attr('light.alles', 'rgb_color')[2] %}
-                  {% set a = (state_attr('light.alles', 'brightness')/255)|round(1) %}
-                  background: rgba({{r}}, {{g}}, {{b}}, {{a}});
-                }
-          content:
-            type: custom:mushroom-chips-card
-            card_mod:
-              class: invisible
-            chips:
-              - type: light
-                entity: light.alles
-                name: Daglicht
-                icon: mdi:weather-sunny
-                content_info: name
-                use_light_color: false
-                tap_action:
-                  action: call-service
-                  service: light.turn_on
-                  data:
-                    kelvin: 5500
-                    transition: 2
-                  target:
-                    entity_id: light.alles
-                card_mod:
-                  style: |
-                    ha-card {
-                      --chip-background: rgb(255, 236, 224);
-                      --text-color: black;
-                    }
-              - type: light
-                entity: light.alles
-                name: Focus
-                tap_action:
-                  action: call-service
-                  service: light.turn_on
-                  data:
-                    kelvin: 3500
-                    transition: 2
-                  target:
-                    entity_id: light.alles
-                content_info: name
-                use_light_color: false
-                icon: mdi:lightbulb
-                card_mod:
-                  style: |
-                    ha-card {
-                      --chip-background: rgb(255, 196, 137); 
-                      --text-color: black;
-                    }
-              - type: light
-                entity: light.alles
-                icon: mdi:lightbulb
-                name: Gezellig
-                use_light_color: false
-                content_info: name
-                tap_action:
-                  action: call-service
-                  service: light.turn_on
-                  data:
-                    transition: 2
-                    kelvin: 2700
-                  target:
-                    entity_id: light.alles
-                card_mod:
-                  style: |
-                    ha-card {
-                      --chip-background: rgb(255, 169, 87); 
-                      --text-color: black;
-                    }
-            alignment: center
-        size: normal
+      action: more-info
     card_mod:
       class: chipbadge
       style: |
@@ -166,7 +73,7 @@
       style: |
         ha-card:after {
           {% if states.vacuum.winston.state != "docked" %}
-          content: "{{ states.sensor.winston_floor.state }}";
+          content: "{{ states.sensor.winston_room.state }}";
           {% endif %} 
         }
 - name: plants

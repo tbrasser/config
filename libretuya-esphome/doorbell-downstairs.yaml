@@ -1,0 +1,9 @@
+substitutions:
+  location: downstairs
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/doorbell.yaml
+
+wifi:
+  use_address: 10.9.8.87

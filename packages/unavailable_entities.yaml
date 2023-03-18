@@ -36,7 +36,7 @@ group:
   ignored_unavailable_entities:
     entities:
       - sensor.unavailable_entities # prevent template loop warnings?
-      - binary_sensor.updater # always unknown after restart
+      #- binary_sensor.updater # always unknown after restart
 
 # OPTIONAL - filter template loop warnings from the Home Assistant log.
 logger:

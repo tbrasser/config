@@ -1,7 +1,0 @@
-substitutions:
-  location: diningroom
-  leds: "81"
-
-packages:
-  defaults: !include includes/defaults.yaml
-  device:   !include includes/quinled-dig-uno.yaml

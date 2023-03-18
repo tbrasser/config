@@ -1,0 +1,215 @@
+substitutions:
+  name: ceiling-lsc
+
+esphome:
+  name: ${location}-${name}
+  friendly_name: "${name} ${location}"
+
+light:
+  - platform: rgbww
+    name: Light
+    id: plafond
+    red: output_red
+    green: output_green
+    blue: output_blue
+    cold_white: output_white
+    warm_white: output_warmwhite
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 Mireds
+    warm_white_color_temperature: 2200 K
+    color_interlock: true
+    constant_brightness: true
+    gamma_correct: 0.0
+    effects:
+      - lambda:
+          name: Fast Rainbow
+          update_interval: 4s
+          lambda: |-
+            static int state = 0;
+            auto call = id(plafond).turn_on();
+            call.set_transition_length(3800);
+            if (state == 0)  call.set_rgb(1.0, 0.0, 0.0); else
+            if (state == 1)  call.set_rgb(1.0, 0.5, 0.0); else
+            if (state == 2)  call.set_rgb(1.0, 1.0, 0.0); else
+            if (state == 3)  call.set_rgb(0.5, 1.0, 0.0); else
+            if (state == 4)  call.set_rgb(0.0, 1.0, 0.0); else
+            if (state == 5)  call.set_rgb(0.0, 1.0, 0.5); else
+            if (state == 6)  call.set_rgb(0.0, 1.0, 1.0); else
+            if (state == 7)  call.set_rgb(0.0, 0.5, 1.0); else
+            if (state == 8)  call.set_rgb(0.0, 0.0, 1.0); else
+            if (state == 9)  call.set_rgb(0.5, 0.0, 1.0); else 
+            if (state == 10) call.set_rgb(1.0, 0.0, 1.0); else 
+            if (state == 11) call.set_rgb(1.0, 0.0, 0.5);
+            call.perform();
+            state++;
+            if (state == 12) state = 0;
+      - lambda:
+          name: Rainbow
+          update_interval: 8s
+          lambda: |-
+            static int state = 0;
+            auto call = id(plafond).turn_on();
+            call.set_transition_length(7500);
+            if (state == 0) {
+              call.set_rgb(1.0, 0.0, 0.0);
+            } else if (state == 1) {
+              call.set_rgb(1.0, 0.5, 0.0);
+            } else if (state == 2) {
+              call.set_rgb(1.0, 1.0, 0.0);
+            } else if (state == 3) {
+              call.set_rgb(0.5, 1.0, 0.0);
+            } else if (state == 4) {
+              call.set_rgb(0.0, 1.0, 0.0);
+            } else if (state == 5) {
+              call.set_rgb(0.0, 1.0, 0.5);
+            } else if (state == 6) {
+              call.set_rgb(0.0, 1.0, 1.0);
+            } else if (state == 7) {
+              call.set_rgb(0.0, 0.5, 1.0);
+            } else if (state == 8) {
+              call.set_rgb(0.0, 0.0, 1.0);
+            } else if (state == 9) {
+              call.set_rgb(0.5, 0.0, 1.0);
+            } else if (state == 10) {
+              call.set_rgb(1.0, 0.0, 1.0);
+            } else if (state == 11) {
+              call.set_rgb(1.0, 0.0, 0.5);
+            }
+            call.perform();
+            state++;
+            if (state == 12)
+              state = 0;
+      - lambda:
+          name: Slow Rainbow
+          update_interval: 16s
+          lambda: |-
+            static int state = 0;
+            auto call = id(plafond).turn_on();
+            call.set_transition_length(15000);
+            if (state == 0) {
+              call.set_rgb(1.0, 0.0, 0.0);
+            } else if (state == 1) {
+              call.set_rgb(1.0, 0.5, 0.0);
+            } else if (state == 2) {
+              call.set_rgb(1.0, 1.0, 0.0);
+            } else if (state == 3) {
+              call.set_rgb(0.5, 1.0, 0.0);
+            } else if (state == 4) {
+              call.set_rgb(0.0, 1.0, 0.0);
+            } else if (state == 5) {
+              call.set_rgb(0.0, 1.0, 0.5);
+            } else if (state == 6) {
+              call.set_rgb(0.0, 1.0, 1.0);
+            } else if (state == 7) {
+              call.set_rgb(0.0, 0.5, 1.0);
+            } else if (state == 8) {
+              call.set_rgb(0.0, 0.0, 1.0);
+            } else if (state == 9) {
+              call.set_rgb(0.5, 0.0, 1.0);
+            } else if (state == 10) {
+              call.set_rgb(1.0, 0.0, 1.0);
+            } else if (state == 11) {
+              call.set_rgb(1.0, 0.0, 0.5);
+            }
+            call.perform();
+            state++;
+            if (state == 12)
+              state = 0;
+      - random:
+      - random:
+          name: "Slow Random"
+          transition_length: 30s
+          update_interval: 30s
+      - random:
+          name: "Fast Random"
+          transition_length: 4s
+          update_interval: 5s
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 0.5s
+          update_interval: 0.5s
+      - pulse:
+          name: "Slow Pulse"
+          transition_length: 1s
+          update_interval: 2s
+      - strobe:
+          name: "Green Strobe"
+          colors:
+            - state: True
+              brightness: 100%
+              red: 0%
+              green: 100%
+              blue: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+      - strobe:
+          name: "Red Strobe"
+          colors:
+            - state: True
+              brightness: 100%
+              red: 100%
+              green: 0%
+              blue: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+      - strobe:
+          name: "Blue Strobe"
+          colors:
+            - state: True
+              brightness: 100%
+              red: 0%
+              green: 0%
+              blue: 100%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+      - strobe:
+          name: "Police Strobe"
+          colors:
+            - state: True
+              brightness: 100%
+              red: 0%
+              green: 0%
+              blue: 100%
+              duration: 500ms
+            - state: True
+              brightness: 100%
+              red: 100%
+              green: 0%
+              blue: 0%
+              duration: 500ms
+      - flicker:
+
+sm2135:
+  data_pin: D16
+  clock_pin: D17
+  rgb_current: 20mA
+  cw_current: 60mA
+
+output:
+  - platform: sm2135
+    id: output_red
+    channel: 2
+    max_power: 1
+  - platform: sm2135
+    id: output_green
+    channel: 0
+    max_power: 1
+  - platform: sm2135
+    id: output_blue
+    channel: 1
+    max_power: 1
+  - platform: sm2135
+    id: output_white
+    channel: 3
+    max_power: 1
+    min_power: 0.01
+    zero_means_zero: true
+  - platform: sm2135
+    id: output_warmwhite
+    channel: 4
+    max_power: 1
+    min_power: 0.01
+    zero_means_zero: true

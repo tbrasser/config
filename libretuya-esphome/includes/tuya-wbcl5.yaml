@@ -1,0 +1,6 @@
+libretuya:
+  board: generic-bk7231t-qfn32-tuya
+  framework:
+    version: dev
+captive_portal:
+web_server:

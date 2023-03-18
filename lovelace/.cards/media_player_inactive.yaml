@@ -1,0 +1,27 @@
+# lovelace_gen
+
+type: conditional
+conditions:
+  - entity: "{{ entity }}"
+    state_not: playing
+  - entity: "{{ entity }}"
+    state_not: buffering
+  - entity: "{{ entity }}"
+    state_not: paused
+card:
+  type: custom:mushroom-media-player-card
+  entity: "{{ entity }}"
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.popup
+      data:
+        title: ' '
+        size: normal
+        style: |
+          --popup-min-width: 180px;
+          --popup-max-width: 600px; 
+        content:
+          - name: Media
+            selector:
+              media:

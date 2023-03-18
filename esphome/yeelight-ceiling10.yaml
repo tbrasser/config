@@ -1,6 +1,0 @@
-substitutions:
-  location: diningroom
-
-packages:
-  defaults: !include includes/defaults.yaml
-  device:   !include includes/ceiling10.yaml

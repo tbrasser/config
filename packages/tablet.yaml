@@ -1,6 +1,0 @@
-template:
-  - binary_sensor:
-      - name: "sense tablet1"
-        state: '{{ is_state("switch.tablet1_screensaver", "off") }}' 
-        device_class: motion
-        unique_id: sense_tablet1

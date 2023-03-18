@@ -21,27 +21,28 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.front_door_ding
+    - binary_sensor.front_door_ding_2
     to: 'on'
   - platform: state
     entity_id:
-    - binary_sensor.front_door_ding_2
+    - binary_sensor.front_door_ding
     to: 'on'
   - type: running
     platform: device
     device_id: 59c86400590de25e456588a86b8e5ae5
-    entity_id: binary_sensor.doorbell_downstairs_knop
+    entity_id: binary_sensor.doorbell_downstairs_drukker
     domain: binary_sensor
   action:
   - parallel:
     - type: turn_on
       device_id: 59c86400590de25e456588a86b8e5ae5
-      entity_id: switch.doorbell_downstairs
+      entity_id: switch.doorbell_downstairs_gong
       domain: switch
     - service: tts.cloud_say
       data:
         entity_id: media_player.area_aware_media_player
         message: 'Someone at the door! '
+        cache: false
   - delay:
       hours: 0
       minutes: 0
@@ -49,16 +50,17 @@
       milliseconds: 0
   - type: turn_off
     device_id: 59c86400590de25e456588a86b8e5ae5
-    entity_id: switch.doorbell_downstairs
+    entity_id: switch.doorbell_downstairs_gong
     domain: switch
   mode: single
+  max_exceeded: silent
 - id: '1653461112548'
   alias: Deurbel Notificatie Thomas
   use_blueprint:
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
-      doorbell_button: siren.doorbell_downstairs
+      doorbell_button: siren.gong
       doorbell_cam: camera.front_door_snapshot
       notify_dev: notify.mobile_app_thomas_phone
       uri_: /lovelace/security
@@ -68,7 +70,7 @@
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
-      doorbell_button: siren.doorbell_downstairs
+      doorbell_button: siren.gong
       doorbell_cam: camera.front_door_snapshot
       notify_dev: notify.mobile_app_frederieke_iphone
       uri_: /lovelace/security
@@ -77,23 +79,22 @@
   description: ''
   trigger:
   - platform: device
+    type: turned_off
     device_id: bcac3f1fabdc32d269b104756263537f
-    domain: select
-    entity_id: select.diningroom_hub_activities
-    type: current_option_changed
-    to: PowerOff
+    entity_id: remote.eetkamer_harmony_hub
+    domain: remote
   action:
   - service: media_player.media_stop
     data: {}
     target:
       entity_id:
       - media_player.eetkamer
-      - media_player.android_tv_10_9_8_92
-      - media_player.eetkamer_2
+      - media_player.eetkamer_jellyfin
+      - media_player.eetkamer_cast
   mode: single
 - id: '1657483816969'
-  alias: 'Sleep mode off - Adaptive lights '
-  description: ''
+  alias: Verlichting uit sleep mode
+  description: Haal de verlichting uit sleep mode als sleep mode uit gaat
   trigger:
   - platform: state
     entity_id:
@@ -115,6 +116,12 @@
       - switch.adaptive_lighting_sleep_mode_woonkamer_plafond
       - switch.adaptive_lighting_sleep_mode_lsc_plafondlampen
       - switch.adaptive_lighting_sleep_mode_woonkamer_bureaulamp
+      - switch.adaptive_lighting_sleep_mode_inloopkast_ledstrip
+      - switch.adaptive_lighting_sleep_mode_eetkamer_bank_plafond
+      - switch.adaptive_lighting_sleep_mode_eetkamer_burealamp
+      - switch.adaptive_lighting_sleep_mode_eetkamer_ceiling10_fel
+      - switch.adaptive_lighting_sleep_mode_eetkamer_kamerlamp
+      - switch.adaptive_lighting_sleep_mode_eetkamer_ceil
   mode: single
 - id: '1663018175468'
   alias: Buiten verlichting
@@ -141,6 +148,7 @@
           entity_id:
           - light.tuin_lampjes
           - light.tuin_strip
+          - light.lsc_stringlight_ww
     - conditions:
       - condition: trigger
         id: sunset
@@ -151,15 +159,8 @@
           entity_id:
           - light.tuin_lampjes
           - light.tuin_strip
+          - light.lsc_stringlight_ww
   mode: single
-- id: '1666214262547'
-  alias: Wallpanel Battery Management Woonkamer
-  description: ''
-  use_blueprint:
-    path: seamus65/wallpanel-battery-management.yaml
-    input:
-      battery: sensor.tablet2_battery_level
-      charger: switch.powerstrip_livingroom_socket_2
 - id: '1666218976691'
   alias: Cast to Google Hub Bijkeuken
   description: ''
@@ -219,13 +220,13 @@
     from: 'off'
   condition:
   - condition: state
-    entity_id: fan.badkamer_ventilatie
+    entity_id: fan.relais
     state: 'off'
   action:
   - service: fan.turn_on
     data: {}
     target:
-      entity_id: fan.badkamer_ventilatie
+      entity_id: fan.relais
   mode: single
 - id: '1669029776875'
   alias: Turn Bathroom fan off when humidity < 70 and light is off
@@ -251,7 +252,7 @@
   - service: fan.turn_off
     data: {}
     target:
-      entity_id: fan.badkamer_ventilatie
+      entity_id: fan.relais
   mode: single
 - id: '1669029958958'
   alias: Bathroom switch toggle light
@@ -259,7 +260,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.shelly_1_bathroom
+    - binary_sensor.shelly_1_bathroom_schakelaar
     from: 'off'
     to: 'on'
   condition: []
@@ -268,7 +269,7 @@
     data: {}
     target:
       entity_id:
-      - light.shelly_1l_bathroom
+      - light.shelly_1l_bathroom_lamp
       - light.badkamer
   mode: single
 - id: '1669125280981'
@@ -370,10 +371,17 @@
   alias: 'Laad Tablets starturl als home assistant opstart '
   description: ''
   trigger:
+  - platform: event
+    event_type: homeassistant_started
   - platform: homeassistant
     event: start
   condition: []
   action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 25
+      milliseconds: 0
   - service: button.press
     data: {}
     target:
@@ -388,7 +396,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.shelly_1_bathroom
+    - binary_sensor.shelly_1_bathroom_schakelaar
     from: 'on'
     to: 'off'
   condition: []
@@ -397,12 +405,13 @@
     data: {}
     target:
       entity_id:
-      - light.shelly_1l_bathroom
+      - light.shelly_1l_bathroom_lamp
       - light.badkamer
   mode: single
 - id: '1670252084636'
-  alias: Sleep mode - Adaptive Lights
-  description: ''
+  alias: Verlichting in sleep mode
+  description: Als Sleep mode aan gaat, zet dan alle lampen op sleep mode (via adaptive
+    lighting op dit moment)
   trigger:
   - platform: state
     entity_id:
@@ -424,6 +433,12 @@
       - switch.adaptive_lighting_sleep_mode_woonkamer_plafond
       - switch.adaptive_lighting_sleep_mode_lsc_plafondlampen
       - switch.adaptive_lighting_sleep_mode_woonkamer_bureaulamp
+      - switch.adaptive_lighting_sleep_mode_inloopkast_ledstrip
+      - switch.adaptive_lighting_sleep_mode_eetkamer_bank_plafond
+      - switch.adaptive_lighting_sleep_mode_eetkamer_burealamp
+      - switch.adaptive_lighting_sleep_mode_eetkamer_kamerlamp
+      - switch.adaptive_lighting_sleep_mode_eetkamer_ceiling10_fel
+      - switch.adaptive_lighting_sleep_mode_eetkamer_ceil
   mode: single
 - id: '1670352454062'
   alias: Radio in de badkamer
@@ -431,34 +446,22 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.shelly_1_bathroom
+    - binary_sensor.shelly_1_bathroom_schakelaar
     from: 'off'
     to: 'on'
-  condition:
-  - condition: device
-    device_id: 86151ac1fa087569a557b7dd64b6d087
-    domain: media_player
-    entity_id: media_player.mass_badkamer
-    type: is_off
+  condition: []
   action:
-  - service: media_player.volume_set
+  - service: spotcast.start
     data:
-      volume_level: 0.35
-    target:
-      entity_id: media_player.mass_badkamer
-  - service: media_player.shuffle_set
-    data:
+      force_playback: true
+      random_song: true
       shuffle: true
-    target:
-      entity_id: media_player.mass_badkamer
-  - service: mass.queue_command
-    data:
-      radio_mode: true
-      enqueue_mode: replace
-      command: play_media
-      uri: 60’s & 70’s
-    target:
-      entity_id: media_player.mass_badkamer
+      start_volume: 35
+      entity_id: media_player.badkamer
+      limit: 20
+      repeat: context
+      offset: 1
+      ignore_fully_played: false
   mode: single
 - id: '1670354036232'
   alias: 'Stop badkamer muziek als schakelaar uitgaat '
@@ -466,7 +469,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.shelly_1_bathroom
+    - binary_sensor.shelly_1_bathroom_schakelaar
     from: 'on'
     to: 'off'
     for:
@@ -478,5 +481,77 @@
   - service: media_player.turn_off
     data: {}
     target:
-      entity_id: media_player.mass_badkamer
+      entity_id:
+      - media_player.badkamer
+  mode: single
+- id: '1673860979697'
+  alias: 'Badkamer media uitschakelen als pauze '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.badkamer
+    from: playing
+    to: paused
+  condition:
+  - condition: state
+    entity_id: automation.automatisch_muziek_tijdens_het_kakken
+    state: 'on'
+  action:
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id:
+      - media_player.badkamer
+  mode: single
+- id: '1673954749740'
+  alias: 'Fontein beneden uit als Sleep mode aan gaat '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.sleep_mode
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.fontein_power
+  mode: single
+- id: '1673954786431'
+  alias: 'Fontein beneden aan als Sleep mode uit gaat '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.sleep_mode
+    to: 'off'
+    from: 'on'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.fontein_power
+  mode: single
+- id: '1677082011846'
+  alias: 'Notify Thomas als main internet eruit ligt '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.router_gateway_wan_dhcp_status
+    from: Online
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_thomas_phone
+    data:
+      message: 'Glasvezel stukkie, notifying from mobile backup! '
+      title: 'Joe! '
   mode: single

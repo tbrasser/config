@@ -10,12 +10,13 @@
 !scenes.yaml
 !customize.yaml
 !groups.yaml
+!animated_background.yaml
 
 # Add esphome
-!esphome/
-!esphome/*.yaml
-!esphome/includes/
-!esphome/includes/*.yaml
+!libretuya-esphome/
+!libretuya-esphome/*.yaml
+!libretuya-esphome/includes/
+!libretuya-esphome/includes/*.yaml
 
 # Add packages
 !packages/
@@ -26,10 +27,10 @@
 !resources.yaml
 !lovelace_rooms.yaml
 !lovelace_views.yaml
-!views/
-!views/*.yaml
-!views/.cards/
-!views/.cards/*.yaml
+!lovelace/
+!lovelace/*.yaml
+!lovelace/.cards/
+!lovelace/.cards/*.yaml
 !themes/
 !themes/transparent.yaml
 
@@ -44,3 +45,12 @@
 !blueprints/automation/**/*.yaml
 !blueprints/script/
 !blueprints/script/**/*.yaml
+
+# Add www
+!www/
+!www/style.css
+!www/style.js
+!www/images/
+!www/images/wallpapers/
+!www/images/wallpapers/*.png
+!www/images/wallpapers/*.jpg

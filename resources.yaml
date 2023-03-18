@@ -2,6 +2,8 @@
   type: module
 - url: /local/style.css
   type: css
+- url: /local/style.js?v=1337
+  type: module
 # HACS
 - url: /hacsfiles/lovelace-more-info-card/more-info-card.js
   type: module
@@ -13,7 +15,7 @@
   type: module
 - url: /hacsfiles/clock-weather-card/clock-weather-card.js
   type: module
-- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=4
+- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=1338
   type: module
 - url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js
   type: module
@@ -23,6 +25,8 @@
   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
 - type: module
   url: /hacsfiles/kiosk-mode/kiosk-mode.js
+- url: /hacsfiles/hass-swipe-navigation/swipe-navigation.js
+  type: module
 - type: module
   url: /hacsfiles/hass-hue-icons/hass-hue-icons.js
 - type: module
@@ -44,8 +48,6 @@
 - type: module
   url: /hacsfiles/bar-card/bar-card.js
 - type: module
-  url: /hacsfiles/check-button-card/check-button-card.js
-- type: module
   url: /hacsfiles/config-editor-card/config-editor-card.js
 - type: module
   url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js
@@ -59,8 +61,6 @@
   url: /hacsfiles/lovelace-card-tools/card-tools.js
 - type: module
   url: /hacsfiles/lovelace-layout-card/layout-card.js
-# - type: module
-#   url: /hacsfiles/button-card/button-card.js
 - type: module
   url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
 - type: module
@@ -69,6 +69,9 @@
   url: /hacsfiles/light-entity-card/light-entity-card.js
 - type: module
   url: /hacsfiles/scheduler-card/scheduler-card.js
+# custom components
+- type: module
+  url: /webrtc/webrtc-camera.js
 # FONTS
 - url: "https://fonts.googleapis.com/css?family=DM Sans"
   type: css

@@ -9,7 +9,36 @@ sensor:
       - time_date
       - time_utc
       - beat
-
+  - platform: template
+    sensors:
+      dagdeel:
+        value_template: >
+          {% set state = states('sensor.time') %}
+          {% if '00:00' <= state < '02:00' %}
+            nacht-begin
+          {% elif '02:00' <= state < '04:00' %}
+            nacht-mid
+          {% elif '04:00' <= state < '06:00' %}
+            nacht-eind
+          {% elif '06:00' <= state < '08:00' %}
+            ochtend-begin
+          {% elif '08:00' <= state < '10:00' %}
+            ochtend-mid
+          {% elif '10:00' <= state < '12:00' %}
+            ochtend-eind
+          {% elif '12:00' <= state < '14:00' %}
+            middag-begin
+          {% elif '14:00' <= state < '16:00' %}
+            middag-mid
+          {% elif '16:00' <= state < '18:00' %}
+            middag-eind
+          {% elif '18:00' <= state < '20:00' %}
+            avond-begin
+          {% elif '20:00' <= state < '22:00' %}
+            avond-mid
+          {% else %}
+            avond-eind
+          {% endif %} 
   # System Monitor
   - platform: systemmonitor
     resources:

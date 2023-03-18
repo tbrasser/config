@@ -1,0 +1,11 @@
+height: calc(100vh - 58px)
+margin: -58px 0 0 0 !important
+padding: 62px 0 0 0 !important
+reflow: true
+grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))
+grid-gap: 0
+grid-template-rows: masonry
+grid-auto-flow: dense
+place-content: start center
+place-items: start stretch
+grid-auto-rows: 1px
