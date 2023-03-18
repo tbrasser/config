@@ -21,6 +21,79 @@ Inspiration from:
 
 Currently in the midst of refactoring the lovelace_gen global vars in `lovelace_rooms.yaml`.
 
+## Walkthrough
+
+The main idea is that there is just a single dashboard, with 3 types of views:
+
+1. The main view in `lovelace/0_main.yaml`
+1. Per room from `lovelace_rooms.yaml` a view in `lovelace/rooms.yaml`
+1. Per view from 'lovelace_views.yaml' a subview in 'lovelace/views.yaml'
+
+The 'scaffolding' or build-up of each view is exactly the same:
+
+```yaml
+type: panel
+cards:
+  - type: custom:mod_card
+    card_mod:
+      class: invisible  # remove borders/background/corners/margin/padding
+      style: |
+        ha-card { <logic here for background based on entity_picture of media_player> }
+    card:
+      type: custom:state-switch
+      entity: mediaquery
+      states:
+        '(orientation: landscape)':
+          type: vertical-stack
+          cards:
+            - !include
+              - .cards/sticky.yaml
+              - view: <viewname>
+                position: both
+            - type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout: !include .cards/layout.yaml
+              cards: !include
+                - .cards/<viewname>.yaml
+                - orientation: landscape
+        `(orientation: portrait)':
+          type: vertical-stack
+          cards:
+            - !include
+              - .cards/sticky.yaml
+              - view: <viewname>
+                position: header
+            - type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout: !include .cards/layout.yaml
+              cards: !include
+                - .cards/<viewname>.yaml
+                - orientation: portrait
+            - !include
+              - .cards/sticky.yaml
+              - view: <viewname>
+                position: footer
+```
+
+### Lovelace_gen
+
+- `configuration.yaml`
+- `ui-lovelace.yaml`
+- `resources.yaml`
+- `lovelace_rooms.yaml`
+- `lovelace_views.yaml`
+- `lovelace/**/*`
+
+### Sticky bar(s)
+
+- `themes/transparent.yaml`
+- `lovelace/.cards/sticky.yaml`
+
+### Masonry for layout_card grid layout
+
+- `www/style.js`
+- `lovelace/.cards/layout.yaml`
+
 ## Some statistics about my installation:
 
 Description | value
