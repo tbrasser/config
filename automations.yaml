@@ -353,7 +353,7 @@
       sequence:
       - service: media_player.play_media
         target:
-          entity_id: media_player.amazon_fire_9th_gen
+          entity_id: media_player.tablet3
         data:
           media_content_id: media-source://media_source/local/Ring - Sonar.oga
           media_content_type: audio/ogg

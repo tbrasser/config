@@ -234,6 +234,8 @@
       icon_color: "{% if states(entity)|float < 75 %}green{% elif states(entity)|float < 100 %}yellow{% else %}red{% endif %}"
       multiline_secondary: false
       fill_container: true
+      tap_action:
+        action: more-info
     - entity: plant.rubberplant
       battery: sensor.plant_sensor_f5c0_battery
   plants:
@@ -273,6 +275,8 @@
       icon_color: "{% if states(entity)|float < 75 %}green{% elif states(entity)|float < 100 %}yellow{% else %}red{% endif %}"
       multiline_secondary: false
       fill_container: true
+      tap_action:
+        action: more-info
 - name: bar
   area: beneden
   icon: mdi:glass-cocktail

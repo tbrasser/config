@@ -5,6 +5,7 @@
   show_empty: false
   more_info_on_tap: true
   state_color: true
+  scrollbars_enabled: false
   entities:
     - binary_sensor.front_door_ding_2
     - binary_sensor.voordeur_contact
