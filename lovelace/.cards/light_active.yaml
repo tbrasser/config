@@ -10,16 +10,7 @@ card:
   show_entity_picture: false
   name: "{{ name }}"
   tap_action:
-    action: more-info #fire-dom-event
-    # browser_mod:
-    #   service: browser_mod.popup
-    #   data: !include
-    #     - popups/light.yaml
-    #     - entity: "{{ entity }}"
-    #       name: "{{ name }}"
-    #       type: "{{ type }}"
-    #       state: "on"
-    #       orientation: "{{ orientation }}"
+    action: more-info
 {% else %}
 view_layout:
   grid-column-end: span 2
@@ -29,16 +20,7 @@ card:
   name: "{{ name }}"
   features: [ type: "light-brightness" ]
   tap_action:
-    action: more-info #fire-dom-event
-    # browser_mod:
-    #   service: browser_mod.popup
-    #   data: !include
-    #     - popups/light.yaml
-    #     - entity: "{{ entity }}"
-    #       name: "{{ name }}"
-    #       type: "{{ type }}"
-    #       state: "on"
-    #       orientation: "{{ orientation }}"
+    action: more-info
   card_mod:
     style: |
       ha-card {

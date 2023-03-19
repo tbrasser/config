@@ -1,6 +1,11 @@
-# Welcome !
+# Welcome!
 
-This is my Home Assistant installation.
+This is my Home Automation Repository.
+Currently it represents the root of my home assistant installation.
+In the future this may be migrated from home assistant to home assistant core and seperate deployments on kubernetes.
+
+## Software
+
 It is built using the following components:
 
 - card_mod
@@ -21,7 +26,7 @@ Inspiration from:
 
 Currently in the midst of refactoring the lovelace_gen global vars in `lovelace_rooms.yaml`.
 
-## Walkthrough
+### Walkthrough
 
 The main idea is that there is just a single dashboard, with 3 types of views:
 
@@ -48,34 +53,32 @@ cards:
           cards:
             - !include
               - .cards/sticky.yaml
-              - view: <viewname>
+              - view: {{ view.name }}
                 position: both
             - type: custom:layout-card
               layout_type: custom:grid-layout
               layout: !include .cards/layout.yaml
-              cards: !include
-                - .cards/<viewname>.yaml
-                - orientation: landscape
-        `(orientation: portrait)':
+              cards:
+                - content here
+        '(orientation: portrait)':
           type: vertical-stack
           cards:
             - !include
               - .cards/sticky.yaml
-              - view: <viewname>
+              - view: {{ view.name }}
                 position: header
             - type: custom:layout-card
               layout_type: custom:grid-layout
               layout: !include .cards/layout.yaml
-              cards: !include
-                - .cards/<viewname>.yaml
-                - orientation: portrait
+              cards:
+                - content here
             - !include
               - .cards/sticky.yaml
-              - view: <viewname>
+              - view: {{ view.name }}
                 position: footer
 ```
 
-### Lovelace_gen
+#### Lovelace_gen
 
 - `configuration.yaml`
 - `ui-lovelace.yaml`
@@ -84,17 +87,17 @@ cards:
 - `lovelace_views.yaml`
 - `lovelace/**/*`
 
-### Sticky bar(s)
+#### Sticky bar(s)
 
 - `themes/transparent.yaml`
 - `lovelace/.cards/sticky.yaml`
 
-### Masonry for layout_card grid layout
+#### Masonry for layout_card grid layout
 
 - `www/style.js`
 - `lovelace/.cards/layout.yaml`
 
-## Some statistics about my installation:
+### Some statistics about my installation:
 
 Description | value
 -- | --
@@ -102,9 +105,9 @@ Number of entities | 1721
 Number of sensors | 747
 
 
-## My installed extensions:
+### My installed extensions:
 
-### Add-ons
+#### Add-ons
 - AppDaemon
 - Cloudflared
 - Frigate (Full Access) Beta (0.12.0)

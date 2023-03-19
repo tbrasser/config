@@ -15,11 +15,7 @@
   view_layout:
     grid-column-end: span 2
   card:
-    type: custom:layout-card
-    layout_type: custom:grid-layout
-    view_layout:
-      grid-template-columns: subgrid
-      grid-template-rows: subgrid
+    type: vertical-stack
   card_param: cards
   filter:
     include:

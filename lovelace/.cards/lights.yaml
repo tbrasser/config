@@ -7,19 +7,10 @@
   - entity: {{ card.entity }}
     name: {{ room.name|capitalize }} {{ card.name|capitalize }}
     type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-    media: {{ room.media }}
-    room: {{ room.name }}
-    view: lights
-    orientation: {{ orientation }}
 - !include
   - light_inactive.yaml
   - entity: {{ card.entity }}
     name: {{ room.name|capitalize }} {{ card.name|capitalize }}
-    type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-    media: {{ room.media }}
-    room: {{ room.name }}
-    view: lights
-    orientation: {{ orientation }}
 {% endif %}
 {% endfor %}
 {% endfor %}

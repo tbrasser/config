@@ -6,9 +6,6 @@
   - plant.yaml
   - entity: {{ card.entity }}
     battery: {{ card.battery }}
-    media: {{ room.media }}
-    room: {{ room.name }}
-    view: plants
 {% endif %}
 {% endfor %}
 {% endfor %}

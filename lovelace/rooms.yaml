@@ -59,26 +59,19 @@
                       features:
                         - type: vacuum-commands
                           commands: [start_pause, stop, clean_spot, locate, return_home]
-                  {% if "lights" in room %}
-                  {% for light in room.lights %}
+                  {% for card in room.cards if 'cards' in room %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'light' %}
                   - !include
                     - .cards/light_active.yaml
-                    - entity: {{ light.entity }}
-                      name: {{ light.name|capitalize }}
-                      type: {{ light.type }}
-                      media: {{ room.media }}
-                      view: {{ room.name }}
-                      orientation: landscape
+                    - entity: {{ card.entity }}
+                      name: {{ card.name|capitalize }}
+                      type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
                   - !include
                     - .cards/light_inactive.yaml
-                    - entity: {{ light.entity }}
-                      name: {{ light.name|capitalize }}
-                      type: {{ light.type }}
-                      media: {{ room.media }}
-                      view: {{ room.name }}
-                      orientation: landscape
-                  {% endfor %}
+                    - entity: {{ card.entity }}
+                      name: {{ card.name|capitalize }}
                   {% endif %}
+                  {% endfor %}
                   {% if "devices" in room %}
                   {% for device in room.devices %}
                   - {% for key in device|list %}
@@ -86,17 +79,14 @@
                     {% endfor %}
                   {% endfor %}
                   {% endif %}
-                  {% if "plants" in room %}
-                  {% for plant in room.plants %}
+                  {% for card in room.cards if 'cards' in room %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'plant' %}
                   - !include
                     - .cards/plant.yaml
-                    - entity: {{ plant.entity }}
-                      battery: {{ plant.battery }}
-                      media: {{ room.media }}
-                      room: {{ room.name }}
-                      view: {{ room.name }}
-                  {% endfor %}
+                    - entity: {{ card.entity }}
+                      battery: {{ card.battery }}
                   {% endif %}
+                  {% endfor %}
           '(orientation: portrait)':
             type: vertical-stack
             cards:
@@ -106,7 +96,7 @@
                   position: header
               - type: conditional
                 conditions:
-                  - entity: "binary_sensor.area_{{ room.name }}"
+                  - entity: binary_sensor.area_{{ room.name }}
                     state_not: "on"
                 card:
                   type: custom:mushroom-title-card
@@ -118,7 +108,7 @@
                       service: browser_mod.popup
                       data: !include
                         - .cards/popups/room.yaml
-                        - room: "{{ room.name }}"
+                        - room: {{ room.name }}
                   card_mod:
                     style:
                       mushroom-title-card$: |
@@ -159,26 +149,19 @@
                       features:
                         - type: vacuum-commands
                           commands: [start_pause, stop, clean_spot, locate, return_home]
-                  {% if "lights" in room %}
-                  {% for light in room.lights %}
+                  {% for card in room.cards if 'cards' in room %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'light' %}
                   - !include
                     - .cards/light_active.yaml
-                    - entity: {{ light.entity }}
-                      name: {{ light.name|capitalize }}
-                      type: {{ light.type }}
-                      media: {{ room.media }}
-                      view: {{ room.name }}
-                      orientation: portrait
+                    - entity: {{ card.entity }}
+                      name: {{ card.name|capitalize }}
+                      type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
                   - !include
                     - .cards/light_inactive.yaml
-                    - entity: {{ light.entity }}
-                      name: {{ light.name|capitalize }}
-                      type: {{ light.type }}
-                      media: {{ room.media }}
-                      view: {{ room.name }}
-                      orientation: portrait
-                  {% endfor %}
+                    - entity: {{ card.entity }}
+                      name: {{ card.name|capitalize }}
                   {% endif %}
+                  {% endfor %}
                   {% if "devices" in room %}
                   {% for device in room.devices %}
                   - {% for key in device|list %}
@@ -186,17 +169,14 @@
                     {% endfor %}
                   {% endfor %}
                   {% endif %}
-                  {% if "plants" in room %}
-                  {% for plant in room.plants %}
+                  {% for card in room.cards if 'cards' in room %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'plant' %}
                   - !include
                     - .cards/plant.yaml
-                    - entity: {{ plant.entity }}
-                      battery: {{ plant.battery }}
-                      media: {{ room.media }}
-                      room: {{ room.name }}
-                      view: {{ room.name }}
-                  {% endfor %}
+                    - entity: {{ card.entity }}
+                      battery: {{ card.battery }}
                   {% endif %}
+                  {% endfor %}
               - !include
                 - .cards/sticky.yaml
                 - view: {{ room.name }}

@@ -52,25 +52,6 @@
       dagen: 30
       confirmation:
         text: Filters schoon?
-  plants:
-    - entity: plant.pannenkoekenplant
-      battery: sensor.plant_sensor_f38a_battery
-  lights:
-    - entity: light.lsc_g125_gold
-      name: Plafond
-      type: cct
-    - entity: light.woonkamer_tafeltje
-      name: Tafeltje
-      type: cct
-    - entity: light.glitterlamp
-      name: Glitterlamp
-      type: onoff
-    - entity: light.candle_gold_2
-      name: Bureaulamp
-      type: cct
-    - entity: light.magic_digital_strip
-      name: Washok
-      type: dimmable
   devices:
     - type: tile
       entity: switch.ps5_606_power
@@ -202,7 +183,8 @@
       card_mod:
         class: reminder
 - name: eetkamer
-  area: boven
+  areas:
+    - eetkamer
   icon: hue:room-dining
   media: media_player.eetkamer
   color: orange
@@ -238,34 +220,6 @@
         action: more-info
     - entity: plant.rubberplant
       battery: sensor.plant_sensor_f5c0_battery
-  plants:
-    - entity: plant.rubberplant
-      battery: sensor.plant_sensor_f5c0_battery
-  lights:
-    - entity: light.diningroom_ceiling10_ceiling_light
-      name: Tafel Fel
-      type: cct
-    - entity: light.diningroom_ceiling10_night_light
-      name: Tafel Dim
-      type: dimmable
-    - entity: light.diningroom_ceiling10_ambient_light
-      name: Plafond Sfeer
-      type: rgb
-    - entity: light.sofa
-      name: Bank Plafond
-      type: cct
-    - entity: light.stopcontact_2
-      name: Staande Lamp
-      type: onoff
-    - entity: light.eetkamer_kamerlamp
-      name: Kamerlamp
-      type: cct
-    - entity: light.stopcontact_4
-      name: Lavalamp
-      type: onoff
-    - entity: light.leeshoek
-      name: Bank Tafeltje
-      type: cct
   devices:
     - type: custom:mushroom-template-card
       primary: Fijnstof
@@ -278,7 +232,8 @@
       tap_action:
         action: more-info
 - name: bar
-  area: beneden
+  areas:
+    - bar
   icon: mdi:glass-cocktail
   color: lime
   cards:
@@ -289,12 +244,9 @@
   devices:
     - type: tile
       entity: switch.fontein_power
-  lights:
-    - entity: light.bar_ceiling
-      name: Plafond
-      type: cct
 - name: keuken
-  area: boven
+  areas:
+    - keuken
   icon: hue:room-kitchen
   color: yellow
   media: media_player.keuken
@@ -325,18 +277,6 @@
       battery: sensor.plant_sensor_b2f8_battery
     - entity: plant.laurier
       battery: sensor.plant_sensor_1455_battery
-  plants:
-    - entity: plant.basilicum
-      battery: sensor.plant_sensor_b2f8_battery
-    - entity: plant.laurier
-      battery: sensor.plant_sensor_1455_battery
-  lights:
-    - entity: light.ceiling_lsc_kitchen_light
-      name: Plafond
-      type: cct
-    - entity: light.afzuigkap
-      name: Afzuigkap
-      type: cct
   devices:
     - type: custom:mushroom-template-card
       icon: phu:litterbox
@@ -417,7 +357,7 @@
               background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
             }
 - name: gang
-  area: beide
+  areas: []
   color: light-blue
   icon: hue:room-hallway
   cards:
@@ -425,30 +365,23 @@
       name: Boven
     - entity: light.hallway_downstairs
       name: Beneden
-  lights:
-    - entity: light.hallway_upstairs
-      name: Boven
-      type: dimmable
-    - entity: light.hallway_downstairs
-      name: Beneden
-      type: cct
 - name: opslag
   icon: hue:room-storage
   color: pink
-  area: boven
+  areas:
+    - opslag
+#    - bijkeuken
   media: media_player.opslag
   cards:
     - entity: media_player.opslag
     - entity: light.ceiling_lsc_storage_light
       name: Plafond
-  lights:
-    - entity: light.ceiling_lsc_storage_light
-      name: Plafond
-      type: cct
 - name: slaapkamer
   icon: hue:room-bedroom
   color: purple
-  area: beneden
+  areas:
+    - slaapkamer
+    - inloopkast
   media: media_player.slaapkamer
   cards:
     - entity: media_player.slaapkamer
@@ -460,23 +393,11 @@
       name: Inloopkast
     - entity: light.tradfri_driver
       name: Kledingrek
-  lights:
-    - entity: light.slaapkamer_plafond
-      name: Plafond
-      type: cct
-    - entity: light.nachtkastje
-      name: Nachtkastje
-      type: cct
-    - entity: light.walk_in_closet
-      name: Inloopkast
-      type: cct
-    - entity: light.tradfri_driver
-      name: Kledingrek
-      type: dimmable
 - name: kantoor
   icon: hue:room-office
   color: light-blue
-  area: boven
+  areas:
+    - kantoor
   cards:
     - entity: light.ceiling_lsc_office_light
       name: Plafond
@@ -488,16 +409,6 @@
       entity: sensor.hp_envy_pro_6400_series
     - entity: plant.pannenkoekenplant_2
       battery: sensor.plant_sensor_1283_battery
-  plants:
-    - entity: plant.pannenkoekenplant_2
-      battery: sensor.plant_sensor_1283_battery
-  lights:
-    - entity: light.ceiling_lsc_office_light
-      name: Plafond
-      type: cct
-    - entity: light.bureaulamp_kantoor
-      name: Bureau
-      type: cct
   devices:
     - type: tile
       entity: sensor.octoprint_current_state
@@ -506,23 +417,18 @@
 - name: toilet
   icon: hue:room-toilet
   color: brown
-  area: beneden
+  areas:
+    - toilet
   cards:
     - entity: light.bathroom_downstairs
       name: Plafond
     - entity: plant.kerstcactus
       battery: sensor.plant_sensor_f391_battery
-  plants:
-    - entity: plant.kerstcactus
-      battery: sensor.plant_sensor_f391_battery
-  lights:
-    - entity: light.bathroom_downstairs
-      name: Plafond
-      type: cct
 - name: badkamer
   icon: hue:room-bathroom
   color: blue
-  area: boven
+  areas:
+    - badkamer
   media: media_player.badkamer
   cards:
     - entity: media_player.badkamer
@@ -535,13 +441,6 @@
       entity: binary_sensor.shower_in_use
     - type: tile
       entity: fan.relais
-  lights:
-    - entity: light.badkamer
-      name: Plafond
-      type: cct
-    - entity: light.shelly_1l_bathroom_lamp
-      name: Spiegel
-      type: onoff
   devices:
     - type: tile
       entity: binary_sensor.shower_in_use
@@ -550,41 +449,33 @@
 - name: tuin
   icon: phu:garden
   color: teal
-  area: buiten
+  areas:
+    - tuin
   cards:
     - entity: light.tuin_lampjes
       name: Lampjes
       type: onoff
     - entity: light.tuin_strip
       name: Ledstrip
-  lights:
-    - entity: light.tuin_lampjes
-      name: Lampjes
-      type: onoff
-    - entity: light.tuin_strip
-      name: Ledstrip
-      type: rgb
 - name: voortuin
   icon: phu:driveway
   color: teal
-  area:
+  areas:
+    - voortuin
   cards:
     - entity: light.lsc_stringlight_ww
       name: Verlichting
       type: onoff
     - type: tile
       entity: binary_sensor.front_door_ding_2
-  lights:
-    - entity: light.lsc_stringlight_ww
-      name: Verlichting
-      type: onoff
   devices:
     - type: tile
       entity: binary_sensor.front_door_ding_2
 - name: trap
   icon: hue:room-stairs
   color: amber
-  area: beide
+  areas:
+    - trap
   cards:
     - entity: light.trap_boven
       name: Boven
@@ -592,13 +483,3 @@
       entity: light.trap_beneden
     - entity: plant.yucca
       battery: sensor.plant_sensor_f56c_battery
-  plants:
-    - entity: plant.yucca
-      battery: sensor.plant_sensor_f56c_battery
-  lights:
-    - entity: light.trap_boven
-      name: Boven
-      type: cct
-    - name: Beneden
-      entity: light.trap_beneden
-      type: cct
