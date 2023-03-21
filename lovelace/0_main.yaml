@@ -38,6 +38,8 @@
                     conditions:
                       - entity: vacuum.winston
                         state_not: docked
+                      - entity: vacuum.winston
+                        state_not: unavailable
                     card:
                       type: tile
                       entity: vacuum.winston
@@ -175,6 +177,8 @@
                     conditions:
                       - entity: vacuum.winston
                         state_not: docked
+                      - entity: vacuum.winston
+                        state_not: unavailable
                     card:
                       type: tile
                       entity: vacuum.winston

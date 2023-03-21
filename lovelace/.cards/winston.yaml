@@ -19,3 +19,17 @@
     - entity: sensor.winston_floor
       state: unavailable
   card: !include winston_badkamers.yaml
+- type: tile
+  entity: sensor.winston_filter_left
+- type: tile
+  entity: sensor.winston_main_brush_left
+- type: tile
+  entity: sensor.winston_side_brush_left
+- type: tile 
+  entity: sensor.winston_sensor_dirty_left
+- type: tile
+  entity: binary_sensor.winston_mop_attached
+- type: tile
+  entity: binary_sensor.winston_water_box_attached
+- type: tile
+  entity: binary_sensor.winston_water_shortage

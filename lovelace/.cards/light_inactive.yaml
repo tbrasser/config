@@ -13,6 +13,10 @@ card:
   card_mod:
     style:
       ha-tile-info$: |
+        span.secondary {
+          display: none;
+        } 
         span.primary {
+          font-weight: 600;
           white-space: normal;
         }

@@ -11,6 +11,17 @@ card:
   name: "{{ name }}"
   tap_action:
     action: more-info
+  card_mod:
+    style:
+      ha-tile-info$: |
+        span.secondary {
+          display: none;
+        } 
+        span.primary {
+          font-weight: 600;
+          white-space: normal;
+        }
+
 {% else %}
 view_layout:
   grid-column-end: span 2
@@ -22,21 +33,30 @@ card:
   tap_action:
     action: more-info
   card_mod:
-    style: |
-      ha-card {
-        {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
-        {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
-        {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
-        box-shadow: none;
-        --primary-text-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }});
-        --secondary-text-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.5);
-        background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
-      }
-      ha-tile-icon {
-        {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
-        {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
-        {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
-        --icon-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }}) !important;
-        --shape-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.2) !important;
-      }
+    style:
+      ha-tile-info$: |
+        span.secondary {
+          font-weight: 600;
+        } 
+        span.primary {
+          font-weight: 600;
+        }
+      .: |
+        ha-card {
+          {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
+          {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
+          {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
+          box-shadow: none;
+          --primary-text-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }});
+          --secondary-text-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.5);
+          background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
+        }
+        ha-tile-icon {
+          {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
+          {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
+          {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
+          --icon-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }}) !important;
+          --shape-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.2) !important;
+        }
+
 {% endif %}

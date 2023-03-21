@@ -9,19 +9,14 @@ conditions:
   - entity: "{{ entity }}"
     state_not: paused
 card:
-  type: custom:mushroom-media-player-card
+  type: tile
   entity: "{{ entity }}"
-  tap_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.popup
-      data:
-        title: ' '
-        size: normal
-        style: |
-          --popup-min-width: 180px;
-          --popup-max-width: 600px; 
-        content:
-          - name: Media
-            selector:
-              media:
+  card_mod:
+    style:
+      ha-tile-info$: |
+        span.secondary {
+          display: none;
+        } 
+        span.primary {
+          white-space: normal;
+        }

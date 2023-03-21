@@ -69,6 +69,7 @@
   camera_image: camera.tablet2
   camera_view: live
   name: Tablet 2
+  aspect_ratio: 4x3
   view_layout:
     grid-column-end: span 2
   tap_action:

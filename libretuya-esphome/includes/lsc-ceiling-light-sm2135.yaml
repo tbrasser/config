@@ -5,6 +5,11 @@ esphome:
   name: ${location}-${name}
   friendly_name: "${name} ${location}"
 
+external_components:
+  - source: github://pr#3850
+    components: [sm2135]
+    refresh: 10 min
+
 light:
   - platform: rgbww
     name: Light

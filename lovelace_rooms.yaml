@@ -13,19 +13,17 @@
 #       battery: sensor.myplant_battery  # optional
 #     - entity: light.mylight
 #       name: My light  # 'short/friendly name', will be prefixed with room name when away from the room view
+#       [type: onoff]   # Lights that only can be toggled don't need a lot of space
 #     - entity: input_datetime.mytimer
-#       dagen: 4        # interval in days
+#       days: 4        # interval in days
 #       confirmation:   # follows browser_mod popup confirmation scheme :)
 #         text: Have you really done the thing?
-#     - entity: my-entity
-#       type: [washer]     # compatibility:  washer: sensor of lg washing machine
 #     - entity: sensor.somesensor  # all other domains will be inserted as-is
 #       type: tile
 #       #
 - name: woonkamer
   icon: hue:room-living
   color: red
-  media: media_player.woonkamer
   areas:
     - woonkamer
     - waskhok
@@ -46,22 +44,51 @@
       battery: sensor.plant_sensor_f38a_battery
     - type: tile
       entity: switch.ps5_606_power
-    - entity: sensor.washer
-      type: washer
+    # - entity: sensor.washer
+    #   type: washer
     - entity: input_datetime.droger
-      dagen: 30
+      days: 30
       confirmation:
         text: Filters schoon?
-  devices:
-    - type: tile
-      entity: switch.ps5_606_power
     - type: conditional
       conditions:
         - entity: sensor.washer
           state: "off"
       card:
-        type: tile
-        entity: sensor.washer
+        type: custom:mushroom-template-card
+        icon_color: grey
+        primary: "{{ state_attr(entity, 'friendly_name') }}"
+        secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
+        entity: input_datetime.wasmachine
+        badge_color: orange
+        icon: "{{ state_attr(entity, 'icon') }}"
+        hold_action:
+          action: more-info
+        tap_action:
+          action: call-service
+          service: script.reset_reminder
+          data:
+            dagen: 30
+          target:
+            entity_id: input_datetime.wasmachine
+          confirmation:
+            text: Filters en Bakjes Schoon?
+        badge_icon: "{% if as_timestamp(now()) > as_timestamp(states(config.entity)) %}mdi:exclamation-thick{% endif %}"
+        card_mod:
+          class: reminder
+          style:
+            mushroom-shape-icon$: |
+              .shape {
+                background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 30) }}% 0%, var(--card-background-color) 0% 100%);
+              }
+              .shape:after {
+                content: "";
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
+              }
     - type: conditional
       view_layout:
         grid-column-end: span 2
@@ -156,37 +183,10 @@
               left: 95%
               top: 74%
               transform: "translate(-100%,-50%)"
-    - type: custom:mushroom-template-card
-      icon: mdi:tumble-dryer
-      primary: Droger
-      icon_color: grey
-      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
-      entity: input_datetime.droger
-      badge_color: red
-      hold_action:
-        action: more-info
-      tap_action:
-        action: call-service
-        service: script.reset_reminder
-        data:
-          dagen: 30
-        target:
-          entity_id: input_datetime.droger
-        confirmation:
-          text: Filters schoon?
-      badge_icon: |-
-        {%- set event = as_timestamp(states(config.entity)) %}
-        {%- set now = as_timestamp(now()) %}
-        {% if (now) > (event) %}
-        mdi:exclamation-thick
-        {% endif %}
-      card_mod:
-        class: reminder
 - name: eetkamer
   areas:
     - eetkamer
   icon: hue:room-dining
-  media: media_player.eetkamer
   color: orange
   cards:
     - entity: media_player.eetkamer
@@ -207,7 +207,7 @@
       name: Lavalamp
       type: onoff
     - entity: light.leeshoek
-      name: Bank Tafeltje
+      name: Leeshoek
     - type: custom:mushroom-template-card
       primary: Fijnstof
       secondary: "{{ states(entity) }} µg/m³"
@@ -220,17 +220,7 @@
         action: more-info
     - entity: plant.rubberplant
       battery: sensor.plant_sensor_f5c0_battery
-  devices:
-    - type: custom:mushroom-template-card
-      primary: Fijnstof
-      secondary: "{{ states(entity) }} µg/m³"
-      icon: mdi:blur
-      entity: sensor.bluetooth_hub_diningroom_2_5um_fijnstof_concentratie
-      icon_color: "{% if states(entity)|float < 75 %}green{% elif states(entity)|float < 100 %}yellow{% else %}red{% endif %}"
-      multiline_secondary: false
-      fill_container: true
-      tap_action:
-        action: more-info
+
 - name: bar
   areas:
     - bar
@@ -241,15 +231,12 @@
       name: Plafond
     - type: tile
       entity: switch.fontein_power
-  devices:
-    - type: tile
-      entity: switch.fontein_power
+
 - name: keuken
   areas:
     - keuken
   icon: hue:room-kitchen
   color: yellow
-  media: media_player.keuken
   cards:
     - entity: media_player.keuken
     - entity: light.ceiling_lsc_kitchen_light
@@ -258,104 +245,26 @@
       name: Afzuigkap
     - entity: input_datetime.kattenbak
       type: custom:lovelace_gen-timer
-      dagen: 3
+      days: 3
       confirmation:
         text: Geen kakkiejakkie meer?
     - entity: input_datetime.drinkfontein
-      dagen: 5
+      days: 5
       confirmation:
         text: Weer woeiert?
     - entity: input_datetime.koffiezetapparaat
-      dagen: 90
+      days: 90
       confirmation:
         text: Waterfilter vervangen en alles ontkalkt/schoongemaakt?
     - entity: input_datetime.ijsblokjesmachine
-      dagen: 60
+      days: 60
       confirmation:
         text: Schoongemaakt en ontkalkt?
     - entity: plant.basilicum
       battery: sensor.plant_sensor_b2f8_battery
     - entity: plant.laurier
       battery: sensor.plant_sensor_1455_battery
-  devices:
-    - type: custom:mushroom-template-card
-      icon: phu:litterbox
-      primary: Kattenbak
-      icon_color: grey
-      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
-      entity: input_datetime.kattenbak
-      badge_color: red
-      hold_action:
-        action: more-info
-      tap_action:
-        action: call-service
-        service: script.reset_reminder
-        data:
-          dagen: 3
-        target:
-          entity_id: input_datetime.kattenbak
-        confirmation:
-          text: Geen kakkiejakkie meer?
-      badge_icon: |-
-        {%- set event = as_timestamp(states(config.entity)) %}
-        {%- set now = as_timestamp(now()) %}
-        {% if (now) > (event) %}
-        mdi:exclamation-thick
-        {% endif %}
-      card_mod:
-        class: reminder
-        style:
-          mushroom-shape-icon$: |
-            .shape {
-              background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 3) }}% 0%, var(--card-background-color) 0% 100%);
-            }
-            .shape:after {
-              content: "";
-              height: 100%;
-              width: 100%;
-              position: absolute;
-              border-radius: 50%;
-              background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
-            }
-    - type: custom:mushroom-template-card
-      icon: mdi:fountain
-      primary: Drinkfontein
-      icon_color: grey
-      secondary: "{% set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) %}{% if timer > 1 %}Over {{ timer }} dagen{% elif timer > 0 %}Over {{ timer }} dag{% else %}'t is tijd!{% endif %}"
-      entity: input_datetime.drinkfontein
-      badge_color: red
-      hold_action:
-        action: more-info
-      tap_action:
-        action: call-service
-        service: script.reset_reminder
-        data:
-          dagen: 5
-        target:
-          entity_id: input_datetime.drinkfontein
-        confirmation:
-          text: Drinkfontein bijgevuild?
-      badge_icon: |-
-        {%- set event = as_timestamp(states(config.entity)) %}
-        {%- set now = as_timestamp(now()) %}
-        {% if (now) > (event) %}
-        mdi:exclamation-thick
-        {% endif %}
-      card_mod:
-        class: reminder
-        style:
-          mushroom-shape-icon$: |
-            .shape {
-              background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / 5) }}% 0%, var(--card-background-color) 0% 100%);
-            }
-            .shape:after {
-              content: "";
-              height: 100%;
-              width: 100%;
-              position: absolute;
-              border-radius: 50%;
-              background: rgba(var(--rgb-{{ config.icon_color }}), 0.2);
-            }
+
 - name: gang
   areas: []
   color: light-blue
@@ -365,24 +274,24 @@
       name: Boven
     - entity: light.hallway_downstairs
       name: Beneden
+
 - name: opslag
   icon: hue:room-storage
   color: pink
   areas:
     - opslag
-#    - bijkeuken
-  media: media_player.opslag
+  #    - bijkeuken
   cards:
     - entity: media_player.opslag
     - entity: light.ceiling_lsc_storage_light
       name: Plafond
+
 - name: slaapkamer
   icon: hue:room-bedroom
   color: purple
   areas:
     - slaapkamer
     - inloopkast
-  media: media_player.slaapkamer
   cards:
     - entity: media_player.slaapkamer
     - entity: light.slaapkamer_plafond
@@ -393,6 +302,7 @@
       name: Inloopkast
     - entity: light.tradfri_driver
       name: Kledingrek
+
 - name: kantoor
   icon: hue:room-office
   color: light-blue
@@ -409,11 +319,7 @@
       entity: sensor.hp_envy_pro_6400_series
     - entity: plant.pannenkoekenplant_2
       battery: sensor.plant_sensor_1283_battery
-  devices:
-    - type: tile
-      entity: sensor.octoprint_current_state
-    - type: tile
-      entity: sensor.hp_envy_pro_6400_series
+
 - name: toilet
   icon: hue:room-toilet
   color: brown
@@ -424,12 +330,12 @@
       name: Plafond
     - entity: plant.kerstcactus
       battery: sensor.plant_sensor_f391_battery
+
 - name: badkamer
   icon: hue:room-bathroom
   color: blue
   areas:
     - badkamer
-  media: media_player.badkamer
   cards:
     - entity: media_player.badkamer
     - entity: light.badkamer
@@ -441,11 +347,7 @@
       entity: binary_sensor.shower_in_use
     - type: tile
       entity: fan.relais
-  devices:
-    - type: tile
-      entity: binary_sensor.shower_in_use
-    - type: tile
-      entity: fan.relais
+
 - name: tuin
   icon: phu:garden
   color: teal
@@ -457,6 +359,7 @@
       type: onoff
     - entity: light.tuin_strip
       name: Ledstrip
+
 - name: voortuin
   icon: phu:driveway
   color: teal
@@ -468,9 +371,7 @@
       type: onoff
     - type: tile
       entity: binary_sensor.front_door_ding_2
-  devices:
-    - type: tile
-      entity: binary_sensor.front_door_ding_2
+
 - name: trap
   icon: hue:room-stairs
   color: amber

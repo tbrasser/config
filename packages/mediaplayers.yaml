@@ -36,6 +36,7 @@ media_player:
   # media_player.woonkamer_cast
   - platform: universal
     name: woonkamer
+    unique_id: woonkamer
     friendly_name: TV
     children:
       - media_player.woonkamer_jellyfin
@@ -50,14 +51,25 @@ media_player:
   #########################################################
   - platform: universal
     name: eetkamer
+    unique_id: eetkamer
     children:
       - media_player.eetkamer_jellyfin
      # - media_player.mass_eetkamer_cast
       - media_player.eetkamer_cast
       - media_player.android_tv_10_9_8_37
+    commands:
+      turn_on:
+        service: remote.turn_on
+        target:
+          entity_id: remote.eetkamer_harmony_hub
+      turn_off:
+        service: remote.turn_off
+        target:
+          entity_id: remote.eetkamer_harmony_hub
   ### Global
   - platform: universal
     name: global
+    unique_id: global
     children:
       - media_player.home
       - media_player.woonkamer
@@ -71,6 +83,7 @@ media_player:
       - media_player.opslag
   - platform: universal
     name: slaapkamer
+    unique_id: slaapkamer
     children:
       - media_player.slaapkamer_jellyfin
      # - media_player.mass_slaapkamer_cast

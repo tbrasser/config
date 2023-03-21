@@ -12,8 +12,8 @@
           ha-card {
             border-radius: 0px !important;
             border-width: 0px !important;
-            {{ "{%" }} if state_attr( "{{ room.media }}", "entity_picture" ) != none {{ "%}" }}
-            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "{{ room.media }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+            {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
+            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
             {{ "{%" }} endif {{ "%}" }}
           }
       card:
@@ -31,20 +31,6 @@
                 layout_type: custom:grid-layout
                 layout: !include .cards/layout.yaml
                 cards:
-                  {% if "media" in room %}
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_1
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_2
-                  - !include
-                    - .cards/media_player_active.yaml
-                    - entity: {{ room.media }}
-                  #- !include
-                  #  - .cards/media_player_inactive.yaml
-                  #  - entity: {{ room.media }}
-                  {% endif %}
                   - type: conditional
                     view_layout:
                       grid-column-end: span 2
@@ -60,7 +46,20 @@
                         - type: vacuum-commands
                           commands: [start_pause, stop, clean_spot, locate, return_home]
                   {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'light' %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'media' %}
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_1
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_2
+                  - !include
+                    - .cards/media_player_active.yaml
+                    - entity: {{card.entity }}
+                  - !include
+                    - .cards/media_player_inactive.yaml
+                    - entity: {{ card.entity }}
+                  {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
                   - !include
                     - .cards/light_active.yaml
                     - entity: {{ card.entity }}
@@ -70,21 +69,49 @@
                     - .cards/light_inactive.yaml
                     - entity: {{ card.entity }}
                       name: {{ card.name|capitalize }}
-                  {% endif %}
-                  {% endfor %}
-                  {% if "devices" in room %}
-                  {% for device in room.devices %}
-                  - {% for key in device|list %}
-                    {{ key }}: {{ device[key]|tojson }}
-                    {% endfor %}
-                  {% endfor %}
-                  {% endif %}
-                  {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'plant' %}
+                  {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
                   - !include
                     - .cards/plant.yaml
                     - entity: {{ card.entity }}
                       battery: {{ card.battery }}
+                  {% elif 'days' in card %}
+                  - type: custom:mushroom-template-card
+                    icon_color: grey
+                    primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
+                    secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
+                    entity: {{ card.entity }}
+                    badge_color: orange
+                    icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
+                    hold_action:
+                      action: more-info
+                    tap_action:
+                      action: call-service
+                      service: script.reset_reminder
+                      data:
+                        dagen: {{ card.days }}
+                      target:
+                        entity_id: {{ card.entity }}
+                      confirmation: {{ card.confirmation|tojson }}
+                    badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
+                    card_mod:
+                      class: reminder
+                      style:
+                        mushroom-shape-icon$: |
+                          .shape {
+                            background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ card.days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
+                          }
+                          .shape:after {
+                            content: "";
+                            height: 100%;
+                            width: 100%;
+                            position: absolute;
+                            border-radius: 50%;
+                            background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
+                          }
+                  {% else %}
+                  - {% for key in card|list %}
+                    {{ key }}: {{ card[key]|tojson }}
+                    {% endfor %}
                   {% endif %}
                   {% endfor %}
           '(orientation: portrait)':
@@ -121,20 +148,6 @@
                 layout_type: custom:grid-layout
                 layout: !include .cards/layout.yaml
                 cards:
-                  {% if "media" in room %}
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_1
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_2
-                  - !include
-                    - .cards/media_player_active.yaml
-                    - entity: {{ room.media }}
-                  #- !include
-                  #  - .cards/media_player_inactive.yaml
-                  #  - entity: {{ room.media }}
-                  {% endif %}
                   - type: conditional
                     view_layout:
                       grid-column-end: span 2
@@ -150,7 +163,20 @@
                         - type: vacuum-commands
                           commands: [start_pause, stop, clean_spot, locate, return_home]
                   {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'light' %}
+                  {% if card.entity|truncate(5, True, '', 0) == 'media' %}
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_1
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_2
+                  - !include
+                    - .cards/media_player_active.yaml
+                    - entity: {{ card.entity }}
+                  - !include
+                    - .cards/media_player_inactive.yaml
+                    - entity: {{ card.entity }}
+                  {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
                   - !include
                     - .cards/light_active.yaml
                     - entity: {{ card.entity }}
@@ -160,21 +186,49 @@
                     - .cards/light_inactive.yaml
                     - entity: {{ card.entity }}
                       name: {{ card.name|capitalize }}
-                  {% endif %}
-                  {% endfor %}
-                  {% if "devices" in room %}
-                  {% for device in room.devices %}
-                  - {% for key in device|list %}
-                    {{ key }}: {{ device[key]|tojson }}
-                    {% endfor %}
-                  {% endfor %}
-                  {% endif %}
-                  {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'plant' %}
+                  {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
                   - !include
                     - .cards/plant.yaml
                     - entity: {{ card.entity }}
                       battery: {{ card.battery }}
+                  {% elif 'days' in card %}
+                  - type: custom:mushroom-template-card
+                    icon_color: grey
+                    primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
+                    secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
+                    entity: {{ card.entity }}
+                    badge_color: orange
+                    icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
+                    hold_action:
+                      action: more-info
+                    tap_action:
+                      action: call-service
+                      service: script.reset_reminder
+                      data:
+                        dagen: {{ card.days }}
+                      target:
+                        entity_id: {{ card.entity }}
+                      confirmation: {{ card.confirmation|tojson }}
+                    badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
+                    card_mod:
+                      class: reminder
+                      style:
+                        mushroom-shape-icon$: |
+                          .shape {
+                            background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ card.days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
+                          }
+                          .shape:after {
+                            content: "";
+                            height: 100%;
+                            width: 100%;
+                            position: absolute;
+                            border-radius: 50%;
+                            background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
+                          }
+                  {% else %}
+                  - {% for key in card|list %}
+                    {{ key }}: {{ card[key]|tojson }}
+                    {% endfor %}
                   {% endif %}
                   {% endfor %}
               - !include

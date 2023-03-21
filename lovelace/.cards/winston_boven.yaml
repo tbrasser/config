@@ -1,15 +1,5 @@
 card_mod:
   style: |
-    ha-card {
-      display: grid !important;
-      grid-template-columns: subgrid;
-    }
-    .map-wrapper: {
-      grid-column-end: span 2;
-    }
-    .controls-wrapper {
-      grid-column-end: span 2;
-    }
     .room-18-wrapper {
       --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
       --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);

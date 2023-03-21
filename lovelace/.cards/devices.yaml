@@ -1,10 +1,46 @@
 # lovelace_gen
 {% for room in _global.rooms %}
-{% if 'devices' in room %}
-{% for device in room.devices %}
-- {% for key in device|list %}
-  {{ key }}: {{ device[key]|tojson }}
+{% for card in room.cards if 'cards' in room %}
+{% if not card.entity|truncate(5, True, '', 0) in ['light','plant','media'] %}
+{% if 'days' in card %}
+- type: custom:mushroom-template-card
+  icon_color: grey
+  primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
+  secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
+  entity: {{ card.entity }}
+  badge_color: orange
+  icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
+  hold_action:
+    action: more-info
+  tap_action:
+    action: call-service
+    service: script.reset_reminder
+    data:
+      dagen: {{ card.days }}
+    target:
+      entity_id: {{ card.entity }}
+    confirmation: {{ card.confirmation|tojson }}
+  badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
+  card_mod:
+    class: reminder
+    style:
+      mushroom-shape-icon$: |
+        .shape {
+          background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ card.days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
+        }
+        .shape:after {
+          content: "";
+          height: 100%;
+          width: 100%;
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
+        }
+{% else %}
+- {% for key in card|list %}
+  {{ key }}: {{ card[key]|tojson }}
   {% endfor %}
-{% endfor %}
 {% endif %}
+{% endif %}
+{% endfor %}
 {% endfor %}

@@ -105,7 +105,6 @@ card:
             ha-card {
               margin: 0px 12px 12px;
               --mmp-progress-height: 12px !important;
-              height: var(--mmp-progress-height);
               --mmp-accent-color: rgb(var(--rgb-indigo-color));
               --mmp-border-radius: 12px !important;
             }
