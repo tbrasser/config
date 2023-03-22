@@ -6,6 +6,32 @@ map_source:
   camera: camera.winston_downstairs
 calibration_source:
   camera: true
+append_tiles: true
+tiles:
+  - tile_id: side_brush_left
+    label: dummy
+    entity: sensor.dagdeel
+    conditions:
+      - entity: sensor.dagdeel
+        value: bier
+  - tile_id: main_brush_left
+    label: dummys
+    entity: sensor.dagdeel
+    conditions:
+      - entity: sensor.dagdeel
+        value: bier
+  - tile_id: sensor_dirty_left
+    label: dummy
+    entity: sensor.dagdeel
+    conditions:
+      - entity: sensor.dagdeel
+        value: bier
+  - tile_id: filter_left
+    label: dummys
+    entity: sensor.dagdeel
+    conditions:
+      - entity: sensor.dagdeel
+        value: bier
 append_icons: true
 icons:
   - icon: mdi:home-floor-0

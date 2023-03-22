@@ -96,8 +96,6 @@ cards:
         conditions:
           - entity: {{ media }}
             state_not: "off"
-          - entity: {{ media }}
-            state_not: idle
         chip:
           type: entity
           entity: {{ media }}

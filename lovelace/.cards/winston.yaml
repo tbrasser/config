@@ -21,12 +21,56 @@
   card: !include winston_badkamers.yaml
 - type: tile
   entity: sensor.winston_filter_left
+  hold_action:
+    action: more-info
+  tap_action:
+    action: call-service
+    service: vacuum.send_command
+    confirmation:
+      text: Winston z'n filter schoon & droog?
+    service_data:
+      command: reset_consumable
+      params: filter_work_time
+      entity_id: vacuum.winston
 - type: tile
   entity: sensor.winston_main_brush_left
+  hold_action:
+    action: more-info
+  tap_action:
+    action: call-service
+    service: vacuum.send_command
+    confirmation:
+      text: Winston z'n hoofdborstel haar en zooivrij?
+    service_data:
+      command: reset_consumable
+      params: main_brush_work_time
+      entity_id: vacuum.winston
 - type: tile
   entity: sensor.winston_side_brush_left
-- type: tile 
+  hold_action:
+    action: more-info
+  tap_action:
+    action: call-service
+    service: vacuum.send_command
+    confirmation:
+      text: Winston z'n zijborstel haarvrij en heel?
+    service_data:
+      command: reset_consumable
+      params: side_brush_work_time
+      entity_id: vacuum.winston
+- type: tile
   entity: sensor.winston_sensor_dirty_left
+  hold_action:
+    action: more-info
+  tap_action:
+    action: call-service
+    service: vacuum.send_command
+    confirmation:
+      text: Winston z'n sensoren nog schoon en/of bedekt?
+    service_data:
+      command: reset_consumable
+      params: sensor_dirty_time
+      entity_id: vacuum.winston
 - type: tile
   entity: binary_sensor.winston_mop_attached
 - type: tile

@@ -25,40 +25,51 @@ card:
         - next
       card_mod:
         class: invisible
-        style: |
-          mushroom-shape-icon {
-            display: flex;
+        style:
+          mushroom-state-info$: |
+            .primary:after {
+            {% if entity == 'media_player.global' %}
             {% raw %}
-            {% set media_type = state_attr(config.entity, 'media_content_type') %}
-            {% if media_type == 'tvshow' %}
-              --card-mod-icon: mdi:television-classic;
-              animation: flicker 1s linear infinite alternate;
-            {% elif media_type == 'movie' %}
-              --card-mod-icon: mdi:movie-roll;
-              animation: spin 2s linear infinite reverse;
-            {% elif media_type == 'music' %}
-              --card-mod-icon: mdi:music;
-              animation: beat 1.3s ease-out infinite both;
-            {% elif media_type == 'playlist' %}
-              --card-mod-icon: mdi:music;
-              animation: beat 1.3s ease-out infinite both;
-            {% else %}
-              --card-mod-icon: mdi:play;
-            {% endif %}
+              {% set child = state_attr(config.entity, 'active_child') %}
+              content: {{ state_attr(child, 'friendly_name') }} !important;
             {% endraw %}
-          }
-          @keyframes flicker {
-            0%, 31.98%, 32.98%, 34.98%, 36.98%, 39.98%, 67.98%, 68.98%, 95.98%, 96.98%, 97.98%, 98.98%, 100% { --icon-color: rgba(var(--rgb-indigo), 1); }
-            32%, 33%, 35%, 36%, 37%, 40%, 68%, 69%, 96%, 97%, 98%, 99% { --icon-color: rgba(var(--rgb-indigo), 0.6); }
-          }
-          @keyframes beat {
-            0%, 60% { --icon-symbol-size: 21px; }
-            5%, 17%, 57% { --icon-symbol-size: 22px; }
-            10%, 20%, 51% { --icon-symbol-size: 23px; }
-            25%, 45% { --icon-symbol-size: 24px; }
-            30%, 39% { --icon-symbol-size: 25px; }
-            33% { --icon-symbol-size: 26px; }
-          }
+            {% endif %}
+            }
+
+          .: |
+            mushroom-shape-icon {
+              display: flex;
+              {% raw %}
+              {% set media_type = state_attr(config.entity, 'media_content_type') %}
+              {% if media_type == 'tvshow' %}
+                --card-mod-icon: mdi:television-classic;
+                animation: flicker 1s linear infinite alternate;
+              {% elif media_type == 'movie' %}
+                --card-mod-icon: mdi:movie-roll;
+                animation: spin 2s linear infinite reverse;
+              {% elif media_type == 'music' %}
+                --card-mod-icon: mdi:music;
+                animation: beat 1.3s ease-out infinite both;
+              {% elif media_type == 'playlist' %}
+                --card-mod-icon: mdi:music;
+                animation: beat 1.3s ease-out infinite both;
+              {% else %}
+                --card-mod-icon: mdi:play;
+              {% endif %}
+              {% endraw %}
+            }
+            @keyframes flicker {
+              0%, 31.98%, 32.98%, 34.98%, 36.98%, 39.98%, 67.98%, 68.98%, 95.98%, 96.98%, 97.98%, 98.98%, 100% { --icon-color: rgba(var(--rgb-indigo), 1); }
+              32%, 33%, 35%, 36%, 37%, 40%, 68%, 69%, 96%, 97%, 98%, 99% { --icon-color: rgba(var(--rgb-indigo), 0.6); }
+            }
+            @keyframes beat {
+              0%, 60% { --icon-symbol-size: 21px; }
+              5%, 17%, 57% { --icon-symbol-size: 22px; }
+              10%, 20%, 51% { --icon-symbol-size: 23px; }
+              25%, 45% { --icon-symbol-size: 24px; }
+              30%, 39% { --icon-symbol-size: 25px; }
+              33% { --icon-symbol-size: 26px; }
+            }
     - type: custom:mushroom-media-player-card
       entity: "{{ entity }}"
       secondary_info: none

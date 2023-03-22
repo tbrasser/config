@@ -141,14 +141,12 @@
                             top: 74%
                             transform: "translate(-100%,-50%)"
                   {% for room in _global.rooms %}
-                  {% if "media" in room %}
                   - !include
                     - .cards/timer_active.yaml
                     - timer: {{ room.name }}_1
                   - !include
                     - .cards/timer_active.yaml
                     - timer: {{ room.name }}_2
-                  {% endif %}
                   {% endfor %}
                   {% for room in _global.rooms %}
                   - !include
@@ -156,9 +154,7 @@
                     - room: {{ room.name }}
                       icon: {{ room.icon }}
                       color: {{ room.color }}
-                      {% if "media" in room %}
-                      media: {{ room.media }}
-                      {% endif %}
+                      media: media_player.{{ room.name }}
                   {% endfor %}
           '(orientation: portrait)':
             type: vertical-stack
@@ -189,24 +185,20 @@
                     - .cards/media_player_active.yaml
                     - entity: media_player.global
                   {% for room in _global.rooms %}
-                  {% if "media" in room %}
                   - !include
                     - .cards/timer_active.yaml
                     - timer: {{ room.name }}_1
                   - !include
                     - .cards/timer_active.yaml
                     - timer: {{ room.name }}_2
-                  {% endif %}
                   {% endfor %}
                   {% for room in _global.rooms %}
                   - !include
                     - .cards/room_card.yaml
                     - room: {{ room.name }}
                       icon: {{ room.icon }}
-                      color: {{ room.color }}
-                      {% if "media" in room %}
-                      media: {{ room.media }}
-                      {% endif %}
+                      color: {{ room.color }} 
+                      media: media_player.{{ room.name }}
                   {% endfor %}
               - !include
                 - .cards/sticky.yaml
