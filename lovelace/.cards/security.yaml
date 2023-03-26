@@ -90,7 +90,7 @@
     camera_image: camera.tablet3
     camera_view: live
     name: Tablet 3
-    aspect_ratio: 4x3
+    aspect_ratio: 3x4
     tap_action:
       action: fire-dom-event
       browser_mod:

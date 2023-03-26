@@ -159,7 +159,6 @@
           entity_id:
           - light.tuin_lampjes
           - light.tuin_strip
-          - light.lsc_stringlight_ww
   mode: single
 - id: '1666218976691'
   alias: Cast to Google Hub Bijkeuken
@@ -555,3 +554,57 @@
       message: 'Glasvezel stukkie, notifying from mobile backup! '
       title: 'Joe! '
   mode: single
+- id: '1679570570181'
+  alias: 'Sleep mode aan als Fré iPhone Sleep mode '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.frederieke_iphone_focus
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition:
+  - condition: zone
+    entity_id: person.frederieke
+    zone: zone.home
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.sleep_mode
+  mode: single
+- id: '1679570632756'
+  alias: 'Sleep mode uit als fré iphone sleep mode uit '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.frederieke_iphone_focus
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: zone
+    entity_id: person.frederieke
+    zone: zone.home
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.sleep_mode
+  mode: single
+- id: '1679579856569'
+  alias: Wekker Thomas Events
+  description: ''
+  use_blueprint:
+    path: IATkachenko/full.yaml
+    input:
+      device: 32bc03e232f39f108ed9a8478be375d0
+      person: person.thomas

@@ -31,7 +31,8 @@
     - entity: media_player.woonkamer
     - entity: light.lsc_g125_gold
       name: Plafond
-    - entity: light.woonkamer_tafeltje
+   # - entity: light.woonkamer_tafeltje
+    - entity: light.nachtkastje
       name: Tafeltje
     - entity: light.glitterlamp
       name: Glitterlamp
@@ -296,8 +297,8 @@
     - entity: media_player.slaapkamer
     - entity: light.slaapkamer_plafond
       name: Plafond
-    - entity: light.nachtkastje
-      name: Nachtkastje
+#    - entity: light.nachtkastje
+#      name: Nachtkastje
     - entity: light.walk_in_closet
       name: Inloopkast
     - entity: light.tradfri_driver
@@ -353,24 +354,18 @@
   color: teal
   areas:
     - tuin
+    - voortuin
   cards:
+    - entity: light.lsc_stringlight_ww
+      name: Voortuin
+      type: onoff
+    - type: tile
+      entity: binary_sensor.front_door_ding_2
     - entity: light.tuin_lampjes
       name: Lampjes
       type: onoff
     - entity: light.tuin_strip
       name: Ledstrip
-
-- name: voortuin
-  icon: phu:driveway
-  color: teal
-  areas:
-    - voortuin
-  cards:
-    - entity: light.lsc_stringlight_ww
-      name: Verlichting
-      type: onoff
-    - type: tile
-      entity: binary_sensor.front_door_ding_2
 
 - name: trap
   icon: hue:room-stairs

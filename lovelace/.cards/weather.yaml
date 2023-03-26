@@ -2,6 +2,36 @@
   entity: weather.openweathermap
   view_layout:
     grid-column-end: span 2
+- type: conditional
+  view_layout:
+    grid-column-end: span 2
+  conditions:
+    - entity: binary_sensor.knmi_home_waarschuwing
+      state: "on"
+  card:
+    type: markdown
+    content: "{{ state_attr('binary_sensor.knmi_home_waarschuwing', 'Waarschuwing') }}"
+- type: entities
+  view_layout:
+    grid-column-end: span 2
+  entities:
+    - entity: sensor.thermal_comfort_perception
+      name: Comfort Buiten
+    - entity: sensor.comfort_buiten_humidex_perception
+      name: Humidex
+    - entity: sensor.thermal_comfort_simmerzone
+      name: Zomeravond Rating
+    - entity: sensor.comfort_buiten_thoms_discomfort_perception
+      name: Thoms Discomfort
+    # - entity: sensor.comfort_buiten_relative_strain_perception
+    #   name: Werken in de zomer
+    # - entity: sensor.comfort_buiten_winter_scharlau_perception
+    #   name: Winter Scharlau
+    # - entity: sensor.comfort_buiten_summer_scharlau_perception
+    #   name: Summer Scharlau
+  show_header_toggle: false
+  state_color: true
+
 - type: custom:hourly-weather
   view_layout:
     grid-column-end: span 2

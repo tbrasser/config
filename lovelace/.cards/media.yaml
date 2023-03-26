@@ -1,0 +1,13 @@
+# lovelace_gen
+- type: iframe
+  url: /api/hassio_ingress/gTMQx91_UqxGSzRUOYf4NOmVudJJRwjX3qLtQMBTF9g/
+  card_mod:
+    style: |
+      #root {
+{% if orientation == 'landscape' %}
+        height: calc(100vh - 62px);
+{% else %}
+        height: calc(100vh - 124px);
+{% endif %}
+        padding-top: 0 !important;
+      }

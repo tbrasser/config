@@ -1,6 +1,41 @@
+#lovelace_gen
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.winston
+camera: camera.winston_upstairs
+map_source:
+  camera: camera.winston_upstairs
+calibration_source:
+  camera: true
+append_tiles: true
+tiles:
+  - {tile_id: side_brush_left,   label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: main_brush_left,   label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: sensor_dirty_left, label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: filter_left,       label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+append_icons: true
+icons:
+  - icon: mdi:home-floor-0
+    tooltip: Beneden
+    tap_action: {action: call-service, service: vacuum.send_command, service_data: {entity_id: vacuum.winston, command: load_multi_map, params: 1}}
+  - icon: hue:room-bathroom
+    tooltip: Badkamers
+    tap_action: {action: call-service, service: vacuum.send_command, service_data: {entity_id: vacuum.winston, command: load_multi_map, params: 2}}
+map_locked: true
+vacuum_platform: default
+map_modes:
+  - template: vacuum_clean_segment
+    predefined_selections:
+      - {id: 16, outline: [[30550, 22000], [30550, 27000], [34550, 27000], [34550, 22000]], icon: {name: "hue:room-dining",  x: 32525, y: 24500}}
+      - {id: 17, outline: [[27850, 24450], [27850, 25400], [30550, 25400], [30550, 24450]]}
+      - {id: 18, outline: [[25000, 22000], [25000, 24450], [27850, 24450], [27850, 22000]], icon: {name: "hue:room-office",  x: 26400, y: 23375}}
+      - {id: 19, outline: [[25000, 24450], [25000, 27000], [27850, 27000], [27850, 24450]], icon: {name: "hue:room-kitchen", x: 26450, y: 25425}}
+      - {id: 20, outline: [[27850, 22000], [27850, 24450], [30550, 24450], [30550, 22000]], icon: {name: "hue:room-storage", x: 29175, y: 23275}}
+  - template: vacuum_clean_zone
+  - template: vacuum_follow_path
+  - template: vacuum_goto
 card_mod:
   style: |
-    .room-18-wrapper {
+    .room-16-wrapper {
       --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
       --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
       --map-card-internal-room-label-color: rgb(255, 255, 255);
@@ -12,7 +47,7 @@ card_mod:
       --map-card-internal-room-label-color: rgb(255, 255, 255);
       --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
     }
-    .room-16-wrapper {
+    .room-18-wrapper {
       --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
       --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
       --map-card-internal-room-label-color: rgb(255, 255, 255);
@@ -30,110 +65,3 @@ card_mod:
       --map-card-internal-room-label-color: rgb(255, 255, 255);
       --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
     }
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.winston
-camera: camera.winston_upstairs
-map_source:
-  camera: camera.winston_upstairs
-calibration_source:
-  camera: true
-append_tiles: true
-tiles:
-  - tile_id: side_brush_left
-    label: dummy
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: main_brush_left
-    label: dummys
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: sensor_dirty_left
-    label: dummy
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: filter_left
-    label: dummys
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-append_icons: true
-icons:
-  - icon: mdi:home-floor-0
-    tooltip: Beneden
-    tap_action:
-      action: call-service
-      service: vacuum.send_command
-      service_data:
-        entity_id: vacuum.winston
-        command: load_multi_map
-        params: 1
-  - icon: hue:room-bathroom
-    tooltip: Badkamers
-    tap_action:
-      action: call-service
-      service: vacuum.send_command
-      service_data:
-        entity_id: vacuum.winston
-        command: load_multi_map
-        params: 2
-map_locked: true
-vacuum_platform: default
-map_modes:
-  - template: vacuum_clean_segment
-    predefined_selections:
-      - id: 16
-        outline:
-          - [30550, 22000]
-          - [30550, 27000]
-          - [34550, 27000]
-          - [34550, 22000]
-        icon:
-          name: "hue:room-dining"
-          x: 32525
-          y: 24500
-      - id: 17
-        outline:
-          - [27850, 24450] # lly
-          - [27850, 25400] # uly
-          - [30550, 25400] # ury
-          - [30550, 24450] # lry
-      - id: 18
-        outline:
-          - [25000, 22000]
-          - [25000, 24450]
-          - [27850, 24450]
-          - [27850, 22000]
-        icon:
-          name: "hue:room-office"
-          x: 26400
-          y: 23375
-      - id: 19
-        outline:
-          - [25000, 24450]
-          - [25000, 27000]
-          - [27850, 27000]
-          - [27850, 24450]
-        icon:
-          name: "hue:room-kitchen"
-          x: 26450
-          y: 25425
-      - id: 20
-        outline:
-          - [27850, 22000]
-          - [27850, 24450]
-          - [30550, 24450]
-          - [30550, 22000]
-        icon:
-          name: "hue:room-storage"
-          x: 29175
-          y: 23275
-  - template: vacuum_clean_zone
-  - template: vacuum_follow_path
-  - template: vacuum_goto

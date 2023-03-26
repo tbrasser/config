@@ -1,35 +1,18 @@
 ---
-media_lights_sync_kitchen:
-  module: media_lights_sync
-  class: MediaLightsSync
-  media_player: media_player.keuken
-  lights:
-    - light.afzuigkap
-    - light.ceiling_lsc_kitchen_light
-  ha_url: http://10.9.8.30:8123
-  reset_lights_after: true
-  use_saturated_colors: false
-  use_current_brightness: false
-  quantization_method: FastOctree
-  condition:
-    entity: sun.sun
-    state: below_horizon
-
 media_lights_sync_diningroom:
   module: media_lights_sync
   class: MediaLightsSync
   media_player: media_player.eetkamer
   lights:
-    - light.ambilight_diningroom_leds
     - light.diningroom_ceiling10_ambient_light
   ha_url: http://10.9.8.30:8123
   reset_lights_after: true
-  use_saturated_colors: false
-  use_current_brightness: false
+  use_saturated_colors: true
+  use_current_brightness: true
   quantization_method: FastOctree
   condition:
-    entity: sun.sun
-    state: below_horizon
+    entity: input_boolean.party
+    state: "on"
 
 bar_controller:
   module: controllerx

@@ -1,0 +1,34 @@
+# lovelace_gen
+type: custom:mushroom-template-card
+icon_color: grey
+primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
+secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
+entity: {{ entity }}
+badge_color: orange
+icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
+hold_action:
+  action: more-info
+tap_action:
+  action: call-service
+  service: script.reset_reminder
+  data:
+    dagen: {{ days }}
+  target:
+    entity_id: {{ entity }}
+  confirmation: {{ confirmation }}
+badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
+card_mod:
+  class: reminder
+  style:
+    mushroom-shape-icon$: |
+      .shape {
+        background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
+      }
+      .shape:after {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
+      }

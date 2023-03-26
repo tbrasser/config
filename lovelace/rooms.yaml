@@ -75,39 +75,11 @@
                     - entity: {{ card.entity }}
                       battery: {{ card.battery }}
                   {% elif 'days' in card %}
-                  - type: custom:mushroom-template-card
-                    icon_color: grey
-                    primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
-                    secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
-                    entity: {{ card.entity }}
-                    badge_color: orange
-                    icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
-                    hold_action:
-                      action: more-info
-                    tap_action:
-                      action: call-service
-                      service: script.reset_reminder
-                      data:
-                        dagen: {{ card.days }}
-                      target:
-                        entity_id: {{ card.entity }}
+                  - !include
+                    - .cards/device_timer.yaml
+                    - entity: {{ card.entity }}
+                      days: {{ card.days }}
                       confirmation: {{ card.confirmation|tojson }}
-                    badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
-                    card_mod:
-                      class: reminder
-                      style:
-                        mushroom-shape-icon$: |
-                          .shape {
-                            background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ card.days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
-                          }
-                          .shape:after {
-                            content: "";
-                            height: 100%;
-                            width: 100%;
-                            position: absolute;
-                            border-radius: 50%;
-                            background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
-                          }
                   {% else %}
                   - {% for key in card|list %}
                     {{ key }}: {{ card[key]|tojson }}
@@ -121,29 +93,6 @@
                 - .cards/sticky.yaml
                 - view: {{ room.name }}
                   position: header
-              - type: conditional
-                conditions:
-                  - entity: binary_sensor.area_{{ room.name }}
-                    state_not: "on"
-                card:
-                  type: custom:mushroom-title-card
-                  title: {{ room.name|title }}
-                  alignment: center
-                  title_tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data: !include
-                        - .cards/popups/room.yaml
-                        - room: {{ room.name }}
-                  card_mod:
-                    style:
-                      mushroom-title-card$: |
-                        .header {
-                          margin-top: -60px !important;
-                          padding: 0 !important;
-                          --title-padding: 0;
-                        }
               - type: custom:layout-card
                 layout_type: custom:grid-layout
                 layout: !include .cards/layout.yaml
@@ -192,39 +141,11 @@
                     - entity: {{ card.entity }}
                       battery: {{ card.battery }}
                   {% elif 'days' in card %}
-                  - type: custom:mushroom-template-card
-                    icon_color: grey
-                    primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
-                    secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
-                    entity: {{ card.entity }}
-                    badge_color: orange
-                    icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"
-                    hold_action:
-                      action: more-info
-                    tap_action:
-                      action: call-service
-                      service: script.reset_reminder
-                      data:
-                        dagen: {{ card.days }}
-                      target:
-                        entity_id: {{ card.entity }}
+                  - !include
+                    - .cards/device_timer.yaml
+                    - entity: {{ card.entity }}
+                      days: {{ card.days }}
                       confirmation: {{ card.confirmation|tojson }}
-                    badge_icon: "{{ "{%" }} if as_timestamp(now()) > as_timestamp(states(config.entity)) {{ "%}" }}mdi:exclamation-thick{{ "{%" }} endif {{ "%}" }}"
-                    card_mod:
-                      class: reminder
-                      style:
-                        mushroom-shape-icon$: |
-                          .shape {
-                            background: radial-gradient(var(--card-background-color) 60%, transparent 0%), conic-gradient(rgb(var(--rgb-orange)) {{ "{{" }} ((states(config.entity) | as_datetime | as_local - now()).days + 1) * (100 / {{ card.days }}) {{ "}}" }}% 0%, var(--card-background-color) 0% 100%);
-                          }
-                          .shape:after {
-                            content: "";
-                            height: 100%;
-                            width: 100%;
-                            position: absolute;
-                            border-radius: 50%;
-                            background: rgba(var(--rgb-{{ "{{" }} config.icon_color {{ "}}" }}), 0.2);
-                          }
                   {% else %}
                   - {% for key in card|list %}
                     {{ key }}: {{ card[key]|tojson }}

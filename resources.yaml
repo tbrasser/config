@@ -2,7 +2,7 @@
   type: module
 - url: /local/style.css
   type: css
-- url: /local/style.js?v=1337
+- url: /local/style.js?v=1338
   type: module
 # HACS
 - url: /hacsfiles/lovelace-more-info-card/more-info-card.js

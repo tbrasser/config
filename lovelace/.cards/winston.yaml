@@ -19,8 +19,12 @@
     - entity: sensor.winston_floor
       state: unavailable
   card: !include winston_badkamers.yaml
-- type: tile
+- type: custom:mushroom-template-card
   entity: sensor.winston_filter_left
+  primary: "{{ state_attr(entity, 'friendly_name') }}"
+  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
+  icon: "{{ state_attr(entity, 'icon') }}"
+  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
   hold_action:
     action: more-info
   tap_action:
@@ -32,7 +36,11 @@
       command: reset_consumable
       params: filter_work_time
       entity_id: vacuum.winston
-- type: tile
+- type: custom:mushroom-template-card
+  primary: "{{ state_attr(entity, 'friendly_name') }}"
+  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
+  icon: "{{ state_attr(entity, 'icon') }}"
+  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
   entity: sensor.winston_main_brush_left
   hold_action:
     action: more-info
@@ -45,7 +53,11 @@
       command: reset_consumable
       params: main_brush_work_time
       entity_id: vacuum.winston
-- type: tile
+- type: custom:mushroom-template-card
+  primary: "{{ state_attr(entity, 'friendly_name') }}"
+  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
+  icon: "{{ state_attr(entity, 'icon') }}"
+  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
   entity: sensor.winston_side_brush_left
   hold_action:
     action: more-info
@@ -58,7 +70,11 @@
       command: reset_consumable
       params: side_brush_work_time
       entity_id: vacuum.winston
-- type: tile
+- type: custom:mushroom-template-card
+  primary: "{{ state_attr(entity, 'friendly_name') }}"
+  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
+  icon: "{{ state_attr(entity, 'icon') }}"
+  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
   entity: sensor.winston_sensor_dirty_left
   hold_action:
     action: more-info

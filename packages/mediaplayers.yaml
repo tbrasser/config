@@ -31,16 +31,12 @@ switch:
     host: 10.9.8.59
     broadcast_address: 10.9.8.255
 media_player:
-  # android tv & cast integrations are setup using the ui
-  # media_player.android_tv_10_9_8_59
-  # media_player.woonkamer_cast
   - platform: universal
     name: woonkamer
     unique_id: woonkamer
     friendly_name: TV
     children:
       - media_player.woonkamer_jellyfin
-     # - media_player.mass_woonkamer_cast
       - media_player.woonkamer_cast
       - media_player.android_tv_10_9_8_59
     commands:
@@ -48,13 +44,11 @@ media_player:
         service: switch.turn_on
         target:
           entity_id: switch.mi_tv_woonkamer
-  #########################################################
   - platform: universal
     name: eetkamer
     unique_id: eetkamer
     children:
       - media_player.eetkamer_jellyfin
-     # - media_player.mass_eetkamer_cast
       - media_player.eetkamer_cast
       - media_player.android_tv_10_9_8_37
     commands:
@@ -66,27 +60,22 @@ media_player:
         service: remote.turn_off
         target:
           entity_id: remote.eetkamer_harmony_hub
-  ### Global
   - platform: universal
     name: global
     unique_id: global
     children:
       - media_player.home
       - media_player.woonkamer
-      - media_player.slaapkamer
       - media_player.eetkamer
-     # - media_player.mass_keuken
       - media_player.keuken
-      #- media_player.mass_badkamer
+      - media_player.slaapkamer
       - media_player.badkamer
-      #- media_player.mass_opslag
       - media_player.opslag
   - platform: universal
     name: slaapkamer
     unique_id: slaapkamer
     children:
       - media_player.slaapkamer_jellyfin
-     # - media_player.mass_slaapkamer_cast
       - media_player.slaapkamer_cast
       - media_player.android_tv_10_9_8_122
   

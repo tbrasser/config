@@ -27,6 +27,8 @@ cards:
       style: |
         :host {
           --mush-icon-symbol-size: 1em;
+          z-index: 500;
+          position: relative;
         }
         ha-card: {
           margin-top: -16px !important;
@@ -61,6 +63,7 @@ cards:
         :host {
           position: relative;
           bottom: 32px;
+          z-index: 2;
         }
         ha-card {
           --chip-background: none;
@@ -69,7 +72,6 @@ cards:
           --chip-spacing: 0;
           --chip-box-shadow: none;
           --chip-height: 32px;
-          z-index: 666;
         }
     chips:
       - type: conditional

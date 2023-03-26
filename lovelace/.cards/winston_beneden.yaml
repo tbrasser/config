@@ -1,35 +1,3 @@
-card_mod:
-  style: |
-    .room-16-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-17-wrapper {
-      --map-card-internal-room-outline-line-color: rgba(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-18-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-19-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-20-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
 type: custom:xiaomi-vacuum-map-card
 entity: vacuum.winston
 camera: camera.winston_downstairs
@@ -39,30 +7,10 @@ calibration_source:
   camera: true
 append_tiles: true
 tiles:
-  - tile_id: side_brush_left
-    label: dummy
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: main_brush_left
-    label: dummys
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: sensor_dirty_left
-    label: dummy
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
-  - tile_id: filter_left
-    label: dummys
-    entity: sensor.dagdeel
-    conditions:
-      - entity: sensor.dagdeel
-        value: bier
+  - {tile_id: side_brush_left,   label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: main_brush_left,   label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: sensor_dirty_left, label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
+  - {tile_id: filter_left,       label: dummy, entity: sensor.dagdeel, conditions: [{entity: sensor.dagdeel, value: bier}]}
 append_icons: true
 icons:
   - icon: mdi:home-floor-1
@@ -104,36 +52,47 @@ map_modes:
           - [29950, 27500]
           - [33950, 27500]
           - [33950, 22750]
-        icon:
-          name: "hue:room-living"
-          x: 31950
-          y: 25150
+        icon: {name: "hue:room-living", x: 31950, y: 25150}
       - id: 18
         outline: # x = 2700, y = 800
           - [27250, 25100] # point 1
           - [27250, 25900]
           - [29950, 25900]
           - [29950, 25100]
-      - id: 19
-        outline: # x = 2850, y = 2350
-          - [24400, 22750]
-          - [24400, 25100]
-          - [27250, 25100] # point 1
-          - [27250, 22750]
-        icon:
-          name: "hue:room-bedroom"
-          x: 25950
-          y: 23950
-      - id: 20
-        outline: # x = 2850, y = 2400
-          - [24400, 25100]
-          - [24400, 27500]
-          - [27250, 27500]
-          - [27250, 25100] # point 1
-        icon:
-          name: "mdi:glass-cocktail"
-          x: 25800
-          y: 26025
+      - {id: 19, outline: [[24400, 22750], [24400, 25100], [27250, 25100], [27250, 22750]], icon: {name: "hue:room-bedroom", x: 25950, y: 23950}}
+      - {id: 20, outline: [[24400, 25100], [24400, 27500], [27250, 27500], [27250, 25100]], icon: {name: "mdi:glass-cocktail", x: 25800, y: 26025}}
   - template: vacuum_clean_zone
   - template: vacuum_follow_path
   - template: vacuum_goto
+card_mod:
+  style: |
+    .room-16-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-17-wrapper {
+      --map-card-internal-room-outline-line-color: rgba(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-18-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-19-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
+    .room-20-wrapper {
+      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+      --map-card-internal-room-label-color: rgb(255, 255, 255);
+      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+    }
