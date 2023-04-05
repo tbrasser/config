@@ -2,31 +2,25 @@
   type: module
 - url: /local/style.css
   type: css
-- url: /local/style.js?v=1338
+- url: /local/style.js?v=128
+  type: module
+- url: /local/persistentsettings.js?v=20230404
   type: module
 # HACS
-- url: /hacsfiles/lovelace-more-info-card/more-info-card.js
+- url: /hacsfiles/lovelace-animated-background/animated-background.js?v=128
   type: module
-- url: /hacsfiles/spotify-card/spotify-card.js
+- url: /hacsfiles/clock-weather-card/clock-weather-card.js?v=128
   type: module
-- url: /hacsfiles/lovelace-animated-background/animated-background.js
+- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=20230402
   type: module
-- url: /hacsfiles/battery-state-card/battery-state-card.js
+- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js?v=128
   type: module
-- url: /hacsfiles/clock-weather-card/clock-weather-card.js
-  type: module
-- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=1338
-  type: module
-- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js
-  type: module
-- url: /hacsfiles/lovelace-state-switch/state-switch.js?v=4
+- url: /hacsfiles/lovelace-state-switch/state-switch.js
   type: module
 - type: module
   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
 - type: module
-  url: /hacsfiles/kiosk-mode/kiosk-mode.js
-- url: /hacsfiles/hass-swipe-navigation/swipe-navigation.js
-  type: module
+  url: /hacsfiles/kiosk-mode/kiosk-mode.js?v=129
 - type: module
   url: /hacsfiles/hass-hue-icons/hass-hue-icons.js
 - type: module
@@ -36,25 +30,13 @@
 - type: module
   url: /hacsfiles/thermal_comfort_icons/thermal_comfort_icons.js
 - type: module
-  url: /hacsfiles/light-popup-card/light-popup-card.js
-- type: module
-  url: /hacsfiles/air-visual-card/air-visual-card.js
-- type: module
-  url: /hacsfiles/alarmo-card/alarmo-card.js
-- type: module
-  url: /hacsfiles/apexcharts-card/apexcharts-card.js
-- type: module
-  url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
-- type: module
-  url: /hacsfiles/bar-card/bar-card.js
-- type: module
   url: /hacsfiles/config-editor-card/config-editor-card.js
 - type: module
-  url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js
+  url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js?v=128
 - type: module
-  url: /hacsfiles/lovelace-mushroom/mushroom.js
+  url: /hacsfiles/lovelace-mushroom/mushroom.js?v=128
 - type: module
-  url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+  url: /hacsfiles/mini-media-player/mini-media-player-bundle.js?v=128
 - type: module
   url: /hacsfiles/timer-bar-card/timer-bar-card.js
 - type: module
@@ -63,25 +45,9 @@
   url: /hacsfiles/lovelace-layout-card/layout-card.js
 - type: module
   url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
-- type: module
-  url: /hacsfiles/lovelace-auto-entities/auto-entities.js
-- type: module
-  url: /hacsfiles/light-entity-card/light-entity-card.js
-- type: module
-  url: /hacsfiles/scheduler-card/scheduler-card.js
 # custom components
 - type: module
   url: /webrtc/webrtc-camera.js
 # FONTS
-- url: "https://fonts.googleapis.com/css?family=DM Sans"
-  type: css
-- url: "https://fonts.googleapis.com/css?family=Poppins"
-  type: css
-- url: "https://fonts.googleapis.com/css?family=Work Sans"
-  type: css
-- url: "https://fonts.googleapis.com/css?family=Nunito"
-  type: css
 - url: "https://fonts.googleapis.com/css?family=Raleway"
-  type: css
-- url: https://fonts.googleapis.com/css?family=Comfortaa&display=swap
   type: css

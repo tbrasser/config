@@ -10,6 +10,8 @@ transparent:
         -webkit-backdrop-filter: blur(24px) contrast(40%) saturate(200%);
         transform: translate3d(0,0,0);
         -webkit-transform: translate3d(0,0,0);
+        --ha-card-border-width: 0px;
+        border-width: 0px !important;
       }
       ha-card.type-tile {
         --state-light-off-color: #555555;
@@ -56,7 +58,7 @@ transparent:
         top: 30px;
       }
   ### Colors and fonts
-  primary-color: rgb(var(--rgb-blue-color))
+  primary-color: '#209cee'
   accent-color: rgb(var(--rgb-orange-color))
   # missing colors
   rgb-amber-color: 255, 193, 7

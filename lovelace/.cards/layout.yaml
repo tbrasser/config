@@ -1,6 +1,4 @@
-height: calc(100vh - 58px)
-margin: -58px 0 0 0 !important
-padding: 62px 0 0 0 !important
+# lovelace_gen
 reflow: true
 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))
 grid-gap: 0
@@ -9,3 +7,16 @@ grid-auto-flow: dense
 place-content: start center
 place-items: start stretch
 grid-auto-rows: 1px
+{% if sticky == 'both' %}
+height: calc(100vh - 110px)
+margin: -54px 0 -56px 0 !important
+padding: 54px 0 56px 0 !important
+{% elif sticky == 'header' %}
+height: calc(100vh - 54px)
+margin: -54px 0 0 0 !important
+padding: 54px 0 0 0 !important
+{% else %}
+height: calc(100vh)
+margin: 0 !important
+padding: 0 !important
+{% endif %}

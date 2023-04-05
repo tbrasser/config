@@ -29,7 +29,9 @@
                   position: both
               - type: custom:layout-card
                 layout_type: custom:grid-layout
-                layout: !include .cards/layout.yaml
+                layout: !include 
+                  - .cards/layout.yaml
+                  - sticky: header
                 cards:
                   - type: conditional
                     view_layout:
@@ -95,7 +97,9 @@
                   position: header
               - type: custom:layout-card
                 layout_type: custom:grid-layout
-                layout: !include .cards/layout.yaml
+                layout: !include 
+                  - .cards/layout.yaml
+                  - sticky: both
                 cards:
                   - type: conditional
                     view_layout:

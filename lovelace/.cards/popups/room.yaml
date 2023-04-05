@@ -1,0 +1,40 @@
+# lovelace_gen
+title: "{{ room|capitalize }} instellingen"
+size: wide
+style: |
+  --popup-min-width: 360px;
+  --popup-max-width: 540px;
+  --popup-border-width: var(--ha-card-border-width, 2px);
+  --popup-border-color: var(--ha-card-border-color, var(--divider-color, #eee));
+  --popup-border-radius: 28px;
+  --popup-background-color: var(--primary-background-color);
+  --popup-padding-x: 0px;
+  --popup-padding-y: 0px;
+content:
+  type: custom:vertical-stack-in-card
+  card_mod:
+    class: invisible
+  cards:
+    - type: tile
+      name: "Huidige status"
+      entity: binary_sensor.area_{{ room }}
+      card_mod:
+        class: invisible
+    - type: tile
+      name: "Automatisch lampen aan & uit"
+      entity: switch.area_light_control_{{ room }}
+      tap_action:
+        action: more-info
+      icon_tap_action:
+        action: toggle
+      card_mod:
+        class: invisible
+    - type: tile
+      name: "Forceer lampen aan"
+      entity: switch.area_presence_hold_{{ room }}
+      tap_action:
+        action: more-info
+      icon_tap_action:
+        action: toggle
+      card_mod:
+        class: invisible

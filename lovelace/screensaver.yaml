@@ -1,0 +1,82 @@
+# lovelace_gen
+- type: panel
+  path: screensaver
+  subview: true
+  cards:
+    - type: custom:mod-card
+      card_mod:
+        class: invisible
+        style: |
+          ha-card {
+            border-radius: 0px !important;
+            border-width: 0px !important;
+            {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
+            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+            {{ "{%" }} endif {{ "%}" }}
+          }
+      card:
+        type: custom:state-switch
+        entity: sun.sun
+        default: default
+        states:
+          default:
+            type: vertical-stack
+            cards:
+              - type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout: !include .cards/layout.yaml
+                cards:
+                  - type: custom:clock-weather-card
+                    entity: weather.openweathermap
+                    # sun_entity: sun.sun
+                    # temperature_sensor: sensor.outdoor_temp
+                    weather_icon_type: fill
+                    animated_icon: true
+                    hide_today_section: false
+                    hide_forecast_section: true
+                    hide_clock: false
+                    hide_date: false
+                    hourly_forecast: false
+                    view_layout:
+                      grid-column-end: span 2
+                  - initial_view: listWeek
+                    type: calendar
+                    entities:
+                      - calendar.samen
+                      - calendar.ical_familywall
+                      - calendar.ical_familywall_tasks
+                    view_layout:
+                      grid-column-end: span 2
+                    card_mod:
+                      style: |
+                        ha-card {
+                          height: 100vh;
+                        }
+                        ha-full-calendar {
+                          height: 100%;
+                          overflow-y: visible;
+                        }
+                  - !include
+                    - .cards/media_player_active.yaml
+                    - entity: media_player.global
+                  - type: conditional
+                    view_layout:
+                      grid-column-end: span 2
+                    conditions:
+                      - entity: vacuum.winston
+                        state_not: docked
+                      - entity: vacuum.winston
+                        state_not: unavailable
+                    card:
+                      type: tile
+                      entity: vacuum.winston
+                  - !include .cards/washer_active.yaml
+                  {% for room in _global.rooms %}
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_1
+                  - !include
+                    - .cards/timer_active.yaml
+                    - timer: {{ room.name }}_2
+                  {% endfor %}
+            

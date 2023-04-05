@@ -31,10 +31,10 @@
                   position: both
               - type: custom:layout-card
                 layout_type: custom:grid-layout
-                layout: !include .cards/layout.yaml
-                cards: !include 
-                  - .cards/{{ view.name }}.yaml
-                  - orientation: landscape
+                layout: !include 
+                  - .cards/layout.yaml
+                  - sticky: header
+                cards: !include .cards/{{ view.name }}.yaml
           '(orientation: portrait)':
             type: vertical-stack
             cards:
@@ -44,10 +44,10 @@
                   position: header
               - type: custom:layout-card
                 layout_type: custom:grid-layout
-                layout: !include .cards/layout.yaml
-                cards: !include 
-                  - .cards/{{ view.name }}.yaml
-                  - orientation: portrait
+                layout: !include 
+                  - .cards/layout.yaml
+                  - sticky: both
+                cards: !include .cards/{{ view.name }}.yaml
               - !include
                 - .cards/sticky.yaml
                 - view: {{ view.name }}

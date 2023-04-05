@@ -75,7 +75,7 @@
       notify_dev: notify.mobile_app_frederieke_iphone
       uri_: /lovelace/security
 - id: '1653934725357'
-  alias: Stop media als TV uitgezet wordt
+  alias: Eetkamer stop playback als remote uit
   description: ''
   trigger:
   - platform: device
@@ -88,9 +88,9 @@
     data: {}
     target:
       entity_id:
-      - media_player.eetkamer
       - media_player.eetkamer_jellyfin
       - media_player.eetkamer_cast
+      - media_player.android_tv_10_9_8_37
   mode: single
 - id: '1657483816969'
   alias: Verlichting uit sleep mode
@@ -166,8 +166,8 @@
   use_blueprint:
     path: local/cast-and-re-cast-a-lovelace-view-to-a-google-hub.yaml
     input:
-      player: media_player.opslag
-      url: http://10.9.8.30:8123/lovelace/opslag
+      player: media_player.eetkamer_cast
+      url: http://10.9.8.30:8123/lovelace/screensaver
 - id: '1666370845576'
   alias: Automatic Theme Change
   description: ''
@@ -289,47 +289,6 @@
     target:
       entity_id: light.alles
   mode: single
-- id: '1669466076010'
-  alias: Tablets Load Alarm Dashboard
-  description: 'Load restricted alarm dashboard on the tablets when alarm is armed. '
-  trigger:
-  - platform: device
-    device_id: 4be213244172f3d3f877c91a0444d2c8
-    domain: alarm_control_panel
-    entity_id: alarm_control_panel.alarm
-    type: armed_away
-  - platform: device
-    device_id: 4be213244172f3d3f877c91a0444d2c8
-    domain: alarm_control_panel
-    entity_id: alarm_control_panel.alarm
-    type: armed_night
-  condition: []
-  action:
-  - service: browser_mod.navigate
-    data:
-      path: /lovelace-alarm
-    target:
-      device_id:
-      - a3fef3295e374b9fba27bb62b9e484c4
-  mode: single
-- id: '1669466184578'
-  alias: Load Tablet start url when alarm disarmed
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 4be213244172f3d3f877c91a0444d2c8
-    domain: alarm_control_panel
-    entity_id: alarm_control_panel.alarm
-    type: disarmed
-  condition: []
-  action:
-  - service: browser_mod.navigate
-    data:
-      path: /lovelace/woonkamer
-    target:
-      device_id:
-      - a3fef3295e374b9fba27bb62b9e484c4
-  mode: single
 - id: '1669496934507'
   alias: Alarm Panel Sounds
   description: ''
@@ -367,11 +326,9 @@
             media_content_id: media-source://media_source
   mode: single
 - id: '1669762061493'
-  alias: 'Laad Tablets starturl als home assistant opstart '
+  alias: Tablets reload na home assistant start
   description: ''
   trigger:
-  - platform: event
-    event_type: homeassistant_started
   - platform: homeassistant
     event: start
   condition: []
@@ -379,15 +336,15 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 25
+      seconds: 45
       milliseconds: 0
   - service: button.press
     data: {}
     target:
       entity_id:
-      - button.tablet_1_load_start_url
-      - button.tablet_2_load_start_url
-      - button.tablet_3_load_start_url_2
+      - button.tablet_1_restart_browser
+      - button.tablet_2_restart_browser
+      - button.tablet_3_restart_browser_2
   mode: single
 - id: '1670060239315'
   alias: 'Badkamer lamp uit '
@@ -450,17 +407,28 @@
     to: 'on'
   condition: []
   action:
-  - service: spotcast.start
+  - service: media_player.volume_set
     data:
-      force_playback: true
-      random_song: true
-      shuffle: true
-      start_volume: 35
+      volume_level: 0.3
+    target:
       entity_id: media_player.badkamer
-      limit: 20
-      repeat: context
-      offset: 1
-      ignore_fully_played: false
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.badkamer
+    data:
+      media_content_id: media-source://radio_browser/96126e82-0601-11e8-ae97-52543be04c81
+      media_content_type: audio/mpeg
+    metadata:
+      title: NPO Radio 2
+      thumbnail: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/640px-NPO_Radio_2_logo.svg.png
+      media_class: music
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://radio_browser
+      - media_content_type: music
+        media_content_id: media-source://radio_browser/country/NL
   mode: single
 - id: '1670354036232'
   alias: 'Stop badkamer muziek als schakelaar uitgaat '
@@ -608,3 +576,23 @@
     input:
       device: 32bc03e232f39f108ed9a8478be375d0
       person: person.thomas
+- id: '1680450883516'
+  alias: 'Eetkamer remote aan als start met casten '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.eetkamer_cast
+    to: playing
+  condition:
+  - condition: device
+    type: is_off
+    device_id: bcac3f1fabdc32d269b104756263537f
+    entity_id: remote.eetkamer_harmony_hub
+    domain: remote
+  action:
+  - type: turn_on
+    device_id: bcac3f1fabdc32d269b104756263537f
+    entity_id: remote.eetkamer_harmony_hub
+    domain: remote
+  mode: single

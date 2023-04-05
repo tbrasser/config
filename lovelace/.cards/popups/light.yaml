@@ -1,0 +1,175 @@
+# lovelace_gen
+title: "{{ name }}"
+{% if state == 'off' %}
+right_button: "Aan"
+right_button_action:
+  service: light.turn_on
+  data:
+    entity_id: "{{ entity }}"
+{% else %}
+right_button: "Uit"
+right_button_action:
+  service: light.turn_off
+  data:
+    entity_id: "{{ entity }}"
+{% endif %}
+dismissable: true
+size: wide
+style: |
+  --popup-min-width: 360px;
+  --popup-max-width: 1080px;
+  --popup-border-width: var(--ha-card-border-width, 2px);
+  --popup-border-color: var(--ha-card-border-color, var(--divider-color, #eee));
+  --popup-border-radius: 28px;
+  --popup-background-color: var(--primary-background-color);
+  --popup-padding-x: 0px;
+  --popup-padding-y: 0px;
+card_mod:
+  style:
+    ha-dialog$: |
+      div.mdc-dialog div.mdc-dialog__scrim {
+        {{ "{%" }} set r = state_attr('{{ entity }}', 'rgb_color')[0] {{ "%}" }}
+        {{ "{%" }} set g = state_attr('{{ entity }}', 'rgb_color')[1] {{ "%}" }}
+        {{ "{%" }} set b = state_attr('{{ entity }}', 'rgb_color')[2] {{ "%}" }}
+        {{ "{%" }} set a = (state_attr('{{ entity }}', 'brightness')/255)|round(1) {{ "%}" }}
+        background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }}, {{ "{{" }}a{{ "}}" }});
+      }
+content:
+  type: custom:vertical-stack-in-card
+  {% if orientation == 'landscape' %}
+  horizontal: true
+  {% endif %}
+  card_mod:
+    class: invisible
+  cards:
+    - type: custom:vertical-stack-in-card
+      card_mod:
+        class: invisible
+      cards:
+        - type: custom:mushroom-chips-card
+          card_mod:
+            class: invisible
+          chips:
+            - type: light
+              entity: {{ entity }}
+              name: Daglicht
+              icon: mdi:weather-sunny
+              content_info: name
+              use_light_color: false
+              tap_action:
+                action: call-service
+                service: light.turn_on
+                data:
+                  kelvin: 5500
+                  transition: 2
+                target:
+                  entity_id: {{ entity }}
+              card_mod:
+                style: |
+                  ha-card {
+                    --chip-background: rgb(255, 236, 224);
+                    --text-color: black;
+                  }
+            - type: light
+              entity: {{ entity }}
+              name: Focus
+              tap_action:
+                action: call-service
+                service: light.turn_on
+                data:
+                  kelvin: 3500
+                  transition: 2
+                target:
+                  entity_id: {{ entity }}
+              content_info: name
+              use_light_color: false
+              icon: mdi:lightbulb
+              card_mod:
+                style: |
+                  ha-card {
+                    --chip-background: rgb(255, 196, 137); 
+                    --text-color: black;
+                  }
+            - type: light
+              entity: {{ entity }}
+              icon: mdi:lightbulb
+              name: Gezellig
+              use_light_color: false
+              content_info: name
+              tap_action:
+                action: call-service
+                service: light.turn_on
+                data:
+                  transition: 2
+                  kelvin: 2700
+                target:
+                  entity_id: {{ entity }}
+              card_mod:
+                style: |
+                  ha-card {
+                    --chip-background: rgb(255, 169, 87); 
+                    --text-color: black;
+                  }
+          alignment: center
+        - entity: "{{ entity }}"
+          type: custom:light-entity-card
+          shorten_cards: true
+          consolidate_entities: true
+          child_card: true
+          hide_header: true
+          color_wheel: true
+          persist_features: true
+          brightness: false
+          color_temp: false
+          white_value: false
+          color_picker: true
+          smooth_color_wheel: true
+          speed: false
+          intensity: false
+          force_features: false
+          effects_list: false
+          card_mod:
+            class: invisible
+        #   style: |
+        #     ha-card {
+        #       padding: -15px;
+        #       background: rgba(var(--rgb-primary-background-color), 0.1);
+        #       }
+    {% if type != 'onoff' %}
+    - type: custom:vertical-stack-in-card
+      card_mod:
+        class: invisible
+      cards:
+        - type: custom:mushroom-light-card
+          entity: "{{ entity }}"
+          fill_container: true
+          layout: horizontal
+          primary_info: none
+          secondary_info: none
+          icon_type: icon
+          icon: hue:scene-bright
+          show_brightness_control: true
+          use_light_color: true
+          show_color_temp_control: false
+          collapsible_controls: false
+          card_mod:
+            class: invisible
+    {% if type != 'dimmable' %}
+    {% if type != 'rgb' %}
+        - type: custom:mushroom-light-card
+          entity: "{{ entity }}"
+          fill_container: true
+          layout: horizontal
+          primary_info: none
+          secondary_info: none
+          icon_type: icon
+          icon: mdi:theme-light-dark
+          show_brightness_control: false
+          use_light_color: true
+          show_color_temp_control: true
+          collapsible_controls: false
+          card_mod:
+            class: invisible
+    {% endif %}
+    {% endif %}
+    {% endif %}

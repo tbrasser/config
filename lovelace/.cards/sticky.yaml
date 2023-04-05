@@ -9,9 +9,9 @@ card_mod:
       position: sticky;
       position: -webkit-sticky;
       {% if position == "footer" %}
-      bottom: 0;
+      bottom: 0 !important;
       {% else %}
-      top: 0;
+      top: 0 !important;
       {% endif %}
     }
     ha-card {
@@ -40,7 +40,27 @@ chips:
         data:
           browser_id: THIS
   {% else %}
-  - type: back
+  - type: template
+    icon: mdi:arrow-left
+    {% if 'entity' in headerview.chip %}
+    entity: {{ headerview.chip.entity }}
+    {% endif %}
+    {% if 'icon_color' in headerview.chip %}
+    icon_color: {{ headerview.chip.icon_color|tojson }}
+    {% endif %}
+    {% if 'card_mod' in headerview.chip %}
+    card_mod: {{ headerview.chip.card_mod|tojson }}
+    {% endif %}
+    {% if 'hold_action' in headerview.chip %}
+    hold_action: {{ headerview.chip.hold_action|tojson }}
+    {% endif %}
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.javascript
+        data:
+          browser_id: THIS
+          code: window.history.back()
   {% endif %} 
   {% else %}
   - tap_action:

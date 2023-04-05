@@ -1,13 +1,31 @@
-- type: custom:mushroom-alarm-control-panel-card
+- type: tile
   entity: alarm_control_panel.alarm
-  states:
-    - armed_home
-    - armed_away
-    - armed_night
-  name: " "
-  layout: vertical
+  features:
+    - type: alarm-modes
+      modes:
+        - away
+        - night
+        - disarmed
   view_layout:
     grid-column-end: span 2
+- type: glance
+  entities:
+    - entity: binary_sensor.inloopkast_pir_occupancy
+    - entity: binary_sensor.woonkamer_pir_occupancy
+    - entity: binary_sensor.pir_stairs_occupancy
+    - entity: binary_sensor.pir_storage_occupancy
+  state_color: true
+  view_layout:
+    grid-column-end: span 2
+- type: glance
+  entities:
+    - entity: binary_sensor.hordeur_contact
+    - entity: binary_sensor.laundry_door_contact
+    - entity: binary_sensor.tuindeur_contact
+    - entity: binary_sensor.voordeur_contact
+  state_color: true
+  view_layout:
+    grid-column-end: span 2 
 - type: picture-entity
   entity: binary_sensor.area_voortuin
   camera_image: camera.03cabcc9_ring_mqtt
@@ -90,7 +108,7 @@
     camera_image: camera.tablet3
     camera_view: live
     name: Tablet 3
-    aspect_ratio: 3x4
+    aspect_ratio: 4x3
     tap_action:
       action: fire-dom-event
       browser_mod:

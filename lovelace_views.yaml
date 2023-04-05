@@ -4,6 +4,9 @@
     type: alarm-control-panel
     entity: alarm_control_panel.alarm
     content_info: none
+    hold_action:
+      action: navigate
+      navigation_path: /config/dashboard
 - name: main
   position: footer
   chip:
@@ -35,10 +38,11 @@
 - name: media
   position: footer
   chip:
-    type: entity
+    type: template
     entity: media_player.global
     content_info: none
     icon_color: indigo
+    icon: "{% set media_type = state_attr(config.entity, 'media_content_type') %}{% if media_type == 'tvshow' %}mdi:television-classic{% elif media_type == 'movie' %}mdi:movie-roll{% elif media_type == 'music' %}mdi:music{% elif media_type == 'playlist' %}mdi:music{% else %}mdi:play{% endif %}"
     hold_action:
       action: more-info
     card_mod:
@@ -48,39 +52,6 @@
           {% if (expand('media_player.alles') | selectattr('state','ne','off') | list | count) > 0 %}
           content: "{{ expand('media_player.alles') | selectattr('state','ne','off') | list | count }}";
           {% endif %} 
-        }
-        :host {
-          width: var(--chip-height);
-        }
-        .content {
-          {% set media_type = state_attr(config.entity, 'media_content_type') %}
-          {% if media_type == 'tvshow' %}
-            --card-mod-icon: mdi:television-classic;
-            animation: flicker 1s linear infinite alternate;
-          {% elif media_type == 'movie' %}
-            --card-mod-icon: mdi:movie-roll;
-            animation: spin 2s linear infinite reverse;
-          {% elif media_type == 'music' %}
-            --card-mod-icon: mdi:music;
-            animation: beat 1.3s ease-out infinite both;
-          {% elif media_type == 'playlist' %}
-            --card-mod-icon: mdi:music;
-            animation: beat 1.3s ease-out infinite both;
-          {% else %}
-            --card-mod-icon: mdi:play;
-          {% endif %}
-        }
-        @keyframes flicker {
-          0%, 31.98%, 32.98%, 34.98%, 36.98%, 39.98%, 67.98%, 68.98%, 95.98%, 96.98%, 97.98%, 98.98%, 100% { --color: rgba(var(--rgb-indigo), 1); }
-          32%, 33%, 35%, 36%, 37%, 40%, 68%, 69%, 96%, 97%, 98%, 99% { --color: rgba(var(--rgb-indigo), 0.6); }
-        }
-        @keyframes beat {
-          0%, 60% { --chip-icon-size: 19px; }
-          5%, 17%, 57% { --chip-icon-size: 20px; }
-          10%, 20%, 51% { --chip-icon-size: 21px; }
-          25%, 45% { --chip-icon-size: 22px; }
-          30%, 39% { --chip-icon-size: 23px; }
-          33% { --chip-icon-size: 24px; }
         }
 - name: location
   position: footer

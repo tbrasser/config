@@ -1,5 +1,18 @@
 - type: custom:clock-weather-card
   entity: weather.openweathermap
+  # sun_entity: sun.sun
+  # temperature_sensor: sensor.outdoor_temp
+  weather_icon_type: fill
+  animated_icon: true
+  # forecast_days: 5
+  # locale: en-GB
+  # time_format: 24
+  # date_pattern: P
+  hide_today_section: false
+  hide_forecast_section: false
+  hide_clock: false
+  hide_date: false
+  hourly_forecast: false
   view_layout:
     grid-column-end: span 2
 - type: conditional

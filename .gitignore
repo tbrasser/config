@@ -31,8 +31,12 @@
 !lovelace/*.yaml
 !lovelace/.cards/
 !lovelace/.cards/*.yaml
+!lovelace/.cards/popups/
+!lovelace/.cards/popups/*.yaml
 !themes/
 !themes/transparent.yaml
+!templates/
+!templates/*.j2
 
 # Add appdaemon
 !appdaemon/
@@ -50,6 +54,7 @@
 !www/
 !www/style.css
 !www/style.js
+!www/persistentsettings.js
 !www/images/
 !www/images/wallpapers/
 !www/images/wallpapers/*.png
