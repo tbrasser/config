@@ -3,6 +3,8 @@ type: conditional
 conditions:
   - entity: "{{ entity }}"
     state_not: "on"
+  - entity: "{{ entity }}"
+    state_not: "unavailable"
 card:
   type: tile
   entity: "{{ entity }}"

@@ -3,6 +3,12 @@ transparent:
   ### Layout
   vertical-stack-card-margin: 0
   masonry-view-card-margin: 4px 4px 4px
+  card-mod-view-yaml: |
+    .: |
+      hui-view {
+        overflow: clip !important;
+      }
+
   card-mod-card-yaml: |
     .: |
       ha-card {
@@ -58,7 +64,7 @@ transparent:
         top: 30px;
       }
   ### Colors and fonts
-  primary-color: '#209cee'
+  primary-color: "#209cee"
   accent-color: rgb(var(--rgb-orange-color))
   # missing colors
   rgb-amber-color: 255, 193, 7

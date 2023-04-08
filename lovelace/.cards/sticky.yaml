@@ -16,10 +16,11 @@ card_mod:
     }
     ha-card {
       background: none;
+      margin: 0;
       {% if position == "footer" %}
-      margin: 0 4px 4px 4px;
+      padding: 0 4px 4px 4px;
       {% else %}
-      margin: 4px 4px 0 4px;
+      padding: 4px 4px 0 4px;
       {% endif %}
       --ha-card-border-width: 0 !important;
       --chip-border-width: 1px;

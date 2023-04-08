@@ -331,6 +331,8 @@
   trigger:
   - platform: homeassistant
     event: start
+  - platform: event
+    event_type: lovelace_updated
   condition: []
   action:
   - delay:
@@ -345,7 +347,7 @@
       - button.tablet_1_restart_browser
       - button.tablet_2_restart_browser
       - button.tablet_3_restart_browser_2
-  mode: single
+  mode: restart
 - id: '1670060239315'
   alias: 'Badkamer lamp uit '
   description: ''

@@ -263,8 +263,8 @@
         text: Schoongemaakt en ontkalkt?
     - entity: plant.basilicum
       battery: sensor.plant_sensor_b2f8_battery
-    - entity: plant.laurier
-      battery: sensor.plant_sensor_1455_battery
+    # - entity: plant.laurier
+    #  battery: sensor.plant_sensor_1455_battery
 
 - name: gang
   areas: []
