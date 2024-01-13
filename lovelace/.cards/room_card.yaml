@@ -10,9 +10,7 @@ card_mod:
       {{ "{%" }} set g = state_attr(entity, 'rgb_color')[1] {{ "%}" }}
       {{ "{%" }} set b = state_attr(entity, 'rgb_color')[2] {{ "%}" }}
       background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
-      {{ "{%" }} else {{ "%}" }}
-      background: none;
-      {{ "{%" }} endif {{ "%}" }}
+      {{ "{%" }} else {{ "%}" }}background: none;{{ "{%" }} endif {{ "%}" }}
     }
 cards:
   - type: custom:mushroom-template-card
@@ -76,8 +74,8 @@ cards:
     chips:
       - type: conditional
         conditions:
-          - entity: sensor.winston_room
-            state: {{ room }}
+          - entity: sensor.winston_current_room
+            state: {{ room | title }}
           - entity: vacuum.winston
             state_not: docked
         chip:
@@ -98,6 +96,8 @@ cards:
         conditions:
           - entity: {{ media }}
             state_not: "off"
+          - entity: {{ media }}
+            state_not: unavailable
         chip:
           type: entity
           entity: {{ media }}
@@ -110,35 +110,44 @@ cards:
                 backdrop-filter: unset;
                 -webkit-backdrop-filter: unset;
               }
+      # - type: conditional
+      #   conditions:
+      #     - entity: binary_sensor.deuren_{{ room }}
+      #       state: "open"
+      #   chip:
+      #     type: entity
+      #     entity: binary_sensor.deuren_{{ room }}
+      #     content_info: none
+      #     tap_action:
+      #       action: more-info
+      #     card_mod:
+      #       style: |
+      #         ha-card {
+      #           backdrop-filter: unset;
+      #           -webkit-backdrop-filter: unset;
+      #         }
+      # - type: conditional
+      #   conditions:
+      #     - entity: binary_sensor.beweging_{{ room }}
+      #       state: "on"
+      #   chip:
+      #     type: entity
+      #     entity: binary_sensor.beweging_{{ room }}
+      #     content_info: none
+      #     tap_action:
+      #       action: more-info
+      #     card_mod:
+      #       style: |
+      #         ha-card {
+      #           backdrop-filter: unset;
+      #           -webkit-backdrop-filter: unset;
+      #         }
       - type: conditional
         conditions:
-          - entity: binary_sensor.deuren_{{ room }}
-            state: "open"
+          - condition: numeric_state
+            entity: 'sensor.area_temperature_degc_{{ room }}'
+            below: 100
         chip:
-          type: entity
-          entity: binary_sensor.deuren_{{ room }}
-          content_info: none
-          tap_action:
-            action: more-info
-          card_mod:
-            style: |
-              ha-card {
-                backdrop-filter: unset;
-                -webkit-backdrop-filter: unset;
-              }
-      - type: conditional
-        conditions:
-          - entity: binary_sensor.beweging_{{ room }}
-            state: "on"
-        chip:
-          type: entity
-          entity: binary_sensor.beweging_{{ room }}
-          content_info: none
-          tap_action:
-            action: more-info
-          card_mod:
-            style: |
-              ha-card {
-                backdrop-filter: unset;
-                -webkit-backdrop-filter: unset;
-              }
+          type: template
+          entity: 'sensor.area_temperature_degc_{{ room }}'
+          content: '{{ "{{" }} states.sensor.area_temperature_degc_{{ room }}.state | round(0) {{ "}}" }}°C'

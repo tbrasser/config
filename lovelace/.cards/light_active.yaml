@@ -1,62 +1,66 @@
 # lovelace_gen
 type: conditional
 conditions:
-  - entity: "{{ entity }}"
+  - entity: {{ entity }}
     state: "on"
-{% if type == 'onoff' %}
-card:
-  type: tile
-  entity: "{{ entity }}"
-  show_entity_picture: false
-  name: "{{ name }}"
-  tap_action:
-    action: more-info
-  card_mod:
-    style:
-      ha-tile-info$: |
-        span.secondary {
-          display: none;
-        } 
-        span.primary {
-          font-weight: 600;
-          white-space: normal;
-        }
-
-{% else %}
+{% if type != 'onoff' %}
 view_layout:
   grid-column-end: span 2
+{% endif %}
 card:
-  type: tile
-  entity: "{{ entity }}"
-  name: "{{ name }}"
-  features: [ type: "light-brightness" ]
+  type: custom:mushroom-light-card
+  show_brightness_control: true
+  secondary_info: none
   tap_action:
     action: more-info
+  hold_action:
+    action: toggle
+  use_light_color: true
+  show_color_temp_control: false
+  show_color_control: false
+  name: {{ name }}
   card_mod:
     style:
-      ha-tile-info$: |
-        span.secondary {
-          font-weight: 600;
-        } 
-        span.primary {
-          font-weight: 600;
+      mushroom-shape-icon$: |
+        .shape:active {
+          transform: scale(1.2);
+        }
+      mushroom-state-info$: |
+        .primary {
+          white-space: normal !important;
         }
       .: |
-        ha-card {
-          {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
-          {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
-          {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
-          box-shadow: none;
-          --primary-text-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }});
-          --secondary-text-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.5);
-          background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
+        mushroom-light-brightness-control, mushroom-light-color-temp-control,
+        mushroom-light-color-control {      
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          opacity: 0.3;
+          --control-height: 66px;
+          --control-border-radius: var(--ha-card-border-radius, 12px);
+          --rgb-disabled: var(--rgb-card-background-color);
+        } 
+        mushroom-state-item {
+          z-index: 1;
+          max-width: fit-content;
+          margin-bottom: 0px;
+          pointer-events: none;
+        } 
+        mushroom-shape-icon {
+          pointer-events: auto;
+        }  
+        mushroom-button {
+          position: absolute;
+          width: calc(var(--control-height) * var(--control-button-ratio)) !important;
+          height: var(--control-height) !important;
+          top: var(--spacing);
+          right: var(--spacing);
         }
-        ha-tile-icon {
-          {{ "{%" }} set r = state_attr(config.entity, 'rgb_color')[0] {{ "%}" }}
-          {{ "{%" }} set g = state_attr(config.entity, 'rgb_color')[1] {{ "%}" }}
-          {{ "{%" }} set b = state_attr(config.entity, 'rgb_color')[2] {{ "%}" }}
-          --icon-color: rgb({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }}) !important;
-          --shape-color: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.2) !important;
+        mushroom-button:nth-child(3) {
+          right:  calc(2 *var(--spacing) + var(--control-height) * var(--control-button-ratio));
         }
-
-{% endif %}
+        .actions :not(:last-child) {
+          margin-right: 0px !important;
+        }
+  entity: {{ entity }}

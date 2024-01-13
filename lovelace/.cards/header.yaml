@@ -4,23 +4,13 @@ alignment: justify
 card_mod:
   class: sticky
   style: |
-    :host {
-      z-index: 999;
-      position: sticky;
-      position: -webkit-sticky;
-      {% if position == "footer" %}
-      bottom: 0 !important;
-      {% else %}
-      top: 0 !important;
-      {% endif %}
-    }
     ha-card {
       background: none;
       margin: 0;
       {% if position == "footer" %}
       padding: 0 4px 4px 4px;
       {% else %}
-      padding: 4px 4px 0 4px;
+      padding: 4px 0px 0 0px;
       {% endif %}
       --ha-card-border-width: 0 !important;
       --chip-border-width: 1px;
@@ -32,8 +22,18 @@ chips:
   {% if (headerview.position == position) or (position == "both") %}
   {% if headerview.name == view %}
   {% if view == "main" %}
-  - type: menu #type: action
-    #icon: mdi:microphone
+  - type: action
+    icon: mdi:microphone
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.sequence
+        data:
+          sequence:
+            - service: browser_mod.navigate
+              data:
+                path: "?conversation=1"
+            - service: browser_mod.refresh
   {% else %}
   - type: template
     icon: mdi:arrow-left

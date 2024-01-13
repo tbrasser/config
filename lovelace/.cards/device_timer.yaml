@@ -2,7 +2,9 @@
 type: custom:mushroom-template-card
 icon_color: grey
 primary: "{{ "{{" }} state_attr(entity, 'friendly_name') {{ "}}" }}"
-secondary: "{{ "{%" }} set timer = ((states(entity) | as_datetime | as_local - now()).days + 1) {{ "%}" }}{{ "{%" }} if timer > 1 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dagen{{ "{%" }} elif timer > 0 {{ "%}" }}Over {{ "{{" }} timer {{ "}}" }} dag{{ "{%" }} else {{ "%}" }}'t is tijd!{{ "{%" }} endif {{ "%}" }}"
+secondary: |
+  {{ "{%" }} from 'easy_time.jinja' import easy_relative_time {{ "%}" }}
+  {{ "{{" }} easy_relative_time(entity) {{ "}}" }}
 entity: {{ entity }}
 badge_color: orange
 icon: "{{ "{{" }} state_attr(entity, 'icon') {{ "}}" }}"

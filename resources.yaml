@@ -2,25 +2,37 @@
   type: module
 - url: /local/style.css
   type: css
-- url: /local/style.js?v=20230408
+- url: /local/style.js?v=20231027
   type: module
-- url: /local/persistentsettings.js?v=20230404
+- url: /local/persistentsettings.js?v=20230615
   type: module
 # HACS
+- url: /hacsfiles/zigbee2mqtt-networkmap/zigbee2mqtt-networkmap.js
+  type: module
+- url: /hacsfiles/sip-hass-card/sipjs-card.js
+  type: module
+- url: /hacsfiles/formulaone-card/formulaone-card.js
+  type: module
+- url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+  type: module
+- url: /hacsfiles/mushroom-strategy/mushroom-strategy.js
+  type: module
 - url: /hacsfiles/lovelace-animated-background/animated-background.js?v=20230408
   type: module
-- url: /hacsfiles/clock-weather-card/clock-weather-card.js?v=128
+- url: /hacsfiles/clock-weather-card/clock-weather-card.js
   type: module
-- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=20230402
+- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=20240102
   type: module
-- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js?v=128
+- url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js
   type: module
-- url: /hacsfiles/lovelace-state-switch/state-switch.js?v=20230406
+- url: /hacsfiles/lovelace-state-switch/state-switch.js
   type: module
 - type: module
   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
 - type: module
   url: /hacsfiles/kiosk-mode/kiosk-mode.js
+- type: module
+  url: /hacsfiles/lovelace-q-card/q-card.js
 - type: module
   url: /hacsfiles/hass-hue-icons/hass-hue-icons.js
 - type: module
@@ -32,11 +44,11 @@
 - type: module
   url: /hacsfiles/config-editor-card/config-editor-card.js
 - type: module
-  url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js?v=128
+  url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js
 - type: module
   url: /hacsfiles/lovelace-mushroom/mushroom.js
 - type: module
-  url: /hacsfiles/mini-media-player/mini-media-player-bundle.js?v=128
+  url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
 - type: module
   url: /hacsfiles/timer-bar-card/timer-bar-card.js
 - type: module
@@ -45,6 +57,18 @@
   url: /hacsfiles/lovelace-layout-card/layout-card.js
 - type: module
   url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+- url: /hacsfiles/frigate-hass-card/frigate-hass-card.js
+  type: module
+- url: /hacsfiles/custom-ui/custom-ui-icon-color.js
+  type: module
+- url: /hacsfiles/lovelace-auto-entities/auto-entities.js
+  type: module
+- url: /hacsfiles/Bubble-Card/bubble-card.js
+  type: module
+- url: /hacsfiles/Bubble-Card/bubble-pop-up.js
+  type: module
+- url: /hacsfiles/better-thermostat-ui-card/better-thermostat-ui-card.js
+  type: module 
 # custom components
 - type: module
   url: /webrtc/webrtc-camera.js

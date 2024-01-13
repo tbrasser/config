@@ -1,4 +1,24 @@
+mqtt:
+  sensor:
+    - name: Zigbee2mqtt Networkmap
+      # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
+      state_topic: zigbee2mqtt/bridge/response/networkmap
+      value_template: >-
+        {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+      # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
+      json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
+      json_attributes_template: "{{ value_json.data.value | tojson }}"
 sensor:
+  - platform: openai_response
+    api_key: !secret openai_apikey
+    model: gpt-3.5-turbo-instruct # "text-davinci-003"
+  - platform: history_stats
+    name: Lavalamp on past 8 hours
+    entity_id: light.stopcontact_4
+    state: "on"
+    type: time
+    duration: 08:00
+    end: "{{ now() }}"
   # Time Date
   - platform: time_date
     display_options:
@@ -14,55 +34,29 @@ sensor:
       dagdeel:
         value_template: >
           {% set state = states('sensor.time') %}
-          {% if '00:00' <= state < '02:00' %}
+          {% if '23:00' <= state < '01:00' %}
             nacht-begin
-          {% elif '02:00' <= state < '04:00' %}
+          {% elif '01:00' <= state < '03:00' %}
             nacht-mid
-          {% elif '04:00' <= state < '06:00' %}
+          {% elif '03:00' <= state < '05:00' %}
             nacht-eind
-          {% elif '06:00' <= state < '08:00' %}
+          {% elif '05:00' <= state < '07:00' %}
             ochtend-begin
-          {% elif '08:00' <= state < '10:00' %}
+          {% elif '07:00' <= state < '09:00' %}
             ochtend-mid
-          {% elif '10:00' <= state < '12:00' %}
+          {% elif '09:00' <= state < '11:00' %}
             ochtend-eind
-          {% elif '12:00' <= state < '14:00' %}
+          {% elif '11:00' <= state < '13:00' %}
             middag-begin
-          {% elif '14:00' <= state < '16:00' %}
+          {% elif '13:00' <= state < '15:00' %}
             middag-mid
-          {% elif '16:00' <= state < '18:00' %}
+          {% elif '15:00' <= state < '17:00' %}
             middag-eind
-          {% elif '18:00' <= state < '20:00' %}
+          {% elif '17:00' <= state < '19:00' %}
             avond-begin
-          {% elif '20:00' <= state < '22:00' %}
+          {% elif '19:00' <= state < '21:00' %}
             avond-mid
           {% else %}
             avond-eind
           {% endif %} 
-  # System Monitor
-  - platform: systemmonitor
-    resources:
-      - type: disk_use
-        arg: /home
-      - type: disk_free
-        arg: /home
-      - type: disk_use_percent
-        arg: /home
-      - type: memory_free
-      - type: memory_use
-      - type: memory_use_percent
-      - type: network_in
-        arg: eth0
-      - type: network_out
-        arg: eth0
-      - type: throughput_network_in
-        arg: eth0
-      - type: throughput_network_out
-        arg: eth0
-      - type: ipv4_address
-        arg: eth0
-      - type: packets_in
-        arg: eth0
-      - type: packets_out
-        arg: eth0
-      - type: processor_use
+

@@ -42,7 +42,19 @@
     entity: media_player.global
     content_info: none
     icon_color: indigo
-    icon: "{% set media_type = state_attr(config.entity, 'media_content_type') %}{% if media_type == 'tvshow' %}mdi:television-classic{% elif media_type == 'movie' %}mdi:movie-roll{% elif media_type == 'music' %}mdi:music{% elif media_type == 'playlist' %}mdi:music{% else %}mdi:play{% endif %}"
+    icon: |
+      {% set media_type = state_attr(config.entity, 'media_content_type') %}
+      {% if media_type == 'tvshow' %}
+      mdi:television-classic
+      {% elif media_type == 'movie' %}
+      mdi:movie-roll
+      {% elif media_type == 'music' %}
+      mdi:music
+      {% elif media_type == 'playlist' %}
+      mdi:music
+      {% else %}
+      mdi:play
+      {% endif %}
     hold_action:
       action: more-info
     card_mod:
@@ -59,6 +71,9 @@
     type: template
     icon: mdi:heart
     icon_color: red
+    hold_action:
+      action: assist
+      start_listening: true
     card_mod:
       class: chipbadge
       style: |
@@ -76,10 +91,20 @@
       class: chipbadge
       style: |
         ha-card:after {
-          content: "{{ (states.sensor.te_besteden_per_dag.state|float - states.sensor.uitgegeven_vandaag.state|float)|int }}";
+          content: "{{ states.sensor.uitgegeven_vandaag.state|float(0)|int }}";
         }
-    icon_color: "{% if states.sensor.uitgegeven_vandaag.state|float > states.sensor.te_besteden_per_dag.state|float %}red{% else %}green{% endif %}"
-    icon: "{% if states.sensor.te_besteden_per_dag.state|float < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
+    icon_color: |
+      {% if states.sensor.uitgegeven_vandaag.state|float(0) >= states.sensor.te_besteden_per_dag.state|float(0) %}
+      red
+      {% else %}
+      green
+      {% endif %}
+    icon: |
+      {% if states.sensor.te_besteden_per_dag.state|float(0) < 70 %}
+      mdi:currency-eur-off
+      {% else %}
+      mdi:currency-eur
+      {% endif %}
 - name: winston
   position: header
   chip:
@@ -93,7 +118,7 @@
       style: |
         ha-card:after {
           {% if states.vacuum.winston.state != "docked" %}
-          content: "{{ states.sensor.winston_room.state }}";
+          content: "{{ states.sensor.winston_current_room.state }}";
           {% endif %} 
         }
 - name: plants
@@ -106,7 +131,31 @@
       class: chipbadge
       style: |
         ha-card:after {
+          {% if (states.plant | selectattr('state','eq','problem') | list | count) > 0 %}
           content: "{{ states.plant | selectattr('state','eq','problem') | list | count }}";
+          {% endif %}
+        }
+- name: climate
+  position: header
+  chip:
+    type: template
+    icon_color: |
+      {% if state_attr('climate.opentherm_livingroom_pid_climate_controller', 'hvac_action') == "heating" %}
+      red
+      {% else %}
+      grey
+      {% endif %}
+    icon: |
+      {% if state_attr('climate.opentherm_livingroom_pid_climate_controller', 'hvac_action') == "off" %}
+      mdi:thermometer
+      {% else %}
+      mdi:thermostat
+      {% endif %}
+    card_mod:
+      class: chipbadge
+      style: |
+        ha-card:after {
+          content: "{{ states.sensor.occupied_rooms_average_temperature.state | round(1) }}";
         }
 - name: weather
   position: header
@@ -117,11 +166,12 @@
       class: chipbadge
       style: |
         ha-card:after {
-          content: "{{ state_attr('weather.buienradar', 'temperature') }}";
+          content: "{{ states.sensor.area_temperature_degc_exterior.state | round(1) }}";
         }
 - name: time
   position: header
   chip:
     type: template
-    entity: sensor.time
-    content: "{{ states.sensor.time.state }}"
+    content: |
+      {% from 'easy_time.jinja' import clock %}
+      {{ clock('24-hr') }}

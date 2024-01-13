@@ -2,81 +2,193 @@
 - type: panel
   path: screensaver
   subview: true
+  animated_background: none
   cards:
-    - type: custom:mod-card
-      card_mod:
-        class: invisible
-        style: |
-          ha-card {
-            border-radius: 0px !important;
-            border-width: 0px !important;
-            {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
-            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
-            {{ "{%" }} endif {{ "%}" }}
-          }
-      card:
-        type: custom:state-switch
-        entity: sun.sun
-        default: default
-        states:
-          default:
-            type: vertical-stack
-            cards:
-              - type: custom:layout-card
-                layout_type: custom:grid-layout
-                layout: !include .cards/layout.yaml
-                cards:
-                  - type: custom:clock-weather-card
-                    entity: weather.openweathermap
-                    # sun_entity: sun.sun
-                    # temperature_sensor: sensor.outdoor_temp
-                    weather_icon_type: fill
-                    animated_icon: true
-                    hide_today_section: false
-                    hide_forecast_section: true
-                    hide_clock: false
-                    hide_date: false
-                    hourly_forecast: false
-                    view_layout:
-                      grid-column-end: span 2
-                  - initial_view: listWeek
-                    type: calendar
-                    entities:
-                      - calendar.samen
-                      - calendar.ical_familywall
-                      - calendar.ical_familywall_tasks
-                    view_layout:
-                      grid-column-end: span 2
-                    card_mod:
-                      style: |
-                        ha-card {
-                          height: 100vh;
-                        }
-                        ha-full-calendar {
-                          height: 100%;
-                          overflow-y: visible;
-                        }
-                  - !include
-                    - .cards/media_player_active.yaml
-                    - entity: media_player.global
-                  - type: conditional
-                    view_layout:
-                      grid-column-end: span 2
-                    conditions:
-                      - entity: vacuum.winston
-                        state_not: docked
-                      - entity: vacuum.winston
-                        state_not: unavailable
-                    card:
-                      type: tile
-                      entity: vacuum.winston
-                  - !include .cards/washer_active.yaml
-                  {% for room in _global.rooms %}
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_1
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_2
-                  {% endfor %}
-            
+    - type: vertical-stack
+      cards:
+        - type: conditional
+          conditions:
+            - condition: state
+              entity: sun.sun
+              state_not: unavailable
+          card:
+            type: 'custom:mod-card'
+            card_mod:
+              class: invisible
+              style: |
+                ha-card {
+                  border-radius: 0px !important;
+                  border-width: 0px !important;
+                  {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
+                  background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                  {{ "{%" }} endif {{ "%}" }}
+                }
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:layout-card
+                  layout_type: custom:grid-layout
+                  layout: !include .cards/layout.yaml
+                  cards:
+                    - type: custom:clock-weather-card
+                      entity: weather.openweathermap
+                      # sun_entity: sun.sun
+                      # temperature_sensor: sensor.outdoor_temp
+                      weather_icon_type: fill
+                      animated_icon: true
+                      hide_today_section: false
+                      hide_forecast_section: true
+                      hide_clock: false
+                      hide_date: false
+                      hourly_forecast: false
+                      view_layout:
+                        grid-column-end: span 2
+                    - initial_view: listWeek
+                      type: calendar
+                      entities:
+                        - calendar.samen
+                       # - calendar.ical_familywall
+                        - calendar.ical_familywall_tasks
+                      view_layout:
+                        grid-column-end: span 2
+                      card_mod:
+                        style:
+                          ha-full-calendar:
+                            $: |
+                              .header {
+                                display: none !important;
+                              }
+                              @media (orientation: landscape) {
+                                #calendar {
+                                  min-height: 100vh !important;
+                                }
+                              }
+                              @media (orientation: portrait) {
+                                #calendar {
+                                  min-height: 50vh !important;
+                                }
+                              } 
+                              .fc-day-past .fc-daygrid-day-events {
+                                opacity: 1 !important;
+                              }
+                              .fc .fc-daygrid-event {
+                                padding 0px !important;
+                                margin 0px !important;
+                                height: 15px !important;
+                              }
+                    - type: conditional
+                      view_layout:
+                        grid-column-end: span 2
+                      conditions:
+                        - entity: media_player.global
+                          state_not: "off"
+                        - entity: media_player.global
+                          state_not: idle
+                        - entity: media_player.global
+                          state_not: standby
+                      card:
+                        type: custom:vertical-stack-in-card
+                        cards:
+                          - type: custom:mushroom-media-player-card
+                            entity: media_player.global
+                            icon: mdi:play
+                            use_media_info: true
+                            use_media_artwork: false
+                            show_volume_level: false
+                            #fill_container: true
+                            card_mod:
+                              class: invisible
+                              style:
+                                mushroom-state-info$: |
+                                  .primary:after {
+                                  {% if entity == 'media_player.global' %}
+                                  {% raw %}
+                                    {% set child = state_attr(config.entity, 'active_child') %}
+                                    content: {{ state_attr(child, 'friendly_name') }} !important;
+                                  {% endraw %}
+                                  {% endif %}
+                                  }
+
+                                .: |
+                                  mushroom-shape-icon {
+                                    display: flex;
+                                    {% raw %}
+                                    {% set media_type = state_attr(config.entity, 'media_content_type') %}
+                                    {% if media_type == 'tvshow' %}
+                                      --card-mod-icon: mdi:television-classic;
+                                      animation: flicker 1s linear infinite alternate;
+                                    {% elif media_type == 'movie' %}
+                                      --card-mod-icon: mdi:movie-roll;
+                                      animation: spin 2s linear infinite reverse;
+                                    {% elif media_type == 'music' %}
+                                      --card-mod-icon: mdi:music;
+                                      animation: beat 1.3s ease-out infinite both;
+                                    {% elif media_type == 'playlist' %}
+                                      --card-mod-icon: mdi:music;
+                                      animation: beat 1.3s ease-out infinite both;
+                                    {% else %}
+                                      --card-mod-icon: mdi:play;
+                                    {% endif %}
+                                    {% endraw %}
+                                  }
+                                  @keyframes flicker {
+                                    0%, 31.98%, 32.98%, 34.98%, 36.98%, 39.98%, 67.98%, 68.98%, 95.98%, 96.98%, 97.98%, 98.98%, 100% { --icon-color: rgba(var(--rgb-indigo), 1); }
+                                    32%, 33%, 35%, 36%, 37%, 40%, 68%, 69%, 96%, 97%, 98%, 99% { --icon-color: rgba(var(--rgb-indigo), 0.6); }
+                                  }
+                                  @keyframes beat {
+                                    0%, 60% { --icon-symbol-size: 21px; }
+                                    5%, 17%, 57% { --icon-symbol-size: 22px; }
+                                    10%, 20%, 51% { --icon-symbol-size: 23px; }
+                                    25%, 45% { --icon-symbol-size: 24px; }
+                                    30%, 39% { --icon-symbol-size: 25px; }
+                                    33% { --icon-symbol-size: 26px; }
+                                  }
+                          - entity: media_player.global
+                            hide:
+                              icon: true
+                              name: true
+                              runtime: true
+                              source: true
+                              power: true
+                              state_label: true
+                              volume: true
+                              info: true
+                              progress: false
+                              controls: true
+                            more_info: false
+                            type: custom:mini-media-player
+                            toggle_power: false
+                            group: true
+                            card_mod:
+                              class: invisible
+                              style:
+                                mmp-progress$: |
+                                  paper-progress {
+                                    --paper-progress-container-color: rgba(var(--rgb-indigo-color), 0.2) !important;
+                                  }
+                                .: |
+                                  ha-card {
+                                    margin: 0px 12px 12px;
+                                    --mmp-progress-height: 12px !important;
+                                    --mmp-accent-color: rgb(var(--rgb-indigo-color));
+                                    --mmp-border-radius: 12px !important;
+                                  }
+                    - type: conditional
+                      conditions:
+                        - entity: vacuum.winston
+                          state_not: docked
+                        - entity: vacuum.winston
+                          state_not: unavailable
+                      card:
+                        type: tile
+                        entity: vacuum.winston
+                    - !include .cards/washer_active.yaml
+                    {% for room in _global.rooms %}
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_1
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_2
+                    {% endfor %}
+              

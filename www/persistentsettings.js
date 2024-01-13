@@ -4,7 +4,6 @@
   // Visit /profile?edit=1 to change your settings, then update them here.
   const settings = {
     dockedSidebar: '"always_hidden"',
-    enableShortcuts: "false",
     suspendWhenHidden: "false",
     vibrate: "true",
   };

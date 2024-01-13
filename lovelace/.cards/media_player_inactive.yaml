@@ -20,3 +20,6 @@ card:
         span.primary {
           white-space: normal;
         }
+  tap_action:
+    action: navigate
+    navigation_path: /media-browser/{{ entity }}

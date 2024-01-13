@@ -9,7 +9,7 @@
   entities:
     - binary_sensor.front_door_ding_2
     - binary_sensor.voordeur_contact
-    - binary_sensor.tuindeur_contact
+    - binary_sensor.contact_tuindeur_contact
     - person.frederieke
     - person.thomas
 - type: map

@@ -1,52 +1,3 @@
-sensor:
-  - platform: template
-    sensors:
-      winston_floor:
-        friendly_name: Winston verdieping
-        value_template: >
-          {% if (state_attr('camera.winston_upstairs', 'charger').a) < 74 %}
-          {{ "boven" }}
-          {% elif (state_attr('camera.winston_upstairs', 'charger').a) > 73 %}
-          {{ "beneden" }}
-          {% else %}
-          {{ "badkamers" }}
-          {% endif %}
-      winston_room:
-        friendly_name: Winston Kamer
-        value_template: >
-          {% set floor = states('sensor.winston_floor') %}
-          {% if floor == "beneden" %}
-          {% set room_number = state_attr('camera.winston_downstairs', 'vacuum_room') %}
-          {% if room_number == 16 %}
-          {{ "inloopkast" }}
-          {% elif room_number == 17 %}
-          {{ "woonkamer" }}
-          {% elif room_number == 18 %}
-          {{ "gang" }}
-          {% elif room_number == 19 %}
-          {{ "slaapkamer" }}
-          {% elif room_number == 20 %}
-          {{ "bar" }}
-          {% endif %}
-          {% elif floor == "boven" %}
-          {% set room_number = state_attr('camera.winston_upstairs', 'vacuum_room') %}
-          {% if room_number == 16 %}
-          {{ "eetkamer" }}
-          {% elif room_number == 17 %}
-          {{ "gang" }}
-          {% elif room_number == 18 %}
-          {{ "kantoor" }}
-          {% elif room_number == 19 %}
-          {{ "keuken" }}
-          {% elif room_number == 20 %}
-          {{ "opslag" }}
-          {% endif %}
-          {% elif floor == "badkamers" %}
-          {{ "badkamer" }}
-          {% else %}
-          {{ "onbekend" }}
-          {% endif %}
-
 script:
   vacuum_follow_path:
     mode: single
@@ -83,75 +34,75 @@ script:
             - wait_template: "{{ is_state(entity_id, 'idle') or is_state(entity_id, 'paused') }}"
               timeout: 00:05:00
               continue_on_timeout: false
-camera:
-  - platform: xiaomi_cloud_map_extractor
-    name: winston_downstairs
-    host: !secret xiaomi_vacuum_host
-    token: !secret xiaomi_vacuum_token
-    username: !secret xiaomi_cloud_username
-    password: !secret xiaomi_cloud_password
-    draw:
-      - all
-    attributes:
-      - calibration_points
-      - charger
-      - cleaned_rooms
-      - is_empty
-      - map_name
-      - room_numbers
-      - rooms
-      - vacuum_room_name
-      - vacuum_room
-      - zones
-    map_transformation:
-      # rotate: 270
-      trim:
-        left: 28 # top
-        right: 25 # bottom
-        top: 22 # right
-        bottom: 33 # left
-    colors:
-      color_map_outside: [158,158,158]
-    room_colors:
-      16: [63, 81, 181] # inloopkast indigo mdi:wardrobe
-      17: [244, 67, 54] # woonkamer red hue:room-living
-      18: [158, 158, 158] # gang grey
-      19: [156, 39, 176] # slaapkamer purple hue:room-bedroom
-      20: [205, 220, 57] # bar lime mdi:glass-cocktail
-  - platform: xiaomi_cloud_map_extractor
-    name: winston_upstairs
-    host: !secret xiaomi_vacuum_host
-    token: !secret xiaomi_vacuum_token
-    username: !secret xiaomi_cloud_username
-    password: !secret xiaomi_cloud_password
-    store_map_raw: false
-    store_map_image: false
-    store_map_path: /config/tmp
-    draw:
-      - all
-    attributes:
-      - calibration_points
-      - charger
-      - cleaned_rooms
-      - is_empty
-      - map_name
-      - room_numbers
-      - rooms
-      - vacuum_room_name
-      - vacuum_room
-      - zones
-    map_transformation:
-      # rotate: 270
-      trim:
-        left: 25
-        right: 24
-        top: 26
-        bottom: 32
-    colors:
-      color_map_outside: [158,158,158]
-    room_colors:
-      16: [255, 152, 0] # eetkamer orange
-      17: [158, 158, 158] # gang grey
-      18: [3, 169, 244] # kantoor light-blue
-      19: [255, 235, 59] # keuken yellow
-      20: [233, 30, 99] # opslag pink
+# camera:
+#   - platform: xiaomi_cloud_map_extractor
+#     name: winston_downstairs
+#     host: !secret xiaomi_vacuum_host
+#     token: !secret xiaomi_vacuum_token
+#     username: !secret xiaomi_cloud_username
+#     password: !secret xiaomi_cloud_password
+#     draw:
+#       - all
+#     attributes:
+#       - calibration_points
+#       - charger
+#       - cleaned_rooms
+#       - is_empty
+#       - map_name
+#       - room_numbers
+#       - rooms
+#       - vacuum_room_name
+#       - vacuum_room
+#       - zones
+#     map_transformation:
+#       # rotate: 270
+#       trim:
+#         left: 28 # top
+#         right: 25 # bottom
+#         top: 22 # right
+#         bottom: 33 # left
+#     colors:
+#       color_map_outside: [158, 158, 158]
+#     room_colors:
+#       16: [63, 81, 181] # inloopkast indigo mdi:wardrobe
+#       17: [244, 67, 54] # woonkamer red hue:room-living
+#       18: [158, 158, 158] # gang grey
+#       19: [156, 39, 176] # slaapkamer purple hue:room-bedroom
+#       20: [205, 220, 57] # bar lime mdi:glass-cocktail
+  # - platform: xiaomi_cloud_map_extractor
+  #   name: winston_upstairs
+  #   host: !secret xiaomi_vacuum_host
+  #   token: !secret xiaomi_vacuum_token
+  #   username: !secret xiaomi_cloud_username
+  #   password: !secret xiaomi_cloud_password
+  #   store_map_raw: false
+  #   store_map_image: false
+  #   store_map_path: /config/tmp
+  #   draw:
+  #     - all
+  #   attributes:
+  #     - calibration_points
+  #     - charger
+  #     - cleaned_rooms
+  #     - is_empty
+  #     - map_name
+  #     - room_numbers
+  #     - rooms
+  #     - vacuum_room_name
+  #     - vacuum_room
+  #     - zones
+  #   map_transformation:
+  #     # rotate: 270
+  #     trim:
+  #       left: 25
+  #       right: 24
+  #       top: 26
+  #       bottom: 32
+  #   colors:
+  #     color_map_outside: [158, 158, 158]
+  #   room_colors:
+  #     16: [255, 152, 0] # eetkamer orange
+  #     17: [158, 158, 158] # gang grey
+  #     18: [3, 169, 244] # kantoor light-blue
+  #     19: [255, 235, 59] # keuken yellow
+  #     20: [233, 30, 99] # opslag pink

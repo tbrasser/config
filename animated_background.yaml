@@ -1,22 +1,22 @@
 entity: sensor.dagdeel
-default_url: /local/images/wallpapers/pexels-victor-freitas-600114.jpg
+default_url: /local/images/wallpapers/wallpapernew.jpg
 state_url:
-  ochtend-begin: /local/images/wallpapers/01-Early-Morning.png
-  ochtend-mid: /local/images/wallpapers/02-Mid-Morning.png
-  ochtend-eind: /local/images/wallpapers/03-Late-Morning.png
-  middag-begin: /local/images/wallpapers/04-Early-Afternoon.png
-  middag-mid: /local/images/wallpapers/05-Mid-Afternoon.png
-  middag-eind: /local/images/wallpapers/06-Late-Afternoon.png
-  avond-begin: /local/images/wallpapers/07-Early-Evening.png
-  avond-mid: /local/images/wallpapers/08-Mid-Evening.png
-  avond-eind: /local/images/wallpapers/09-Late-Evening.png
-  nacht-begin: /local/images/wallpapers/10-Early-Night.png
-  nacht-mid: /local/images/wallpapers/11-Mid-Night.png
-  nacht-eind: /local/images/wallpapers/12-Late-Night.png
+  1ochtend-begin: /local/images/wallpapers/01-Early-Morning.png
+  1ochtend-mid: /local/images/wallpapers/02-Mid-Morning.png
+  1ochtend-eind: /local/images/wallpapers/03-Late-Morning.png
+  1middag-begin: /local/images/wallpapers/04-Early-Afternoon.png
+  1middag-mid: /local/images/wallpapers/05-Mid-Afternoon.png
+  1middag-eind: /local/images/wallpapers/06-Late-Afternoon.png
+  1avond-begin: /local/images/wallpapers/07-Early-Evening.png
+  Qavond-mid: /local/images/wallpapers/08-Mid-Evening.png
+  1avond-eind: /local/images/wallpapers/09-Late-Evening.png
+  Qnacht-begin: /local/images/wallpapers/10-Early-Night.png
+  Qnacht-mid: /local/images/wallpapers/11-Mid-Night.png
+  Qnacht-eind: /local/images/wallpapers/12-Late-Night.png
 views:
   - path: weather
     config:
-      default_url: /local/images/wallpapers/pexels-victor-freitas-600114.jpg
+      default_url: /local/images/wallpapers/wallpapernew.jpg
       entity: weather.openweathermap
       state_url:
         sunny:

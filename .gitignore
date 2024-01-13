@@ -35,8 +35,12 @@
 !lovelace/.cards/popups/*.yaml
 !themes/
 !themes/transparent.yaml
+
 !templates/
 !templates/*.j2
+
+!custom_templates/
+!custom_templates/**/*.jinja
 
 # Add appdaemon
 !appdaemon/
@@ -59,3 +63,19 @@
 !www/images/wallpapers/
 !www/images/wallpapers/*.png
 !www/images/wallpapers/*.jpg
+
+# Add some modified HACS lovelace
+!www/community/
+
+# Animated Background
+!www/community/lovelace-animated-background/
+!www/community/lovelace-animated-background/**/*.js
+
+# Flower Card
+!www/community/lovelace-flower-card/
+!www/community/lovelace-flower-card/**/*.js
+
+# State Switch
+!www/community/lovelace-state-switch/
+!www/community/lovelace-state-switch/**/*.js
+

@@ -8,6 +8,10 @@ conditions:
     state_not: "off"
   - entity: "{{ entity }}"
     state_not: idle
+  - entity: "{{ entity }}"
+    state_not: standby
+  - entity: "{{ entity }}"
+    state_not: unavailable
 card:
   type: custom:vertical-stack-in-card
   cards:
@@ -18,6 +22,9 @@ card:
       use_media_artwork: false
       show_volume_level: false
       #fill_container: true
+      tap_action:
+        action: navigate
+        navigation_path: /media-browser/{{ entity }}
       media_controls:
         - on_off
         - play_pause_stop
@@ -35,7 +42,6 @@ card:
             {% endraw %}
             {% endif %}
             }
-
           .: |
             mushroom-shape-icon {
               display: flex;
@@ -72,6 +78,9 @@ card:
             }
     - type: custom:mushroom-media-player-card
       entity: "{{ entity }}"
+      tap_action:
+        action: navigate
+        navigation_path: /media-browser/{{ entity }}
       secondary_info: none
       primary_info: none
       icon_type: none
@@ -88,7 +97,7 @@ card:
         style: |
           ha-card {
             padding-top: 0px !important;
-            padding-bottom: 0px !important;
+            padding-bottom: 12px !important;
           }
     - entity: {{ entity }}
       hide:

@@ -6,19 +6,22 @@ conditions:
   - entity: "{{ entity }}"
     state_not: "unavailable"
 card:
-  type: tile
-  entity: "{{ entity }}"
-  show_entity_picture: false
+  type: custom:mushroom-light-card
+  show_brightness_control: false
   name: "{{ name }}"
+  secondary_info: none
   tap_action:
+    action: toggle
+  hold_action:
     action: more-info
   card_mod:
     style:
-      ha-tile-info$: |
-        span.secondary {
-          display: none;
-        } 
-        span.primary {
-          font-weight: 600;
-          white-space: normal;
+      mushroom-shape-icon$: |
+        .shape:active {
+          transform: scale(1.2);
         }
+      mushroom-state-info$: |
+        .primary {
+          white-space: normal !important;
+        }
+  entity: "{{ entity }}"

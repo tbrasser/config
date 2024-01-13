@@ -23,9 +23,12 @@ alarm_sound:
       entity_id: media_player.tablet3
       media_content_type: music
     data_template:
-      media_content_id: "{% if is_state('alarm_control_panel.alarm','pending') %}https://linux.garden/local/alarm_beep.mp3{% elif is_state('alarm_control_panel.alarm','triggered') %}https://linux.garden/local/alarm_beep.mp3{% endif %}"
+      media_content_id: '{% if is_state(''alarm_control_panel.alarm'',''pending'')
+        %}https://linux.garden/local/alarm_beep.mp3{% elif is_state(''alarm_control_panel.alarm'',''triggered'')
+        %}https://linux.garden/local/alarm_beep.mp3{% endif %}'
   - delay:
-      seconds: "{% if is_state('alarm_control_panel.alarm','pending') %}2{% elif is_state('alarm_control_panel.alarm','triggered') %}2{% endif %}"
+      seconds: '{% if is_state(''alarm_control_panel.alarm'',''pending'') %}2{% elif
+        is_state(''alarm_control_panel.alarm'',''triggered'') %}2{% endif %}'
   - service: script.turn_on
     entity_id: script.alarm_sound_loop
   mode: single
@@ -37,23 +40,25 @@ reset_reminder:
   sequence:
   - service: input_datetime.set_datetime
     data:
-      datetime: "{{ now() + timedelta(days=dagen) }}"
+      datetime: '{{ now() + timedelta(days=dagen) }}'
     target:
-      entity_id: "{{ entity_id }}"
+      entity_id: '{{ entity_id }}'
 start_url:
   alias: Load tablet homepage
   sequence:
   - service: browser_mod.navigate
     data_template:
       browser_id:
-      - "{{ browser_id }}"
-      path: /lovelace/{% if browser_id == 'tablet1' %}keuken{% elif browser_id == 'tablet2' %}eetkamer{% elif browser_id == 'tablet3' %}woonkamer{% else %}main{% endif %}
+      - '{{ browser_id }}'
+      path: /lovelace/{% if browser_id == 'tablet1' %}keuken{% elif browser_id ==
+        'tablet2' %}eetkamer{% elif browser_id == 'tablet3' %}woonkamer{% else %}main{%
+        endif %}
 create_groups:
   alias: Create Groups
   sequence:
   - service: group.set
     data_template:
       object_id: all_lights
-      entities: "{{ states.light | map(attribute='entity_id') | join(',') }}"
+      entities: '{{ states.light | map(attribute=''entity_id'') | join('','') }}'
   mode: single
   icon: mdi:group

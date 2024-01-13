@@ -24,27 +24,10 @@
   card:
     type: markdown
     content: "{{ state_attr('binary_sensor.knmi_home_waarschuwing', 'Waarschuwing') }}"
-- type: entities
+- type: markdown
   view_layout:
     grid-column-end: span 2
-  entities:
-    - entity: sensor.thermal_comfort_perception
-      name: Comfort Buiten
-    - entity: sensor.comfort_buiten_humidex_perception
-      name: Humidex
-    - entity: sensor.thermal_comfort_simmerzone
-      name: Zomeravond Rating
-    - entity: sensor.comfort_buiten_thoms_discomfort_perception
-      name: Thoms Discomfort
-    # - entity: sensor.comfort_buiten_relative_strain_perception
-    #   name: Werken in de zomer
-    # - entity: sensor.comfort_buiten_winter_scharlau_perception
-    #   name: Winter Scharlau
-    # - entity: sensor.comfort_buiten_summer_scharlau_perception
-    #   name: Summer Scharlau
-  show_header_toggle: false
-  state_color: true
-
+  content: "{{ state_attr('sensor.hassio_openai_response', 'response_text') }}"
 - type: custom:hourly-weather
   view_layout:
     grid-column-end: span 2

@@ -1,8 +1,9 @@
-- type: iframe
-  url: /api/hassio_ingress/gTMQx91_UqxGSzRUOYf4NOmVudJJRwjX3qLtQMBTF9g/
-  card_mod:
-    style: |
-      #root {
-        height: calc(100vh - 55px);
-        padding-top: 0 !important;
-      }
+- type: markdown
+  content: >-
+    {% for group, items in expand('media_player.alles') | selectattr("attributes.entity_picture", "defined") |  map(attribute="attributes") | groupby("media_title") %}
+    
+    * {{ group }}
+    {% for item in items %}
+      * {{ item.friendly_name }}
+    {% endfor %}
+    {% endfor %}

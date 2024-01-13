@@ -2,29 +2,41 @@
   view_layout:
     grid-column-end: span 2
   conditions:
-    - entity: sensor.winston_floor
-      state: "boven"
+    - entity: sensor.winston_current_map_selected
+      state: boven
   card: !include winston_boven.yaml
 - type: conditional
   view_layout:
     grid-column-end: span 2
   conditions:
-    - entity: sensor.winston_floor
-      state: "beneden"
+    - entity: sensor.winston_current_map_selected 
+      state: beneden
   card: !include winston_beneden.yaml
 - type: conditional
   view_layout:
     grid-column-end: span 2
   conditions:
-    - entity: sensor.winston_floor
+    - entity: sensor.winston_current_map_selected
       state: unavailable
   card: !include winston_badkamers.yaml
+- type: custom:mushroom-select-card 
+  entity: select.winston_mop_intensity
+- type: custom:mushroom-select-card
+  entity: select.winston_mop_mode
 - type: custom:mushroom-template-card
   entity: sensor.winston_filter_left
   primary: "{{ state_attr(entity, 'friendly_name') }}"
-  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
-  icon: "{{ state_attr(entity, 'icon') }}"
-  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
+  secondary: |
+    {% from 'easy_time.jinja' import custom_relative_time %}
+    {{ custom_relative_time(now() + timedelta(seconds = states(entity)|int), 'hour') }}
+  icon: |
+    {{ state_attr(entity,'icon') }}
+  icon_color: |
+    {% if states(entity)|int < 0 %}
+    orange
+    {% else %}
+    green
+    {% endif%}
   hold_action:
     action: more-info
   tap_action:
@@ -37,10 +49,19 @@
       params: filter_work_time
       entity_id: vacuum.winston
 - type: custom:mushroom-template-card
-  primary: "{{ state_attr(entity, 'friendly_name') }}"
-  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
-  icon: "{{ state_attr(entity, 'icon') }}"
-  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
+  primary: |
+    {{ state_attr(entity, 'friendly_name') }}
+  secondary: |
+    {% from 'easy_time.jinja' import easy_relative_time %}
+    {{ easy_relative_time(now() + timedelta(seconds = states(entity)|int)) }}
+  icon: |
+    {{ state_attr(entity,'icon') }}
+  icon_color: |
+    {% if states(entity)|int < 0 %}
+    orange
+    {% else %}
+    green
+    {% endif%}
   entity: sensor.winston_main_brush_left
   hold_action:
     action: more-info
@@ -54,10 +75,19 @@
       params: main_brush_work_time
       entity_id: vacuum.winston
 - type: custom:mushroom-template-card
-  primary: "{{ state_attr(entity, 'friendly_name') }}"
-  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
-  icon: "{{ state_attr(entity, 'icon') }}"
-  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
+  primary: |
+    {{ state_attr(entity,'friendly_name') }}
+  secondary: |
+    {% from 'easy_time.jinja' import easy_relative_time %}
+    {{ easy_relative_time(now() + timedelta(seconds = states(entity)|int)) }}
+  icon: |
+    {{ state_attr(entity,'icon') }}
+  icon_color: |
+    {% if states(entity)|int < 0 %}
+    orange
+    {% else %}
+    green
+    {% endif%}
   entity: sensor.winston_side_brush_left
   hold_action:
     action: more-info
@@ -71,10 +101,19 @@
       params: side_brush_work_time
       entity_id: vacuum.winston
 - type: custom:mushroom-template-card
-  primary: "{{ state_attr(entity, 'friendly_name') }}"
-  secondary: Over {{ ((states(entity)|int)*0.000277777778/24)|round(0,"ceil","x") }} dagen
-  icon: "{{ state_attr(entity, 'icon') }}"
-  icon_color: "{% if states(entity)|int < 0 %}orange{% else %}green{% endif%}"
+  primary: |
+    {{ state_attr(entity,'friendly_name') }}
+  secondary: |
+    {% from 'easy_time.jinja' import easy_relative_time %}
+    {{ easy_relative_time(now() + timedelta(seconds = states(entity)|int)) }}
+  icon: |
+    {{ state_attr(entity,'icon') }}
+  icon_color: |
+    {% if states(entity)|int < 0 %}
+    orange
+    {% else %}
+    green
+    {% endif%}
   entity: sensor.winston_sensor_dirty_left
   hold_action:
     action: more-info

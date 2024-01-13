@@ -3,6 +3,14 @@ transparent:
   ### Layout
   vertical-stack-card-margin: 0
   masonry-view-card-margin: 4px 4px 4px
+  card-mod-root: |
+    .header {
+      background-color: unset !important;
+    }
+    .header .toolbar #headerCards div {
+      min-width: unset !important;
+      width: 100% !important;
+    }
   card-mod-view-yaml: |
     .: |
       hui-view {

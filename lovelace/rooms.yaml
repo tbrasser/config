@@ -1,163 +1,210 @@
 # lovelace_gen
 {% for room in _global.rooms %}
 - type: panel
-  path: {{ room.name }}
-  title: {{ room.name|title }}
+  path: "{{ room.name }}"
+  title: "{{ room.name|title }}"
   subview: false
   cards:
-    - type: custom:mod-card
-      card_mod:
-        class: invisible
-        style: |
-          ha-card {
-            border-radius: 0px !important;
-            border-width: 0px !important;
-            {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
-            background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
-            {{ "{%" }} endif {{ "%}" }}
-          }
-      card:
-        type: custom:state-switch
-        entity: mediaquery
-        states:
-          '(orientation: landscape)':
-            type: vertical-stack
-            cards:
-              - !include
-                - .cards/sticky.yaml
-                - view: {{ room.name }}
-                  position: both
-              - type: custom:layout-card
-                layout_type: custom:grid-layout
-                layout: !include 
-                  - .cards/layout.yaml
-                  - sticky: header
-                cards:
-                  - type: conditional
-                    view_layout:
-                      grid-column-end: span 2
-                    conditions:
-                      - entity: sensor.winston_room
-                        state: {{ room.name }}
-                      - entity: vacuum.winston
-                        state_not: docked
-                    card:
-                      type: tile
-                      entity: vacuum.winston
-                      features:
-                        - type: vacuum-commands
-                          commands: [start_pause, stop, clean_spot, locate, return_home]
-                  {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'media' %}
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_1
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_2
-                  - !include
-                    - .cards/media_player_active.yaml
-                    - entity: {{card.entity }}
-                  - !include
-                    - .cards/media_player_inactive.yaml
-                    - entity: {{ card.entity }}
-                  {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
-                  - !include
-                    - .cards/light_active.yaml
-                    - entity: {{ card.entity }}
-                      name: {{ card.name|capitalize }}
-                      type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-                  - !include
-                    - .cards/light_inactive.yaml
-                    - entity: {{ card.entity }}
-                      name: {{ card.name|capitalize }}
-                  {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
-                  - !include
-                    - .cards/plant.yaml
-                    - entity: {{ card.entity }}
-                      battery: {{ card.battery }}
-                  {% elif 'days' in card %}
-                  - !include
-                    - .cards/device_timer.yaml
-                    - entity: {{ card.entity }}
-                      days: {{ card.days }}
-                      confirmation: {{ card.confirmation|tojson }}
-                  {% else %}
-                  - {% for key in card|list %}
-                    {{ key }}: {{ card[key]|tojson }}
+    - type: vertical-stack
+      cards:
+        - type: conditional
+          conditions:
+            - condition: screen
+              media_query: '(orientation: landscape)'
+          card:
+            type: custom:mod-card
+            card_mod:
+              class: invisible
+              style: |
+                ha-card {
+                  border-radius: 0px !important;
+                  border-width: 0px !important;
+                  {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
+                  background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                  {{ "{%" }} endif {{ "%}" }}
+                }
+            card:
+              type: vertical-stack
+              cards:
+                - !include
+                  - .cards/sticky.yaml
+                  - view: {{ room.name }}
+                    position: both
+                - type: custom:layout-card
+                  layout_type: custom:grid-layout
+                  layout: !include 
+                    - .cards/layout.yaml
+                    - sticky: header
+                  cards:
+                    - type: conditional
+                      view_layout:
+                        grid-column-end: span 2
+                      conditions:
+                        - entity: sensor.winston_room
+                          state: {{ room.name }}
+                        - entity: vacuum.winston
+                          state_not: docked
+                      card:
+                        type: tile
+                        entity: vacuum.winston
+                        features:
+                          - type: vacuum-commands
+                            commands: [start_pause, stop, clean_spot, locate, return_home]
+                    - type: conditional
+                      conditions:
+                        - entity: climate.area_climate_{{ room.name }}
+                          state:
+                            - heat
+                            - "off"
+                            - cool
+                            - heat_cool
+                      card:
+                        entity: climate.area_climate_{{ room.name }}
+                        name: ""
+                        type: custom:mushroom-climate-card
+                        collapsible_controls: true
+                        show_temperature_control: true
+                    {% for card in room.cards if 'cards' in room %}
+                    {% if card.entity|truncate(5, True, '', 0) == 'media' %}
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_1
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_2
+                    - !include
+                      - .cards/media_player_active.yaml
+                      - entity: {{card.entity }}
+                    - !include
+                      - .cards/media_player_inactive.yaml
+                      - entity: {{ card.entity }}
+                    {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
+                    - !include
+                      - .cards/light_active.yaml
+                      - entity: {{ card.entity }}
+                        name: {{ card.name|capitalize }}
+                        type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
+                    - !include
+                      - .cards/light_inactive.yaml
+                      - entity: {{ card.entity }}
+                        name: {{ card.name|capitalize }}
+                    {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
+                    - !include
+                      - .cards/plant.yaml
+                      - entity: {{ card.entity }}
+                        battery: {{ card.battery }}
+                    {% elif 'days' in card %}
+                    - !include
+                      - .cards/device_timer.yaml
+                      - entity: {{ card.entity }}
+                        days: {{ card.days }}
+                        confirmation: {{ card.confirmation|tojson }}
+                    {% else %}
+                    - {% for key in card|list %}
+                      {{ key }}: {{ card[key]|tojson }}
+                      {% endfor %}
+                    {% endif %}
                     {% endfor %}
-                  {% endif %}
-                  {% endfor %}
-          '(orientation: portrait)':
-            type: vertical-stack
-            cards:
-              - !include
-                - .cards/sticky.yaml
-                - view: {{ room.name }}
-                  position: header
-              - type: custom:layout-card
-                layout_type: custom:grid-layout
-                layout: !include 
-                  - .cards/layout.yaml
-                  - sticky: both
-                cards:
-                  - type: conditional
-                    view_layout:
-                      grid-column-end: span 2
-                    conditions:
-                      - entity: sensor.winston_room
-                        state: {{ room.name }}
-                      - entity: vacuum.winston
-                        state_not: docked
-                    card:
-                      type: tile
-                      entity: vacuum.winston
-                      features:
-                        - type: vacuum-commands
-                          commands: [start_pause, stop, clean_spot, locate, return_home]
-                  {% for card in room.cards if 'cards' in room %}
-                  {% if card.entity|truncate(5, True, '', 0) == 'media' %}
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_1
-                  - !include
-                    - .cards/timer_active.yaml
-                    - timer: {{ room.name }}_2
-                  - !include
-                    - .cards/media_player_active.yaml
-                    - entity: {{ card.entity }}
-                  - !include
-                    - .cards/media_player_inactive.yaml
-                    - entity: {{ card.entity }}
-                  {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
-                  - !include
-                    - .cards/light_active.yaml
-                    - entity: {{ card.entity }}
-                      name: {{ card.name|capitalize }}
-                      type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-                  - !include
-                    - .cards/light_inactive.yaml
-                    - entity: {{ card.entity }}
-                      name: {{ card.name|capitalize }}
-                  {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
-                  - !include
-                    - .cards/plant.yaml
-                    - entity: {{ card.entity }}
-                      battery: {{ card.battery }}
-                  {% elif 'days' in card %}
-                  - !include
-                    - .cards/device_timer.yaml
-                    - entity: {{ card.entity }}
-                      days: {{ card.days }}
-                      confirmation: {{ card.confirmation|tojson }}
-                  {% else %}
-                  - {% for key in card|list %}
-                    {{ key }}: {{ card[key]|tojson }}
+        - type: conditional
+          conditions:
+            - condition: screen
+              media_query: '(orientation: portrait)'
+          card:
+            type: custom:mod-card
+            card_mod:
+              class: invisible
+              style: |
+                ha-card {
+                  border-radius: 0px !important;
+                  border-width: 0px !important;
+                  {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
+                  background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                  {{ "{%" }} endif {{ "%}" }}
+                }
+            card:
+              type: vertical-stack
+              cards:
+                - !include
+                  - .cards/sticky.yaml
+                  - view: {{ room.name }}
+                    position: header
+                - type: custom:layout-card
+                  layout_type: custom:grid-layout
+                  layout: !include 
+                    - .cards/layout.yaml
+                    - sticky: both
+                  cards:
+                    - type: conditional
+                      view_layout:
+                        grid-column-end: span 2
+                      conditions:
+                        - entity: sensor.winston_room
+                          state: {{ room.name }}
+                        - entity: vacuum.winston
+                          state_not: docked
+                      card:
+                        type: tile
+                        entity: vacuum.winston
+                        features:
+                          - type: vacuum-commands
+                            commands: [start_pause, stop, clean_spot, locate, return_home]
+                    - type: conditional
+                      conditions:
+                        - entity: climate.area_climate_{{ room.name }}
+                          state:
+                            - heat
+                            - "off"
+                            - cool
+                            - heat_cool
+                      card:
+                        entity: climate.area_climate_{{ room.name }}
+                        name: ""
+                        type: custom:mushroom-climate-card
+                        collapsible_controls: true
+                        show_temperature_control: true 
+                    {% for card in room.cards if 'cards' in room %}
+                    {% if card.entity|truncate(5, True, '', 0) == 'media' %}
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_1
+                    - !include
+                      - .cards/timer_active.yaml
+                      - timer: {{ room.name }}_2
+                    - !include
+                      - .cards/media_player_active.yaml
+                      - entity: {{ card.entity }}
+                    - !include
+                      - .cards/media_player_inactive.yaml
+                      - entity: {{ card.entity }}
+                    {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
+                    - !include
+                      - .cards/light_active.yaml
+                      - entity: {{ card.entity }}
+                        name: {{ card.name|capitalize }}
+                        type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
+                    - !include
+                      - .cards/light_inactive.yaml
+                      - entity: {{ card.entity }}
+                        name: {{ card.name|capitalize }}
+                    {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
+                    - !include
+                      - .cards/plant.yaml
+                      - entity: {{ card.entity }}
+                        battery: {{ card.battery }}
+                    {% elif 'days' in card %}
+                    - !include
+                      - .cards/device_timer.yaml
+                      - entity: {{ card.entity }}
+                        days: {{ card.days }}
+                        confirmation: {{ card.confirmation|tojson }}
+                    {% else %}
+                    - {% for key in card|list %}
+                      {{ key }}: {{ card[key]|tojson }}
+                      {% endfor %}
+                    {% endif %}
                     {% endfor %}
-                  {% endif %}
-                  {% endfor %}
-              - !include
-                - .cards/sticky.yaml
-                - view: {{ room.name }}
-                  position: footer
+                - !include
+                  - .cards/sticky.yaml
+                  - view: {{ room.name }}
+                    position: footer
 {% endfor %}

@@ -1,0 +1,62 @@
+- type: thermostat
+  entity: climate.opentherm_livingroom_pid_climate_controller
+  show_current_as_primary: false
+  view_layout:
+    grid-column-end: span 2
+- type: custom:vertical-stack-in-card
+  cards:
+    - type: thermostat
+      entity: climate.area_climate_keuken
+    - show_name: true
+      show_icon: true
+      type: button
+      tap_action:
+        action: toggle
+      entity: automation.sync_trv_keuken_to_cv
+      name: Sync
+      icon: mdi:link-variant
+      icon_height: 48px
+      hold_action:
+        action: none
+- type: custom:vertical-stack-in-card
+  cards:
+    - type: thermostat
+      entity: climate.area_climate_badkamer
+    - show_name: true
+      show_icon: true
+      type: button
+      tap_action:
+        action: toggle
+      entity: automation.sync_trv_badkamer_to_cv
+      name: Sync
+      icon: mdi:link-variant
+      icon_height: 48px
+      hold_action:
+        action: none
+- type: custom:vertical-stack-in-card
+  cards:
+    - type: thermostat
+      entity: climate.area_climate_kantoor
+    - show_name: true
+      show_icon: true
+      type: button
+      tap_action:
+        action: toggle
+      entity: automation.sync_trv_kantoor_to_cv
+      name: Sync
+      icon: mdi:link-variant
+      icon_height: 48px
+      hold_action:
+        action: none
+- type: history-graph
+  view_layout:
+    grid-column-end: span 2
+  entities:
+    - entity: sensor.occupied_rooms_average_temperature
+    - entity: sensor.area_temperature_degc_keuken
+    - entity: sensor.area_temperature_degc_toilet
+    - entity: sensor.area_temperature_degc_badkamer
+    - entity: sensor.area_temperature_degc_woonkamer
+    - entity: sensor.area_temperature_degc_eetkamer
+    - entity: sensor.area_temperature_degc_exterior
+    - entity: sensor.area_temperature_degc_kantoor

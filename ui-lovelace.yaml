@@ -2,10 +2,14 @@ title: Thuis
 resources: !include resources.yaml
 views: !include_dir_merge_list lovelace/
 animated_background: !include animated_background.yaml
-q_cards: !include_dir_named lovelace/cards/
 kiosk_mode:
   user_settings:
     - {users: [Frederieke], hide_header: true, ignore_entity_settings: true}
     - {users: [tablet1],    hide_header: true, ignore_entity_settings: true}
-    - {users: [Thomas],     hide_header: true}
+    - {users: [tablet2],    hide_header: true, ignore_entity_settings: true}
+    - {users: [tablet3],    hide_header: true, ignore_entity_settings: true}
+    - {users: [Keuken],     hide_header: true, ignore_entity_settings: true}
+    - {users: [Eetkamer],   hide_header: true, ignore_entity_settings: true}
+    - {users: [Woonkamer],  hide_header: true, ignore_entity_settings: true}
+    - {users: [Thomas],     hide_header: true, hide_edit_dashboard: true, hide_refresh: true, hide_reload_resources: true, hide_unused_entities: true, hide_account: true, hide_search: true}
   entity_settings: [{       hide_header: false, entity: {input_boolean.show_header: "on"}}]

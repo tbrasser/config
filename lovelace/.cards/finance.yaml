@@ -1,20 +1,32 @@
-- type: tile
-  entity: sensor.bunq_t_f
-  name: Balans
-- type: gauge
-  entity: sensor.te_besteden_per_dag
-  max: 100
-  needle: false
-  severity:
-    green: 70
-    yellow: 60
-    red: 50
-  min: 0
-  unit: €
-  name: Budget 
-- type: tile
-  entity: sensor.uitgegeven_vandaag
-- type: custom:mushroom-number-card
-  entity: input_number.offset_rekening
-  display_mode: buttons
- 
+# - type: tile
+#   entity: sensor.bunq_t_f
+#   name: Balans
+# - type: gauge
+#   entity: sensor.te_besteden_per_dag
+#   max: 100
+#   needle: false
+#   severity:
+#     green: 70
+#     yellow: 60
+#     red: 50
+#   min: 0
+#   unit: €
+#   name: Budget 
+# - type: tile
+#   entity: sensor.uitgegeven_vandaag
+# - type: custom:mushroom-number-card
+#   entity: input_number.offset_rekening
+#   display_mode: buttons
+- type: energy-date-selection
+  view_layout:
+    grid-column-end: span 2
+- type: energy-usage-graph
+  view_layout:
+    grid-column-end: span 2
+- type: energy-gas-graph
+  view_layout:
+    grid-column-end: span 2
+- type: energy-sources-table
+  view_layout:
+    grid-column-end: span 2
+

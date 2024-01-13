@@ -15,52 +15,13 @@
     data:
       message: "\U0001F300 De was is klaar! "
   mode: single
-- id: '1653402216389'
-  alias: Ring deurbel met oude gong
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.front_door_ding_2
-    to: 'on'
-  - platform: state
-    entity_id:
-    - binary_sensor.front_door_ding
-    to: 'on'
-  - type: running
-    platform: device
-    device_id: 59c86400590de25e456588a86b8e5ae5
-    entity_id: binary_sensor.doorbell_downstairs_drukker
-    domain: binary_sensor
-  action:
-  - parallel:
-    - type: turn_on
-      device_id: 59c86400590de25e456588a86b8e5ae5
-      entity_id: switch.doorbell_downstairs_gong
-      domain: switch
-    - service: tts.cloud_say
-      data:
-        entity_id: media_player.area_aware_media_player
-        message: 'Someone at the door! '
-        cache: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - type: turn_off
-    device_id: 59c86400590de25e456588a86b8e5ae5
-    entity_id: switch.doorbell_downstairs_gong
-    domain: switch
-  mode: single
-  max_exceeded: silent
 - id: '1653461112548'
   alias: Deurbel Notificatie Thomas
   use_blueprint:
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
-      doorbell_button: siren.gong
+      doorbell_button: switch.doorbell_downstairs_bel
       doorbell_cam: camera.front_door_snapshot
       notify_dev: notify.mobile_app_thomas_phone
       uri_: /lovelace/security
@@ -70,28 +31,10 @@
     path: AndreiRadchenko/doorbell-cam-actionable-nitification.yaml
     input:
       notification_title: Iemand aan de deur!
-      doorbell_button: siren.gong
-      doorbell_cam: camera.front_door_snapshot
+      doorbell_button: switch.doorbell_downstairs_bel
+      doorbell_cam: camera.birdseye
       notify_dev: notify.mobile_app_frederieke_iphone
       uri_: /lovelace/security
-- id: '1653934725357'
-  alias: Eetkamer stop playback als remote uit
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: bcac3f1fabdc32d269b104756263537f
-    entity_id: remote.eetkamer_harmony_hub
-    domain: remote
-  action:
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id:
-      - media_player.eetkamer_jellyfin
-      - media_player.eetkamer_cast
-      - media_player.android_tv_10_9_8_37
-  mode: single
 - id: '1657483816969'
   alias: Verlichting uit sleep mode
   description: Haal de verlichting uit sleep mode als sleep mode uit gaat
@@ -107,67 +50,9 @@
     data: {}
     target:
       entity_id:
-      - switch.adaptive_lighting_sleep_mode_afzuigkap
-      - switch.adaptive_lighting_sleep_mode_bar_hue_plafond
-      - switch.adaptive_lighting_sleep_mode_gang_boven
-      - switch.adaptive_lighting_sleep_mode_slaapkamer_plafond
-      - switch.adaptive_lighting_sleep_mode_trap
-      - switch.adaptive_lighting_sleep_mode_woonkamer_tafellamp
-      - switch.adaptive_lighting_sleep_mode_woonkamer_plafond
-      - switch.adaptive_lighting_sleep_mode_lsc_plafondlampen
-      - switch.adaptive_lighting_sleep_mode_woonkamer_bureaulamp
-      - switch.adaptive_lighting_sleep_mode_inloopkast_ledstrip
-      - switch.adaptive_lighting_sleep_mode_eetkamer_bank_plafond
-      - switch.adaptive_lighting_sleep_mode_eetkamer_burealamp
-      - switch.adaptive_lighting_sleep_mode_eetkamer_ceiling10_fel
-      - switch.adaptive_lighting_sleep_mode_eetkamer_kamerlamp
-      - switch.adaptive_lighting_sleep_mode_eetkamer_ceil
+      - switch.adaptive_lighting_sleep_mode_bijkeuken_plafond
+      - switch.adaptive_lighting_sleep_mode_eetkamer_hoek_links
   mode: single
-- id: '1663018175468'
-  alias: Buiten verlichting
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunrise
-    offset: '1'
-    id: sunrise
-  - platform: sun
-    event: sunset
-    offset: '-1'
-    id: sunset
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: sunrise
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id:
-          - light.tuin_lampjes
-          - light.tuin_strip
-          - light.lsc_stringlight_ww
-    - conditions:
-      - condition: trigger
-        id: sunset
-      sequence:
-      - service: light.turn_on
-        data: {}
-        target:
-          entity_id:
-          - light.tuin_lampjes
-          - light.tuin_strip
-  mode: single
-- id: '1666218976691'
-  alias: Cast to Google Hub Bijkeuken
-  description: ''
-  use_blueprint:
-    path: local/cast-and-re-cast-a-lovelace-view-to-a-google-hub.yaml
-    input:
-      player: media_player.eetkamer_cast
-      url: http://10.9.8.30:8123/lovelace/screensaver
 - id: '1666370845576'
   alias: Automatic Theme Change
   description: ''
@@ -195,44 +80,15 @@
   - platform: tag
     tag_id: '3003705'
   condition: []
-  action:
-  - device_id: b5e7f2ee8aac95350be2575dd67ede17
-    domain: mobile_app
-    type: notify
-    message: 'Test '
-  mode: single
-- id: '1668984750889'
-  alias: Bathroom fan on when light on or humidity above 70
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.thp_bathroom_humidity
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-    above: 70
-  - platform: state
-    entity_id:
-    - light.badkamer
-    to: 'on'
-    from: 'off'
-  condition:
-  - condition: state
-    entity_id: fan.relais
-    state: 'off'
-  action:
-  - service: fan.turn_on
-    data: {}
-    target:
-      entity_id: fan.relais
+  action: []
   mode: single
 - id: '1669029776875'
   alias: Turn Bathroom fan off when humidity < 70 and light is off
   description: ''
   trigger:
   - platform: numeric_state
-    entity_id: sensor.thp_bathroom_humidity
+    entity_id:
+    - sensor.thp_badkamer_humidity
     for:
       hours: 0
       minutes: 1
@@ -245,31 +101,11 @@
     entity_id: light.badkamer
     state: 'off'
   - condition: numeric_state
-    entity_id: sensor.thp_bathroom_humidity
+    entity_id: sensor.thp_badkamer_humidity
     below: 70
   action:
   - service: fan.turn_off
     data: {}
-    target:
-      entity_id: fan.relais
-  mode: single
-- id: '1669029958958'
-  alias: Bathroom switch toggle light
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.shelly_1_bathroom_schakelaar
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: light.turn_on
-    data: {}
-    target:
-      entity_id:
-      - light.shelly_1l_bathroom_lamp
-      - light.badkamer
   mode: single
 - id: '1669125280981'
   alias: 'Lampen aan als schoonmaakster er is '
@@ -347,6 +183,18 @@
       - button.tablet_1_restart_browser
       - button.tablet_2_restart_browser
       - button.tablet_3_restart_browser_2
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 45
+      milliseconds: 0
+  - service: button.press
+    data: {}
+    target:
+      entity_id:
+      - button.tablet_1_load_start_url
+      - button.tablet_2_load_start_url
+      - button.tablet_3_load_start_url_2
   mode: restart
 - id: '1670060239315'
   alias: 'Badkamer lamp uit '
@@ -382,128 +230,32 @@
     data: {}
     target:
       entity_id:
-      - switch.adaptive_lighting_sleep_mode_afzuigkap
-      - switch.adaptive_lighting_sleep_mode_bar_hue_plafond
-      - switch.adaptive_lighting_sleep_mode_gang_boven
-      - switch.adaptive_lighting_sleep_mode_slaapkamer_plafond
-      - switch.adaptive_lighting_sleep_mode_trap
-      - switch.adaptive_lighting_sleep_mode_woonkamer_tafellamp
-      - switch.adaptive_lighting_sleep_mode_woonkamer_plafond
-      - switch.adaptive_lighting_sleep_mode_lsc_plafondlampen
-      - switch.adaptive_lighting_sleep_mode_woonkamer_bureaulamp
-      - switch.adaptive_lighting_sleep_mode_inloopkast_ledstrip
-      - switch.adaptive_lighting_sleep_mode_eetkamer_bank_plafond
-      - switch.adaptive_lighting_sleep_mode_eetkamer_burealamp
-      - switch.adaptive_lighting_sleep_mode_eetkamer_kamerlamp
-      - switch.adaptive_lighting_sleep_mode_eetkamer_ceiling10_fel
-      - switch.adaptive_lighting_sleep_mode_eetkamer_ceil
+      - switch.adaptive_lighting_sleep_mode_bijkeuken_plafond
+      - switch.adaptive_lighting_sleep_mode_eetkamer_hoek_links
   mode: single
-- id: '1670352454062'
-  alias: Radio in de badkamer
+- id: '1673860979697'
+  alias: 'Toilet media uitschakelen als pauze '
   description: ''
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.shelly_1_bathroom_schakelaar
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: media_player.volume_set
-    data:
-      volume_level: 0.3
-    target:
-      entity_id: media_player.badkamer
-  - service: media_player.play_media
-    target:
-      entity_id: media_player.badkamer
-    data:
-      media_content_id: media-source://radio_browser/96126e82-0601-11e8-ae97-52543be04c81
-      media_content_type: audio/mpeg
-    metadata:
-      title: NPO Radio 2
-      thumbnail: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/640px-NPO_Radio_2_logo.svg.png
-      media_class: music
-      children_media_class:
-      navigateIds:
-      - {}
-      - media_content_type: app
-        media_content_id: media-source://radio_browser
-      - media_content_type: music
-        media_content_id: media-source://radio_browser/country/NL
-  mode: single
-- id: '1670354036232'
-  alias: 'Stop badkamer muziek als schakelaar uitgaat '
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.shelly_1_bathroom_schakelaar
-    from: 'on'
-    to: 'off'
+    - media_player.toilet
+    from: playing
+    to: paused
     for:
       hours: 0
       minutes: 0
-      seconds: 0
-  condition: []
-  action:
-  - service: media_player.turn_off
-    data: {}
-    target:
-      entity_id:
-      - media_player.badkamer
-  mode: single
-- id: '1673860979697'
-  alias: 'Badkamer media uitschakelen als pauze '
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - media_player.badkamer
-    from: playing
-    to: paused
+      seconds: 5
   condition:
   - condition: state
-    entity_id: automation.automatisch_muziek_tijdens_het_kakken
     state: 'on'
+    entity_id: automation.radio_in_toilet
   action:
   - service: media_player.turn_off
     data: {}
     target:
       entity_id:
-      - media_player.badkamer
-  mode: single
-- id: '1673954749740'
-  alias: 'Fontein beneden uit als Sleep mode aan gaat '
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.sleep_mode
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: switch.turn_off
-    data: {}
-    target:
-      entity_id: switch.fontein_power
-  mode: single
-- id: '1673954786431'
-  alias: 'Fontein beneden aan als Sleep mode uit gaat '
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.sleep_mode
-    to: 'off'
-    from: 'on'
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.fontein_power
+      - media_player.toilet
   mode: single
 - id: '1677082011846'
   alias: 'Notify Thomas als main internet eruit ligt '
@@ -578,23 +330,519 @@
     input:
       device: 32bc03e232f39f108ed9a8478be375d0
       person: person.thomas
-- id: '1680450883516'
-  alias: 'Eetkamer remote aan als start met casten '
+- id: '1680993027286'
+  alias: Deurbel notificatie Eetkamer TV
   description: ''
   trigger:
   - platform: state
     entity_id:
-    - media_player.eetkamer_cast
-    to: playing
-  condition:
-  - condition: device
-    type: is_off
-    device_id: bcac3f1fabdc32d269b104756263537f
-    entity_id: remote.eetkamer_harmony_hub
-    domain: remote
+    - switch.doorbell_downstairs_bel
+    to: 'on'
+  condition: []
   action:
-  - type: turn_on
-    device_id: bcac3f1fabdc32d269b104756263537f
-    entity_id: remote.eetkamer_harmony_hub
-    domain: remote
+  - service: notify.eetkamer
+    data:
+      message: Iemand aan de deur!
+      title: Deurbel
+      data:
+        fontsize: large
+        position: top-right
+        duration: 10
+        transparency: 25%
+        interrupt: 0
+        color: teal
+        image:
+          url: https://linux.garden{{ states.camera.front_door_snapshot.attributes.entity_picture
+            }}
   mode: single
+- id: '1681162310695'
+  alias: 'Toilet start playing '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.toilet
+    to: 'on'
+    from: 'off'
+  condition: []
+  action:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.32
+    target:
+      entity_id: media_player.toilet
+    enabled: false
+  - service: media_player.turn_on
+    data: {}
+    enabled: false
+    target:
+      entity_id: media_player.toilet
+  - service: media_player.media_play
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.toilet
+  mode: single
+- id: '1681162461094'
+  alias: Radio Toilet uit
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.toilet
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: media_player.toilet
+  mode: single
+- id: '1681766389024'
+  alias: 'Lavalamp auto uit '
+  description: 'Als langer aan dan 6 uur de afgelopen 8 '
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.lavalamp_on_past_8_hours
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    above: 6
+  - platform: state
+    entity_id:
+    - switch.powerstrip_diningroom_stopcontact_4
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.lavalamp_on_past_8_hours
+    above: 6
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.eetkamer_hoek_links
+  mode: single
+- id: '1681809742635'
+  alias: 'Leeg Winston als niemand thuis is '
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.frederieke
+    zone: zone.home
+    event: leave
+  - platform: zone
+    entity_id: person.thomas
+    zone: zone.home
+    event: leave
+  condition:
+  - condition: not
+    conditions:
+    - condition: zone
+      entity_id: person.frederieke
+      zone: zone.home
+    - condition: zone
+      entity_id: person.thomas
+      zone: zone.home
+  action:
+  - service: vacuum.send_command
+    data:
+      command: app_start_collect_dust
+    target:
+      entity_id: vacuum.winston
+  mode: single
+- id: '1683897272135'
+  alias: Intercom Keuken
+  description: Open fullscreen popup with intercom card when called
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.104_state
+    to: Ringing
+  condition: []
+  action:
+  - service: browser_mod.popup
+    data:
+      browser_id:
+      - tablet1
+      dismissable: true
+      title: Intercom
+      size: fullscreen
+      content:
+        type: custom:sipjs-card
+        server: sip.brasser.family
+        port: '443'
+        button_size: '48'
+        state_color: true
+        auto_answer: false
+        hide_me: true
+        custom_title: ''
+        video: true
+        custom: []
+        dtmfs: []
+        iceTimeout: 5
+        prefix: ''
+        ringtone: /local/cowpowder.mp3
+        ringbacktone: /local/spacy_ringback.mp3
+        buttons: []
+        backup_name: Keuken
+        backup_extension: '101'
+        backup_secret: frederiekeislekker
+        extensions:
+        - person: person.keuken
+          name: Keuken
+          extension: '104'
+          secret: frederiekeislekker
+          icon: hue:room-kitchen
+          entity: binary_sensor.area_keuken
+          camera: camera.tablet1
+        - person: person.frederieke
+          name: Frederieke
+          extension: '100'
+          secret: frederiekeislekker
+          icon: mdi:face-woman
+          entity: binary_sensor.frederieke_phone
+        - person: person.thomas
+          name: Thomas
+          extension: '101'
+          secret: frederiekeislekker
+          icon: mdi:face-man
+          entity: binary_sensor.thomas_phone
+        - person: person.woonkamer
+          name: Woonkamer
+          extension: '102'
+          secret: frederiekeislekker
+          icon: hue:room-living
+          entity: binary_sensor.area_woonkamer
+          camera: camera.tablet3
+        - person: person.eetkamer
+          name: Eetkamer
+          extension: '103'
+          secret: frederiekeislekker
+          icon: hue:room-dining
+          entity: binary_sensor.area_eetkamer
+          camera: camera.tablet2
+  mode: single
+- id: '1684772860827'
+  alias: AI Weatherreport
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /30
+  condition: []
+  action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.gpt_input
+    data:
+      value: "{{ now().hour }}:{{ now().minute }} {{ now().day }}-{{ now().month }}-{{
+        now().year }} nu: {{ states.weather.buienradar.state }} temperatuur: {{ states.weather.buienradar.attributes.temperature
+        }}°C luchtvochtigheid: {{ states.weather.buienradar.attributes.humidity }}%
+        druk: {{ states.weather.buienradar.attributes.pressure }}hPa wind: {{ states.weather.buienradar.attributes.wind_speed
+        }}km/h morgen: {{ states.weather.buienradar.attributes.forecast[0].condition
+        }}\n  max: {{ states.weather.buienradar.attributes.forecast[0].temperature
+        }}°C\n  min: {{ states.weather.buienradar.attributes.forecast[0].templow }}°C\n
+        \ wind: {{ states.weather.buienradar.attributes.forecast[0].wind_speed }}km/h\nmaak
+        weerraport en pas toon aan op omstandigheden."
+  mode: single
+- id: '1688591327748'
+  alias: AI 9 o'clock day report
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_agent_agenda.yaml
+    input:
+      conversation_agent: d200da0d5f6b2355a4076d01ae854d93
+      calendar_entity: calendar.ical_familywall
+      weather_entity: weather.buienradar
+      zone_entity: zone.home
+      notify_service: notify.notify
+      notify_time: 09:00:00
+      prompt: "Please generate text for a notification that will be sent to the users\nsmartphone
+        with helpful information.\n\n- Your messages help the user prepare for their
+        day, for example:\n  - Making note of unusual weather for the location and
+        time of year (but not mundane details like \"0% chance of precipitation\")\n
+        \ - How much time remaining until their first meeting\n  - Anything that may
+        be of interest."
+- id: '1692531095698'
+  alias: Woonkamer Tablet 2 Screen on and Screensaver off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_woonkamer
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screen
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screensaver
+    enabled: false
+  mode: single
+- id: '1692531226712'
+  alias: Woonkamer Tablet 2 Screen off when area clear
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_woonkamer
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screen
+  mode: single
+- id: '1692531370728'
+  alias: Woonkamer Tablet 2 Screensaver off on motion
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet2_person_occupancy
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.tablet_2_screen
+    state: 'on'
+    enabled: false
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screensaver
+  mode: single
+- id: '1692531439719'
+  alias: Woonkamer Tablet 2 Screensaver on when no motion
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet2_person_occupancy
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screensaver
+  mode: single
+- id: '1693816251866'
+  alias: Keuken Tablet 1 Screensaver Uit
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet1_person_occupancy
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 0bfc31147ded6f4ff82de798fd2a4f2a
+    entity_id: 76d3094050a76542cd8342f5d173ad0a
+    domain: switch
+  mode: single
+- id: '1702990341855'
+  alias: Bijkeuken Lamp
+  description: ''
+  trigger:
+  - type: powered
+    platform: device
+    device_id: f6e1316b821d0b0c2bd15c8ea8a7003e
+    entity_id: 6baac2f560bc64f80e727480eb7fef29
+    domain: binary_sensor
+  - type: not_powered
+    platform: device
+    device_id: f6e1316b821d0b0c2bd15c8ea8a7003e
+    entity_id: 6baac2f560bc64f80e727480eb7fef29
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: toggle
+    device_id: 7049ec2aa88cd05ccf0d85608a314a93
+    entity_id: 08205f2359c9a128d39b77471518326e
+    domain: light
+  mode: single
+- id: '1703801239530'
+  alias: 'Hele CV uit in sleep mode '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.sleep_mode
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  condition: []
+  action:
+  - service: climate.turn_off
+    data: {}
+    target:
+      entity_id:
+      - climate.opentherm_livingroom_hot_water
+      - climate.opentherm_livingroom_pid_climate_controller
+      - climate.opentherm_livingroom_heating_water
+  mode: single
+- id: '1704309594854'
+  alias: TRV Keuken Temperatuur
+  description: ''
+  use_blueprint:
+    path: pavax/z2m_aqara_trv_external_temperature.yaml
+    input:
+      external_temp_sensor: sensor.area_temperature_degc_keuken
+      aqara_trv_device: 021568c690934628b135ba50c37d75a4
+- id: '1704320167826'
+  alias: Sync TRV Keuken to CV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - climate.opentherm_livingroom_pid_climate_controller
+    attribute: temperature
+  condition: []
+  action:
+  - service: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: '{{ state_attr(''climate.opentherm_livingroom_pid_climate_controller'',
+        ''temperature'') }}'
+    target:
+      entity_id: climate.trv_keuken
+  mode: restart
+- id: '1704492886183'
+  alias: Keuken Tablet 3 scherm uit
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_keuken
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_3_screen_2
+  mode: single
+- id: '1704492976228'
+  alias: Keuken Tablet 3 Scherm aan
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_keuken
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_3_screen_2
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.tablet_2_screensaver
+    enabled: false
+  mode: single
+- id: '1704493042444'
+  alias: Keuken Tablet 3 Screensaver weg
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet3_person_occupancy
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.tablet_2_screen
+    state: 'on'
+    enabled: false
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_3_screensaver_2
+  mode: single
+- id: '1704493939837'
+  alias: Keuken Tablet 3 Screensaver aan
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet3_person_occupancy
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_3_screensaver_2
+  mode: single
+- id: '1704838913935'
+  alias: Pannenkoekenplant kamer volger
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.pannenkoekenplant_1_area
+    attribute: area_id
+  action:
+  - service: ha_registry.update_entity
+    data:
+      area_id: '{{ state_attr(''sensor.pannenkoekenplant_1_area'',''area_id'') }}
+
+        '
+      entity_id:
+      - plant.pannenkoekenplant
+      - sensor.plant_sensor_6bf38a_temperature
+      - sensor.plant_sensor_6bf38a_illuminance
+  mode: restart
+- id: '1705059335266'
+  alias: Bosch TRV II external temperature
+  description: ''
+  use_blueprint:
+    path: local/z2m_bosch_trv_external_temperature.yaml
+    input:
+      external_temp_sensor: sensor.area_temperature_degc_badkamer
+      aqara_trv_device: e08286ed05715fb9e2c177f8a48905b7
+- id: '1705062502717'
+  alias: Badkamer TRV Sync to CV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - climate.opentherm_livingroom_pid_climate_controller
+    attribute: temperature
+  condition: []
+  action:
+  - service: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: '{{ state_attr(''climate.opentherm_livingroom_pid_climate_controller'',
+        ''temperature'') }}'
+    target:
+      entity_id: climate.trv_badkamer
+  mode: restart

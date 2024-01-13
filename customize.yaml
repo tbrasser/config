@@ -1,1 +1,11 @@
+light.dapy_neon_radio_blue:
+  templates:
+    icon_color: >
+      if (state === 'on') return 'var(--blue-color)';
+      return '';
 
+light.dapy_neon_radio_pink:
+  templates:
+    icon_color: >
+      if (state === 'on') return 'var(--pink-color)';
+      return '';

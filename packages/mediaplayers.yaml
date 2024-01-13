@@ -17,13 +17,7 @@ emulated_hue: # for harmony home control buttons
       name: "Lavalamp"
       hidden: false
 
-## mediaplayer woonkamer ################################
-binary_sensor:
-  - platform: ping
-    host: 10.9.8.59
-    name: Mi TV Woonkamer
-    count: 1
-    scan_interval: 15
+## mediaplayer woonkamer ###############################
 switch:
   - platform: wake_on_lan
     mac: d4:5e:ec:95:5b:48
@@ -35,47 +29,85 @@ media_player:
     name: woonkamer
     unique_id: woonkamer
     friendly_name: TV
+    browse_media_entity: media_player.woonkamer_cast
     children:
       - media_player.woonkamer_jellyfin
       - media_player.woonkamer_cast
-      - media_player.android_tv_10_9_8_59
+      - media_player.woonkamer_androidtv
     commands:
       turn_on:
         service: switch.turn_on
         target:
           entity_id: switch.mi_tv_woonkamer
+  # - platform: universal
+  #   name: eetkamer
+  #   unique_id: eetkamer
+  #   browse_media_entity: media_player.eetkamer_cast
+  #   children:
+  #     - media_player.eetkamer_jellyfin
+  #     - media_player.eetkamer_cast
+  #     - media_player.eetkamer_androidtv
+  #   commands:
+  #     turn_on:
+  #       service: remote.turn_on
+  #       target:
+  #         entity_id: remote.eetkamer_harmony_hub
+  #     turn_off:
+  #       service: remote.turn_off
+  #       target:
+  #         entity_id: remote.eetkamer_harmony_hub
+  #     select_source:
+  #       service: media_player.select_source
+  #       target:
+  #         entity_id: media_player.eetkamer_androidtv
+  #       data:
+  #         source: "{{ source }}"
+  #   attributes:
+  #     source: media_player.eetkamer_androidtv|source
+  #     source_list: media_player.eetkamer_androidtv|source_list
   - platform: universal
-    name: eetkamer
-    unique_id: eetkamer
+    name: dapy
+    unique_id: dapy
+    browse_media_entity: media_player.dapy_neon_radio
     children:
-      - media_player.eetkamer_jellyfin
-      - media_player.eetkamer_cast
-      - media_player.android_tv_10_9_8_37
+      - media_player.dapy_neon_radio
+    state_template: |-
+      {% if states.switch.dapy_neon_radio_power.state %}{% if states.select.dapy_neon_radio_mode.state == 'Media Player' %}{{ states.media_player.dapy.state }}{% else %}playing{% endif %}{% else %}off{% endif %}
     commands:
       turn_on:
-        service: remote.turn_on
+        service: switch.turn_on
         target:
-          entity_id: remote.eetkamer_harmony_hub
+          entity_id: switch.dapy_neon_radio_power
       turn_off:
-        service: remote.turn_off
+        service: switch.turn_off
         target:
-          entity_id: remote.eetkamer_harmony_hub
+          entity_id: switch.dapy_neon_radio_power
+      select_source:
+        service: select.select_option
+        target:
+          entity_id: select.dapy_neon_radio_mode
+        data:
+          option: "{{ source }}"
+    attributes:
+      source: select.dapy_neon_radio_mode
+      source_list: select.dapy_neon_radio_mode|options
   - platform: universal
     name: global
     unique_id: global
     children:
       - media_player.home
-      - media_player.woonkamer
       - media_player.eetkamer
+      - media_player.woonkamer
       - media_player.keuken
       - media_player.slaapkamer
       - media_player.badkamer
-      - media_player.opslag
+      - media_player.toilet
   - platform: universal
     name: slaapkamer
     unique_id: slaapkamer
+    browse_media_entity: media_player.slaapkamer_cast
     children:
-      - media_player.slaapkamer_jellyfin
+      - media_player.beamer_cast
+      - media_player.beamer_jellyfin
       - media_player.slaapkamer_cast
-      - media_player.android_tv_10_9_8_122
-  
+      - media_player.beamer_androidtv

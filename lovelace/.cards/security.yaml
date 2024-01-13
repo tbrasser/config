@@ -1,3 +1,4 @@
+# lovelace_gen
 - type: tile
   entity: alarm_control_panel.alarm
   features:
@@ -8,24 +9,95 @@
         - disarmed
   view_layout:
     grid-column-end: span 2
-- type: glance
-  entities:
-    - entity: binary_sensor.inloopkast_pir_occupancy
-    - entity: binary_sensor.woonkamer_pir_occupancy
-    - entity: binary_sensor.pir_stairs_occupancy
-    - entity: binary_sensor.pir_storage_occupancy
+- type: custom:sipjs-card
+  server: !secret sip_host
+  port: '443'
+  button_size: '48'
   state_color: true
+  auto_answer: false
+  hide_me: true
+  custom_title: '' # Intercom
+  video: true
+  custom: []
+  dtmfs: []
+  iceTimeout: 5
+  prefix: ''
+  ringtone: /local/cowpowder.mp3
+  ringbacktone: /local/spacy_ringback.mp3
+  buttons: []
+  backup_name: Thomas
+  backup_extension: '101'
+  backup_secret: !secret sippassword
+  # iceConfig:
+  #   iceCandidatePoolSize: 0
+  #   iceTransportPolicy: all
+  #   iceServers:
+  #     - urls:
+  #         - stun:stun.l.google.com:19302
+  #         - stun:stun1.l.google.com:19302
+  #   rtcpMuxPolicy: required
+  extensions:
+    - person: person.frederieke
+      name: Frederieke
+      extension: '100'
+      secret: !secret sippassword
+      icon: mdi:face-woman
+      entity: binary_sensor.frederieke_phone
+    #  camera: camera.frederieke_phone
+    - person: person.thomas
+      name: Thomas
+      extension: '101'
+      secret: !secret sippassword
+      icon: mdi:face-man
+      entity: binary_sensor.thomas_phone
+    #  camera: camera.thomas_phone
+    - person: person.woonkamer
+      name: Woonkamer
+      extension: '102'
+      secret: !secret sippassword
+      icon: hue:room-living
+      entity: binary_sensor.area_woonkamer
+      camera: camera.tablet3
+    - person: person.eetkamer
+      name: Eetkamer
+      extension: '103'
+      secret: !secret sippassword
+      icon: hue:room-dining
+      entity: binary_sensor.area_eetkamer
+      camera: camera.tablet2
+    - person: person.keuken
+      name: Keuken
+      extension: '104'
+      secret: !secret sippassword
+      icon: hue:room-kitchen
+      entity: binary_sensor.area_keuken
+      camera: camera.tablet1
   view_layout:
     grid-column-end: span 2
-- type: glance
+# - type: glance
+#   entities:
+#     - entity: binary_sensor.inloopkast_pir_occupancy
+#     - entity: binary_sensor.woonkamer_pir_occupancy
+#     - entity: binary_sensor.pir_stairs_occupancy
+#     - entity: binary_sensor.pir_storage_occupancy
+#   state_color: true
+#   columns: 2
+# - type: glance
+#   entities:
+#     - entity: binary_sensor.contact_hordeur_contact
+#     - entity: binary_sensor.laundry_door_contact
+#     - entity: binary_sensor.contact_tuindeur_contact
+#     - entity: binary_sensor.voordeur_contact
+#   state_color: true
+#   columns: 2
+- camera_view: live
+  type: picture-glance
   entities:
-    - entity: binary_sensor.hordeur_contact
-    - entity: binary_sensor.laundry_door_contact
-    - entity: binary_sensor.tuindeur_contact
-    - entity: binary_sensor.voordeur_contact
-  state_color: true
+    - entity: binary_sensor.area_interior
+  camera_image: camera.birdseye
+  title: ' '
   view_layout:
-    grid-column-end: span 2 
+    grid-column-end: span 2
 - type: picture-entity
   entity: binary_sensor.area_voortuin
   camera_image: camera.03cabcc9_ring_mqtt
@@ -38,89 +110,16 @@
   name: Voordeur
   view_layout:
     grid-column-end: span 2
-- type: custom:webrtc-camera
-  entity: camera.garden
-  ui: true
-  title: Tuin
-  poster: https://home-assistant.io/images/cast/splash.png
-  intersection: 0.75
-  background: true
-  view_layout:
-    grid-column-end: span 2
-- type: picture-entity
-  view_layout:
-    grid-column-end: span 2
-  entity: binary_sensor.area_eetkamer
-  camera_image: camera.eetkamera
-  camera_view: live
-  name: Eetkamer
-  tap_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.more_info
-      data:
-        entity: camera.eetkamera
-  hold_action:
-    action: navigate
-    navigation_path: /lovelace/eetkamer
-- type: conditional
-  view_layout:
-    grid-column-end: span 2
-  conditions:
-    - entity: binary_sensor.tablet_1_plugged_in
-      state: "on"
-  card:
-    type: picture-entity
-    entity: binary_sensor.area_keuken
-    camera_image: camera.tablet1
-    camera_view: live
-    name: Tablet 1
-    aspect_ratio: 4x3
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.more_info
-        data:
-          entity: camera.tablet1
-- type: picture-entity
-  entity: binary_sensor.area_eetkamer
-  camera_image: camera.tablet2
-  camera_view: live
-  name: Tablet 2
-  aspect_ratio: 4x3
-  view_layout:
-    grid-column-end: span 2
-  tap_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.more_info
-      data:
-        entity: camera.tablet2
-- type: conditional
-  view_layout:
-    grid-column-end: span 2
-  conditions:
-    - entity: binary_sensor.tablet_3_plugged_in
-      state: "on"
-  card:
-    type: picture-entity
-    entity: binary_sensor.area_woonkamer
-    camera_image: camera.tablet3
-    camera_view: live
-    name: Tablet 3
-    aspect_ratio: 4x3
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.more_info
-        data:
-          entity: camera.tablet3
-- type: custom:webrtc-camera
-  entity: camera.catcam
-  ui: true
-  title: Keuken
-  poster: https://home-assistant.io/images/cast/splash.png
-  intersection: 0.75
-  background: true
+- type: custom:frigate-card
+  cameras:
+    - camera_entity: camera.tablet1
+    - camera_entity: camera.tablet2
+    - camera_entity: camera.tablet3
+    - camera_entity: camera.garden
+    - camera_entity: camera.catcam
+  view:
+    default: live
+    dark_mode: auto
+    update_cycle_camera: true
   view_layout:
     grid-column-end: span 2

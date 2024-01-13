@@ -7,3 +7,8 @@ calendar:
     username: !secret calendar_frederieke_user
     password: !secret calendar_frederieke_password
     url: https://caldav.icloud.com
+sensor:
+  - platform: afvalwijzer
+    provider: mijnafvalwijzer
+    postal_code: !secret postal_code
+    street_number: !secret street_number

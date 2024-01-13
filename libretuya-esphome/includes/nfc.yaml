@@ -1,7 +1,0 @@
-uart:
-  rx_pin: 17
-  baud_rate: 9600
-rdm6300:
-  on_tag:
-    then:
-      - homeassistant.tag_scanned: !lambda 'return to_string(x);'

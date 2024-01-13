@@ -9,8 +9,7 @@ config_editor:
 magic_areas:
 stream:
 readme:
-spotcast: {sp_dc: !secret sp_dc, sp_key: !secret sp_key, country: NL}
-sensor: [{platform: spotcast, country: NL}]
+battery_notes:
 lovelace: {mode: yaml, resources: !include resources.yaml}
 tts: [platform: google_translate]
 group: !include groups.yaml
@@ -18,3 +17,4 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 logger: {default: warning}
+custom_templates: {preload_translations: [en, nl]}
