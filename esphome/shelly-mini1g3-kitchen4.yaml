@@ -1,0 +1,6 @@
+substitutions:
+  location: kitchen4
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/shelly-mini1g3.yaml

@@ -1,0 +1,5 @@
+substitutions:
+  location: luxe
+packages:
+  defaults: !include includes/defaults.yaml
+  museluxe: !include includes/muse-luxe.yaml

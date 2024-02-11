@@ -8,13 +8,39 @@ mqtt:
       # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
       json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
       json_attributes_template: "{{ value_json.data.value | tojson }}"
+# Example configuration.yaml entry
+fan:
+  - platform: template
+    fans:
+      humidifier_fan:
+        friendly_name: "Humidifier Fan"
+        value_template: "{{ states('binary_sensor.humidifier') }}"
+        preset_mode_template: "{{ states('select.hhp70cah011_modus') }}"
+        turn_on:
+          service: select.select
+        turn_off:
+          service: script.fan_off
+        set_percentage:
+          service: script.fans_set_speed
+          data:
+            percentage: "{{ percentage }}"
+        set_preset_mode:
+          service: script.fans_set_preset_mode
+          data:
+            preset_mode: "{{ preset_mode }}"
+        speed_count: 5
+        preset_modes:
+          - 'sleep'
+          - 'auto'
+          - 'allergen'
+          - 'max'
 sensor:
   - platform: openai_response
     api_key: !secret openai_apikey
     model: gpt-3.5-turbo-instruct # "text-davinci-003"
   - platform: history_stats
     name: Lavalamp on past 8 hours
-    entity_id: light.stopcontact_4
+    entity_id: light.powerstrip_diningroom_rechts_stopcontact_2
     state: "on"
     type: time
     duration: 08:00
@@ -28,7 +54,6 @@ sensor:
       - date_time_iso
       - time_date
       - time_utc
-      - beat
   - platform: template
     sensors:
       dagdeel:

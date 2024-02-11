@@ -1,0 +1,6 @@
+substitutions:
+  location: diningroom-ceiling
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/shelly-dimmer2.yaml

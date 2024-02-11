@@ -1,0 +1,179 @@
+substitutions:
+  name: opentherm
+
+esp8266:
+  board: d1_mini_pro
+
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+  platformio_options:
+    lib_deps:
+      - https://github.com/freebear-nc/opentherm_library.git
+
+captive_portal:
+
+external_components:
+  source: github://freebear-nc/esphome-opentherm@main
+
+opentherm:
+  master_id: 5
+  in_pin: 12  #D6
+  out_pin: 14  #D5
+  ch_enable: true
+  dhw_enable: true
+  cooling_enable: false
+  otc_active: false
+  ch2_active: false
+  sync_mode: false
+  t_room: ch_room_temperature
+
+output:
+  - platform: opentherm
+    t_set:
+      id: t_set
+      auto_max_value: true
+      zero_means_zero: true
+    t_dhw_set:
+      id: t_dhw_set
+      auto_max_value: true
+      auto_min_value: true
+      zero_means_zero: true
+    
+sensor:
+  - platform: opentherm
+    rel_mod_level:
+      name: "Boiler Relative modulation level"
+    ch_pressure:
+      name: "Boiler Water pressure in CH circuit"
+    dhw_flow_rate:
+      name: "Boiler Water flow rate in DHW circuit"
+    t_boiler:
+      name: "Boiler water temperature"
+    t_dhw:
+      name: "Boiler DHW temperature"
+    t_outside:
+      name: "Boiler Outside temperature"
+    t_ret:
+      name: "Boiler Return water temperature"
+    t_storage:
+      name: "Boiler Solar storage temperature"
+    t_collector:
+      name: "Boiler Solar collector temperature"
+    t_flow_ch2:
+      name: "Boiler Flow water temperature CH2 circuit"
+    t_dhw2:
+      name: "Boiler Domestic hot water temperature 2"
+    t_exhaust:
+      name: "Boiler Exhaust temperature"
+    burner_starts:
+      name: "Boiler Number of starts burner"
+    ch_pump_starts:
+      name: "Boiler Number of starts CH pump"
+    dhw_pump_valve_starts:
+      name: "Boiler Number of starts DHW pump/valve"
+    dhw_burner_starts:
+      name: "Boiler Number of starts burner during DHW mode"
+    burner_operation_hours:
+      name: "Boiler Number of hours that burner is in operation (i.e. flame on)"
+    ch_pump_operation_hours:
+      name: "Boiler Number of hours that CH pump has been running"
+    dhw_pump_valve_operation_hours:
+      name: "Boiler Number of hours that DHW pump has been running or DHW valve has been opened"
+    dhw_burner_operation_hours:
+      name: "Boiler Number of hours that burner is in operation during DHW mode"
+    t_dhw_set_ub:
+      name: "Boiler Upper bound for adjustement of DHW setpoint"
+    t_dhw_set_lb:
+      name: "Boiler Lower bound for adjustement of DHW setpoint"
+    max_t_set_ub:
+      name: "Boiler Upper bound for adjustement of max CH setpoint"
+    max_t_set_lb:
+      name: "Boiler Lower bound for adjustement of max CH setpoint"
+    t_dhw_set:
+      name: "Boiler Domestic hot water temperature setpoint"
+    max_t_set:
+      name: "Boiler Maximum allowable CH water setpoint"
+
+  - platform: homeassistant
+    id: ch_room_temperature
+    entity_id: sensor.occupied_rooms_average_temperature
+    filters: 
+      # Push room temperature every second to update PID parameters
+      - heartbeat: 1s  
+
+  - platform: homeassistant
+    id: indoor_humidity
+    entity_id: sensor.area_humidity_interior
+
+  - platform: pid
+    name: "PID Climate Result"
+    type: RESULT
+  - platform: pid
+    name: "PID Climate Error"
+    type: ERROR
+  - platform: pid
+    name: "PID Climate Proportional"
+    type: PROPORTIONAL
+  - platform: pid
+    name: "PID Climate Integral"
+    type: INTEGRAL
+  - platform: pid
+    name: "PID Climate Derivative"
+    type: DERIVATIVE
+  - platform: pid
+    name: "PID Climate Output"
+    type: HEAT
+  - platform: pid
+    name: "PID Climate KP"
+    type: KP
+  - platform: pid
+    name: "PID Climate KI"
+    type: KI
+  - platform: pid
+    name: "PID Climate KD"
+    type: KD
+
+binary_sensor:
+  - platform: opentherm
+    ch_active:
+      name: "Boiler Central Heating active"
+    dhw_active:
+      name: "Boiler Domestic Hot Water active"
+    flame_on:
+      name: "Boiler Flame on"
+    fault_indication:
+      name: "Boiler Fault indication"
+      entity_category: diagnostic
+    diagnostic_indication:
+      name: "Boiler Diagnostic event"
+      entity_category: diagnostic
+
+button:
+  - platform: template
+    name: "PID Climate Autotune"
+    on_press:
+      - climate.pid.autotune: pid_climate
+
+switch:
+  - platform: opentherm
+    ch_enable:
+      name: "Boiler Central Heating enabled"
+      mode: restore_default_on
+    dhw_enable:
+      name: "Boiler Domestic Hot Water enabled"
+    otc_active:
+      name: "Boiler Outside temperature compensation active"
+
+climate:
+  - platform: pid
+    name: "Central heating"
+    id: pid_climate
+    heat_output: t_set
+    default_target_temperature: 20
+    sensor: ch_room_temperature
+    humidity_sensor: indoor_humidity
+    control_parameters: 
+      kp: 0.4
+      ki: 0.008
+      kd: 3.5

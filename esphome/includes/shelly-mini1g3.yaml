@@ -1,0 +1,108 @@
+substitutions:
+  name: mini1g3
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+    version: recommended
+  flash_size: 8MB
+  variant: esp32c3
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+captive_portal:
+
+improv_serial:
+esp32_ble_tracker:
+  scan_parameters:
+    active: true
+    # interval: 1100ms
+    # window: 1100ms
+bluetooth_proxy:
+  active: true
+
+output:
+  - platform: gpio
+    id: "relay_output"
+    pin: GPIO7
+
+switch:
+  - platform: output
+    id: "relay"
+    name: Relais
+    output: relay_output
+
+binary_sensor:
+  - platform: gpio
+    name: Button
+    pin:
+      number: GPIO1
+      inverted: yes
+      mode:
+        input: true
+        pullup: true
+    on_press:
+      then:
+        - switch.toggle: "relay"
+    filters:
+      - delayed_on_off: 5ms
+
+sensor:
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: Internal Temperature
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+    id: temperature
+    internal: true
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+    on_value:
+      then:
+        - if:
+            condition:
+              - sensor.in_range:
+                  id: temperature
+                  above: "80.0"
+              - switch.is_on: relay
+            then:
+              - switch.turn_off:
+                  id: relay
+              - logger.log: "Turned off because temperature exceeded 80°C"
+              - homeassistant.service:
+                  service: persistent_notification.create
+                  data:
+                    title: Warning from ${name} ${location}
+                  data_template:
+                    message: Turned off because temperature exceeded 80°C
+    on_value_range:
+      - above: "80.0"
+        then:
+          - logger.log: "Temperature exceeded 80°C"
+          - homeassistant.service:
+              service: persistent_notification.create
+              data:
+                title: Message from ${name} ${location}
+              data_template:
+                message: Temperature exceeded 80°C
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 10kOhm
+  - platform: adc
+    id: temp_analog_reading
+    pin: GPIO3
+    attenuation: 11db
+
+status_led:
+  pin:
+    number: GPIO0
+    inverted: true

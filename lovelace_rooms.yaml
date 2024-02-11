@@ -37,8 +37,8 @@
       name: Bureaulamp
     - type: tile
       entity: switch.ps5_606_power
-    - entity: plant.pannenkoekenplant_2
-      battery: sensor.plant_sensor_1283_battery
+    - entity: plant.bananenplant
+      battery: sensor.plant_sensor_1de8_battery
 
 - name: eetkamer
   areas:
@@ -47,6 +47,9 @@
   color: orange
   cards:
     - entity: media_player.eetkamer
+    - entity: light.powerstrip_diningroom_rechts_stopcontact_2
+      name: Lavalamp
+      type: onoff
     - entity: input_datetime.kattenbak
       type: custom:lovelace_gen-timer
       days: 3
@@ -79,8 +82,10 @@
     #   name: Plafond Sfeer
     # - entity: light.sofa
     #   name: Bank Plafond
+    - entity: light.dimmer2_diningroom_ceiling_dimmer2_diningroom_ceiling
+      name: Plafond
     - entity: light.eetkamer_hoek_links
-      name: Hoek Links
+      name: Hoek
     # - entity: light.stopcontact_2
     #   name: Staande Lamp
     #   type: onoff
@@ -91,10 +96,9 @@
     #   type: onoff
     # - entity: light.leeshoek
     #   name: Leeshoek
-    - entity: plant.pannenkoekenplant
-      battery: sensor.plant_sensor_f38a_battery
-    - entity: plant.yucca
-      battery: sensor.plant_sensor_f56c_battery
+    - entity: plant.sierpeper
+      battery: sensor.plant_sensor_b2f8_battery
+
   # - entity: plant.yucca_2
     #  battery: sensor.plant_sensor_1455_battery
 
@@ -107,10 +111,8 @@
     - entity: media_player.keuken
     - entity: light.keuken_vier
       name: Aanrecht
-      type: onoff
     - entity: light.keuken_drie
       name: Eiland
-      type: onoff
     # - type: tile
     #   entity: switch.fontein_power # todo: create automation that warns if water is not running
     - entity: input_datetime.drinkfontein
@@ -137,8 +139,9 @@
       fill_container: true
       tap_action:
         action: more-info
-    - entity: plant.sierpeper
-      battery: sensor.plant_sensor_b2f8_battery
+    - entity: plant.pannenkoekenplant
+      battery: sensor.plant_sensor_f38a_battery
+
 - name: bijkeuken
   areas:
     - bijkeuken
@@ -324,6 +327,8 @@
       name: Nachtkastje Fre
     - entity: light.nachtkastje_thomas
       name: Nachtkastje Tho
+    - entity: plant.tabaksplant
+      battery: sensor.plant_sensor_f56c_battery
 
 - name: kantoor
   icon: hue:room-office
@@ -340,7 +345,8 @@
     #   entity: sensor.octoprint_current_state
     - type: tile
       entity: sensor.hp_envy_pro_6400_series
-
+    - entity: plant.pannenkoekenplant_2
+      battery: sensor.plant_sensor_1283_battery
 - name: toilet
   icon: hue:room-toilet
   color: brown
@@ -367,6 +373,8 @@
     #   entity: binary_sensor.shower_in_use
     # - type: tile
     #   entity: fan.relais
+    - entity: plant.hoya_puber
+      battery: sensor.plant_sensor_f607_battery
 
 - name: tuin
   icon: phu:garden

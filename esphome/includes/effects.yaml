@@ -1,0 +1,180 @@
+- lambda:
+    name: Fast Rainbow
+    update_interval: 4s
+    lambda: |-
+      static int state = 0;
+      auto call = id(my_light).turn_on();
+      call.set_transition_length(3800);
+      if (state == 0)  call.set_rgb(1.0, 0.0, 0.0); else
+      if (state == 1)  call.set_rgb(1.0, 0.5, 0.0); else
+      if (state == 2)  call.set_rgb(1.0, 1.0, 0.0); else
+      if (state == 3)  call.set_rgb(0.5, 1.0, 0.0); else
+      if (state == 4)  call.set_rgb(0.0, 1.0, 0.0); else
+      if (state == 5)  call.set_rgb(0.0, 1.0, 0.5); else
+      if (state == 6)  call.set_rgb(0.0, 1.0, 1.0); else
+      if (state == 7)  call.set_rgb(0.0, 0.5, 1.0); else
+      if (state == 8)  call.set_rgb(0.0, 0.0, 1.0); else
+      if (state == 9)  call.set_rgb(0.5, 0.0, 1.0); else 
+      if (state == 10) call.set_rgb(1.0, 0.0, 1.0); else 
+      if (state == 11) call.set_rgb(1.0, 0.0, 0.5);
+      call.perform();
+      state++;
+      if (state == 12) state = 0;
+- lambda:
+    name: Rainbow
+    update_interval: 8s
+    lambda: |-
+      static int state = 0;
+      auto call = id(my_light).turn_on();
+      call.set_transition_length(7500);
+      if (state == 0) {
+        call.set_rgb(1.0, 0.0, 0.0);
+      } else if (state == 1) {
+        call.set_rgb(1.0, 0.5, 0.0);
+      } else if (state == 2) {
+        call.set_rgb(1.0, 1.0, 0.0);
+      } else if (state == 3) {
+        call.set_rgb(0.5, 1.0, 0.0);
+      } else if (state == 4) {
+        call.set_rgb(0.0, 1.0, 0.0);
+      } else if (state == 5) {
+        call.set_rgb(0.0, 1.0, 0.5);
+      } else if (state == 6) {
+        call.set_rgb(0.0, 1.0, 1.0);
+      } else if (state == 7) {
+        call.set_rgb(0.0, 0.5, 1.0);
+      } else if (state == 8) {
+        call.set_rgb(0.0, 0.0, 1.0);
+      } else if (state == 9) {
+        call.set_rgb(0.5, 0.0, 1.0);
+      } else if (state == 10) {
+        call.set_rgb(1.0, 0.0, 1.0);
+      } else if (state == 11) {
+        call.set_rgb(1.0, 0.0, 0.5);
+      }
+      call.perform();
+      state++;
+      if (state == 12)
+        state = 0;
+- lambda:
+    name: Slow Rainbow
+    update_interval: 16s
+    lambda: |-
+      static int state = 0;
+      auto call = id(my_light).turn_on();
+      call.set_transition_length(15000);
+      if (state == 0) {
+        call.set_rgb(1.0, 0.0, 0.0);
+      } else if (state == 1) {
+        call.set_rgb(1.0, 0.5, 0.0);
+      } else if (state == 2) {
+        call.set_rgb(1.0, 1.0, 0.0);
+      } else if (state == 3) {
+        call.set_rgb(0.5, 1.0, 0.0);
+      } else if (state == 4) {
+        call.set_rgb(0.0, 1.0, 0.0);
+      } else if (state == 5) {
+        call.set_rgb(0.0, 1.0, 0.5);
+      } else if (state == 6) {
+        call.set_rgb(0.0, 1.0, 1.0);
+      } else if (state == 7) {
+        call.set_rgb(0.0, 0.5, 1.0);
+      } else if (state == 8) {
+        call.set_rgb(0.0, 0.0, 1.0);
+      } else if (state == 9) {
+        call.set_rgb(0.5, 0.0, 1.0);
+      } else if (state == 10) {
+        call.set_rgb(1.0, 0.0, 1.0);
+      } else if (state == 11) {
+        call.set_rgb(1.0, 0.0, 0.5);
+      }
+      call.perform();
+      state++;
+      if (state == 12)
+        state = 0;
+- random:
+- random:
+    name: "Slow Random"
+    transition_length: 30s
+    update_interval: 30s
+- random:
+    name: "Fast Random"
+    transition_length: 4s
+    update_interval: 5s
+- pulse:
+    name: "Fast Pulse"
+    transition_length: 0.5s
+    update_interval: 0.5s
+- pulse:
+    name: "Slow Pulse"
+    transition_length: 1s
+    update_interval: 2s
+- lambda:
+    name: Throb
+    update_interval: 1s
+    lambda: |-
+      static int state = 0;
+      auto call = id(the_light).turn_on();
+      // Transtion of 1000ms = 1s
+      call.set_transition_length(1000);
+      if (state == 0) {
+        call.set_brightness(1.0);
+      } else {
+        call.set_brightness(0.01);
+      }
+      call.perform();
+      state += 1;
+      if (state == 2)
+        state = 0;
+- strobe:
+    name: "Green Strobe"
+    colors:
+      - state: True
+        brightness: 100%
+        red: 0%
+        green: 100%
+        blue: 0%
+        duration: 500ms
+      - state: False
+        duration: 250ms
+- strobe:
+    name: "Red Strobe"
+    colors:
+      - state: True
+        brightness: 100%
+        red: 100%
+        green: 0%
+        blue: 0%
+        duration: 500ms
+      - state: False
+        duration: 250ms
+- strobe:
+    name: "Blue Strobe"
+    colors:
+      - state: True
+        brightness: 100%
+        red: 0%
+        green: 0%
+        blue: 100%
+        duration: 500ms
+      - state: False
+        duration: 250ms
+- strobe:
+    name: "Police Strobe"
+    colors:
+      - state: True
+        brightness: 100%
+        red: 0%
+        green: 0%
+        blue: 100%
+        duration: 500ms
+      - state: True
+        brightness: 100%
+        red: 100%
+        green: 0%
+        blue: 0%
+        duration: 500ms
+- strobe:
+- flicker:
+    alpha: 50% #The percentage that the last color value should affect the light. More or less the “forget-factor” of an exponential moving average. Defaults to 95%.
+    intensity: 50% #The intensity of the flickering, basically the maximum amplitude of the random offsets. Defaults to 1.5%.

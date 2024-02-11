@@ -15,14 +15,15 @@
             type: custom:mod-card
             card_mod:
               class: invisible
-              style: |
-                ha-card {
-                  border-radius: 0px !important;
-                  border-width: 0px !important;
-                  {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
-                  {{ "{%" }} endif {{ "%}" }}
-                }
+              style:
+                .: |
+                  ha-card {
+                    border-radius: 0px !important;
+                    border-width: 0px !important;
+                    {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
+                    background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    {{ "{%" }} endif {{ "%}" }}
+                  }
             card:
               type: vertical-stack
               cards:
@@ -40,7 +41,7 @@
                       view_layout:
                         grid-column-end: span 2
                       conditions:
-                        - entity: sensor.winston_room
+                        - entity: sensor.winston_current_room
                           state: {{ room.name }}
                         - entity: vacuum.winston
                           state_not: docked
@@ -113,14 +114,15 @@
             type: custom:mod-card
             card_mod:
               class: invisible
-              style: |
-                ha-card {
-                  border-radius: 0px !important;
-                  border-width: 0px !important;
-                  {{ "{%" }} if state_attr( "media_player.global", "entity_picture" ) != none {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.global", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
-                  {{ "{%" }} endif {{ "%}" }}
-                }
+              style:
+                .: |
+                  ha-card {
+                    border-radius: 0px !important;
+                    border-width: 0px !important;
+                    {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
+                    background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    {{ "{%" }} endif {{ "%}" }}
+                  }
             card:
               type: vertical-stack
               cards:
@@ -138,7 +140,7 @@
                       view_layout:
                         grid-column-end: span 2
                       conditions:
-                        - entity: sensor.winston_room
+                        - entity: sensor.winston_current_room
                           state: {{ room.name }}
                         - entity: vacuum.winston
                           state_not: docked

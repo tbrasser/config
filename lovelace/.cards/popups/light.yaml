@@ -15,15 +15,15 @@ right_button_action:
 {% endif %}
 dismissable: true
 size: wide
-style: |
-  --popup-min-width: 360px;
-  --popup-max-width: 1080px;
-  --popup-border-width: var(--ha-card-border-width, 2px);
-  --popup-border-color: var(--ha-card-border-color, var(--divider-color, #eee));
-  --popup-border-radius: 28px;
-  --popup-background-color: var(--primary-background-color);
-  --popup-padding-x: 0px;
-  --popup-padding-y: 0px;
+# style: |
+#   --popup-min-width: 360px;
+#   --popup-max-width: 1080px;
+#   --popup-border-width: var(--ha-card-border-width, 2px);
+#   --popup-border-color: var(--ha-card-border-color, var(--divider-color, #eee));
+#   --popup-border-radius: 28px;
+#   --popup-background-color: var(--primary-background-color);
+#   --popup-padding-x: 0px;
+#   --popup-padding-y: 0px;
 card_mod:
   style:
     ha-dialog$: |
@@ -65,11 +65,12 @@ content:
                 target:
                   entity_id: {{ entity }}
               card_mod:
-                style: |
-                  ha-card {
-                    --chip-background: rgb(255, 236, 224);
-                    --text-color: black;
-                  }
+                style:
+                  .: |
+                    ha-card {
+                      --chip-background: rgb(255, 236, 224);
+                      --text-color: black;
+                    }
             - type: light
               entity: {{ entity }}
               name: Focus
@@ -85,11 +86,12 @@ content:
               use_light_color: false
               icon: mdi:lightbulb
               card_mod:
-                style: |
-                  ha-card {
-                    --chip-background: rgb(255, 196, 137); 
-                    --text-color: black;
-                  }
+                style:
+                  .: |
+                    ha-card {
+                      --chip-background: rgb(255, 196, 137); 
+                      --text-color: black;
+                    }
             - type: light
               entity: {{ entity }}
               icon: mdi:lightbulb
@@ -105,11 +107,12 @@ content:
                 target:
                   entity_id: {{ entity }}
               card_mod:
-                style: |
-                  ha-card {
-                    --chip-background: rgb(255, 169, 87); 
-                    --text-color: black;
-                  }
+                style:
+                  .: |
+                    ha-card {
+                      --chip-background: rgb(255, 169, 87); 
+                      --text-color: black;
+                    }
           alignment: center
         - entity: "{{ entity }}"
           type: custom:light-entity-card

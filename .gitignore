@@ -13,10 +13,10 @@
 !animated_background.yaml
 
 # Add esphome
-!libretuya-esphome/
-!libretuya-esphome/*.yaml
-!libretuya-esphome/includes/
-!libretuya-esphome/includes/*.yaml
+!esphome/
+!esphome/*.yaml
+!esphome/includes/
+!esphome/includes/*.yaml
 
 # Add packages
 !packages/

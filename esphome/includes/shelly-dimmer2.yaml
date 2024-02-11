@@ -1,0 +1,271 @@
+substitutions:
+  name: dimmer2
+  max_temp: "80"  # °C
+  dim_lenght: "10s"
+  restore_mode: "restore_default_off"
+  min_brightness: "0"  # "470"
+  max_brightness: "750"  # "1000"
+  leading_edge: "false"
+  gamma_correct: "0"
+  light_icon: mdi:lightbulb
+
+# ESPhome generic config
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+
+esp8266:
+  board: esp01_1m
+
+# based on the config of pimw from community post https://community.home-assistant.io/t/shelly-2-dimmer/232324/18
+uart:
+  tx_pin: 1
+  rx_pin: 3
+  baud_rate: 115200
+logger:
+  baud_rate: 0
+  hardware_uart: UART1
+
+captive_portal:
+
+light:
+  - platform: shelly_dimmer
+    name: None
+    id: dimmer
+    icon: ${light_icon}
+    leading_edge: ${leading_edge}
+    min_brightness: ${min_brightness}
+    max_brightness: ${max_brightness}
+    restore_mode: ${restore_mode}
+    default_transition_length: 1s
+    gamma_correct: ${gamma_correct}
+    power:
+      name: Power
+    voltage:
+      name: Voltage
+    current:
+      name: Current
+    firmware:
+      version: "51.7"
+      update: true
+    # set the global for the dim action based on the brightness value
+    on_state:
+      - if:
+          condition:
+            - lambda: "return(id(dimmer).remote_values.get_brightness() == 1);"
+          then:
+            - globals.set:
+                id: dim_down_bool
+                value: "true"
+      - if:
+          condition:
+            - lambda: "return(id(dimmer).remote_values.get_brightness() < 0.013);"
+          then:
+            - globals.set:
+                id: dim_down_bool
+                value: "false"
+sensor:
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: Temperature
+    id: temperature
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+    on_value:
+      then:
+        - if:
+            condition:
+              - sensor.in_range:
+                  id: temperature
+                  above: ${max_temp}
+              - light.is_on: dimmer
+            then:
+              - light.turn_off:
+                  id: dimmer
+              - logger.log: "Switch turned off because temperature exceeded ${max_temp}°C"
+              - homeassistant.service:
+                  service: persistent_notification.create
+                  data:
+                    title: Message from ${name}
+                  data_template:
+                    message: Switch turned off because temperature exceeded ${max_temp}°C
+    on_value_range:
+      - above: ${max_temp}
+        then:
+          - logger.log: "Temperature exceeded ${max_temp}°C"
+          - homeassistant.service:
+              service: persistent_notification.create
+              data:
+                title: Message from ${name}
+              data_template:
+                message: Temperature exceeded ${max_temp}°C
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 32kOhm
+  - platform: adc
+    id: temp_analog_reading
+    pin: A0
+
+# globals for dim action and light control
+globals:
+  - id: dim_down_bool
+    type: bool
+    restore_value: true
+    initial_value: "true"
+  - id: control_light
+    type: bool
+    restore_value: true
+    initial_value: "true"
+
+# switches to determine light control and dim action
+switch:
+  - platform: template
+    name: Dim Down
+    id: dim_down_active
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - globals.set:
+          id: dim_down_bool
+          value: "true"
+    turn_off_action:
+      - globals.set:
+          id: dim_down_bool
+          value: "false"
+    lambda: |-
+      return id(dim_down_bool);
+    entity_category: config
+  - platform: template
+    name: Control Light
+    id: control_light_active
+    restore_mode: RESTORE_DEFAULT_ON
+    turn_on_action:
+      - globals.set:
+          id: control_light
+          value: "true"
+    turn_off_action:
+      - globals.set:
+          id: control_light
+          value: "false"
+    lambda: |-
+      return id(control_light);
+    entity_category: config
+
+script:
+  - id: script_dim_down_timer
+    mode: restart
+    then:
+      - logger.log: "Dim-down timer script started"
+      - delay: ${dim_lenght}
+      - logger.log: "Dim-down timer script finished"
+  - id: script_dim_up_timer
+    mode: restart
+    then:
+      - logger.log: "Dim-up timer script started"
+      - delay: ${dim_lenght}
+      - logger.log: "Dim-up timer script finished"
+  - id: script_dim_down
+    mode: single
+    then:
+      - logger.log: "Start dimming down"
+      - while:
+          condition:
+            and:
+              - script.is_running: script_dim_down_timer
+              - light.is_on: dimmer
+              - lambda: "return(id(dimmer).remote_values.get_brightness() >= 0.01);"
+          then:
+            - light.dim_relative:
+                id: dimmer
+                relative_brightness: -0.5%
+                transition_length: 0.01s
+            - delay: 0.01s
+      - logger.log: "Dimming down stopped"
+      - globals.set:
+          id: dim_down_bool
+          value: "false"
+      - logger.log: "Toggled dim action to dim up"
+  - id: script_dim_up
+    mode: single
+    then:
+      - while:
+          condition:
+            and:
+              - script.is_running: script_dim_up_timer
+              - light.is_on: dimmer
+              - lambda: "return(id(dimmer).remote_values.get_brightness() <= 0.999);"
+          then:
+            - light.dim_relative:
+                id: dimmer
+                relative_brightness: 0.5%
+                transition_length: 0.01s
+            - delay: 0.01s
+      - logger.log: "Dimming up stopped"
+      - globals.set:
+          id: dim_down_bool
+          value: "true"
+      - logger.log: "Toggled dim action to dim down"
+  - id: script_turn_on_off
+    mode: single
+    then:
+      - logger.log: "Turn_on_off script started"
+      - if:
+          condition:
+            light.is_on:
+              id: dimmer
+          then:
+            - light.turn_off:
+                id: dimmer
+            - logger.log: "Light turned off"
+          else:
+            - light.turn_on:
+                id: dimmer
+                brightness: !lambda |-
+                  return id(dimmer).remote_values.get_brightness();
+
+binary_sensor:
+  - platform: gpio
+    name: Schakelaar
+    pin: GPIO14
+    # small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+      then:
+        - if:
+            condition:
+              or:
+                - switch.is_on: control_light_active
+                - not:
+                    - api.connected:
+            then:
+              - script.execute: script_turn_on_off
+    id: button_1
+
+button:
+  - platform: template
+    name: Dim Down
+    on_press:
+      then:
+        - script.execute: script_dim_down_timer
+        - script.execute: script_dim_down
+  - platform: template
+    name: Dim Up
+    on_press:
+      then:
+        - script.execute: script_dim_up_timer
+        - script.execute: script_dim_up
+  - platform: template
+    name: Dim Stop
+    on_press:
+      then:
+        - logger.log: "Stopping timer script"
+        - script.stop: script_dim_down_timer
+        - script.stop: script_dim_up_timer

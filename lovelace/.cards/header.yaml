@@ -3,20 +3,21 @@ type: custom:mushroom-chips-card
 alignment: justify
 card_mod:
   class: sticky
-  style: |
-    ha-card {
-      background: none;
-      margin: 0;
-      {% if position == "footer" %}
-      padding: 0 4px 4px 4px;
-      {% else %}
-      padding: 4px 0px 0 0px;
-      {% endif %}
-      --ha-card-border-width: 0 !important;
-      --chip-border-width: 1px;
-      --chip-height: 48px; 
-      --chip-border-radius: 24px;
-    }
+  style:
+    .: |
+      ha-card {
+        background: none;
+        margin: 0;
+        {% if position == "footer" %}
+        padding: 0 4px 4px 4px;
+        {% else %}
+        padding: 4px 0px 0 0px;
+        {% endif %}
+        --ha-card-border-width: 0 !important;
+        --chip-border-width: 1px;
+        --chip-height: 48px; 
+        --chip-border-radius: 24px;
+      }
 chips:
   {% for headerview in _global.views %}
   {% if (headerview.position == position) or (position == "both") %}

@@ -1,0 +1,69 @@
+substitutions:
+  name: doorbell
+
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+  platform: ESP8266
+  board: d1_mini
+  project:
+    name: zuidwijk.doorbell
+    version: "2.0"
+captive_portal:
+
+globals:
+  - id: chime
+    type: bool
+    restore_value: true
+    initial_value: 'true'
+
+switch:
+  - platform: gpio
+    pin:
+      number: D1
+      inverted: false
+    name: "Bel"
+    id: relay
+    icon: mdi:alarm-bell
+  - platform: restart
+    name: "Deurbel Herstart"
+  - platform: template
+    name: Deurbel Actief
+    id: chime_active
+    restore_mode: disabled
+    turn_on_action:
+      - globals.set:
+          id: chime
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: chime
+          value: 'false'
+    lambda: |-
+      return id(chime);
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D5
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Drukker"
+    filters:
+      # Small filter, to debounce the button press.
+      - delayed_on: 25ms
+      - delayed_off: 25ms
+    on_press:
+      # Only turn on the chime when it is active.
+      then:
+        if:
+          condition:
+            - switch.is_on: chime_active
+          then:
+            - switch.turn_on: relay
+    on_release:
+      # On release, turn of the chime.
+      - switch.turn_off: relay
+
+  - platform: status
+    name: "Deurbel Status"

@@ -1,0 +1,40 @@
+substitutions:
+  location: laundry
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/shelly-mini1g3.yaml
+
+binary_sensor:
+  - platform: gpio
+    name: Schakelaarbinary_sensor:
+  - platform: gpio
+    name: Schakelaar
+…            # else, toggle relay
+            else:
+              - switch.toggle: relay
+    id: button
+    pin: GPIO10
+    # small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+      then:
+        - if:
+            condition:
+              and:
+                - wifi.connected:
+                - api.connected:
+                - switch.is_on: relay
+            # toggle smart light if wifi and api are connected and relay is on
+            then:
+              # - switch.toggle: relay
+              - homeassistant.service:
+                  service: light.toggle
+                  data:
+                    entity_id: light.bijkeuken_plafond
+            # else, toggle relay
+            else:
+              - switch.toggle: relay
+    id: button

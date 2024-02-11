@@ -1,0 +1,6 @@
+substitutions:
+  location: bathroom
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/shelly1l.yaml

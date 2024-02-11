@@ -1,23 +1,24 @@
 # lovelace_gen
 type: custom:vertical-stack-in-card
 card_mod:
-  style: |
-    ha-card {
-      height: 68px;
-      {{ "{%" }} set entity = 'light.{{ room }}_lights' {{ "%}" }}
-      {{ "{%" }} if is_state(entity, 'on') {{ "%}" }}
-      {{ "{%" }} set r = state_attr(entity, 'rgb_color')[0] {{ "%}" }}
-      {{ "{%" }} set g = state_attr(entity, 'rgb_color')[1] {{ "%}" }}
-      {{ "{%" }} set b = state_attr(entity, 'rgb_color')[2] {{ "%}" }}
-      background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
-      {{ "{%" }} else {{ "%}" }}background: none;{{ "{%" }} endif {{ "%}" }}
-    }
+  style:
+    .: |
+      ha-card {
+        height: 68px;
+        {{ "{%" }} set entity = 'light.{{ room }}_lights' {{ "%}" }}
+        {{ "{%" }} if is_state(entity, 'on') {{ "%}" }}
+        {{ "{%" }} set r = state_attr(entity, 'rgb_color')[0] {{ "%}" }}
+        {{ "{%" }} set g = state_attr(entity, 'rgb_color')[1] {{ "%}" }}
+        {{ "{%" }} set b = state_attr(entity, 'rgb_color')[2] {{ "%}" }}
+        background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
+        {{ "{%" }} else {{ "%}" }}background: none;{{ "{%" }} endif {{ "%}" }}
+      }
 cards:
   - type: custom:mushroom-template-card
     primary: "{{ room|capitalize }}"
     icon: "{{ icon }}"
     entity: "light.{{ room }}_lights"
-    icon_color: '{{ "{{" }} "{{ color }}" if is_state(entity, "on") else "disabled" {{ "}}" }}'
+    icon_color: '{{ "{{" }} "{{ color }}" if is_state("binary_sensor.area_{{ room }}", "on") else "disabled" {{ "}}" }}'
     fill_container: true
     layout: horizontal
     card_mod:
@@ -28,11 +29,9 @@ cards:
           z-index: 500;
           position: relative;
         }
-        ha-card: {
-          margin-top: -16px !important;
-        }
         .:
           ha-card {
+            margin-top: -16px !important;
             top: -66px;
           }
           mushroom-shape-icon {
@@ -57,25 +56,26 @@ cards:
     alignment: end
     card_mod:
       class: invisible
-      style: |
-        :host {
-          position: relative;
-          bottom: 32px;
-          z-index: 2;
-        }
-        ha-card {
-          --chip-background: none;
-          backdrop-filter: unset;
-          --chip-border-width: 0;
-          --chip-spacing: 0;
-          --chip-box-shadow: none;
-          --chip-height: 32px;
-        }
+      style:
+        .: |
+          :host {
+            position: relative;
+            bottom: 32px;
+            z-index: 2;
+          }
+          ha-card {
+            --chip-background: none;
+            backdrop-filter: unset;
+            --chip-border-width: 0;
+            --chip-spacing: 0;
+            --chip-box-shadow: none;
+            --chip-height: 32px;
+          }
     chips:
       - type: conditional
         conditions:
           - entity: sensor.winston_current_room
-            state: {{ room | title }}
+            state: {{ room }}
           - entity: vacuum.winston
             state_not: docked
         chip:
@@ -87,11 +87,12 @@ cards:
             action: navigate
             navigation_path: /lovelace/winston
           card_mod:
-            style: |
-              ha-card {
-                backdrop-filter: unset;
-                -webkit-backdrop-filter: unset;
-              }
+            style:
+              .: |
+                ha-card {
+                  backdrop-filter: unset;
+                  -webkit-backdrop-filter: unset;
+                }
       - type: conditional
         conditions:
           - entity: {{ media }}
@@ -105,11 +106,12 @@ cards:
           tap_action:
             action: more-info
           card_mod:
-            style: |
-              ha-card {
-                backdrop-filter: unset;
-                -webkit-backdrop-filter: unset;
-              }
+            style:
+              .: |
+                ha-card {
+                  backdrop-filter: unset;
+                  -webkit-backdrop-filter: unset;
+                }
       # - type: conditional
       #   conditions:
       #     - entity: binary_sensor.deuren_{{ room }}

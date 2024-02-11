@@ -1,0 +1,168 @@
+substitutions:
+  name: waterp1meterkit
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+  baud_rate: 115200
+
+ota:
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 1
+  power_pin: GPIO16
+
+web_server:
+  port: 80
+
+# status_led:
+#   pin: GPIO05
+
+i2c:
+  sda: GPIO15
+  scl: GPIO4
+  scan: true
+  frequency: 400kHz
+
+output:
+  - platform: ledc
+    pin: GPIO13
+    id: output_led_green
+  - platform: ledc
+    pin: GPIO05
+    id: output_led_red
+  - platform: ledc
+    pin: GPIO14
+    id: output_led_blue
+
+light:
+  - platform: monochromatic
+    id: light_led_green
+    output: output_led_green
+  - platform: monochromatic
+    id: light_led_red
+    output: output_led_red
+  - platform: monochromatic
+    id: light_led_blue
+    output: output_led_blue
+
+uart:
+  id: uart_dsmr
+  rx_pin: GPIO33
+  baud_rate: 115200
+  rx_buffer_size: 1700
+
+dsmr:
+  uart_id: uart_dsmr
+  id: dsmr_instance
+  max_telegram_length: 1700
+  request_pin: GPIO12
+  #request_interval: 10s
+#DSMR part end
+
+sensor:
+  #DSMR part
+  - platform: dsmr
+    energy_delivered_tariff1:
+      id: dsmr_electricity_delivered_1
+      name: "Energy Consumed Tariff 1"
+      state_class: total_increasing
+    energy_returned_tariff1:
+      id: dsmr_electricity_returned_1
+      name: "Energy Produced Tariff 1"
+      state_class: total_increasing
+    energy_delivered_tariff2:
+      id: dsmr_electricity_delivered_2
+      name: "Energy Consumed Tariff 2"
+      state_class: total_increasing
+    energy_returned_tariff2:
+      id: dsmr_electricity_returned_2
+      name: "Energy Produced Tariff 2"
+      state_class: total_increasing
+    power_delivered:
+      accuracy_decimals: 3
+      id: dsmr_electricity_currently_delivered
+      name: "Power Consumed"
+    power_returned:
+      accuracy_decimals: 3
+      id: dsmr_electricity_currently_returned
+      name: "Power Produced"
+    voltage_l1:
+      id: dsmr_phase_voltage_l1
+      name: "Voltage"
+    current_l1:
+      id: dsmr_phase_power_current_l1
+      name: "Current"
+    power_delivered_l1:
+      accuracy_decimals: 3
+      id: dsmr_phase_currently_delivered_l1
+      name: "Power Consumed"
+    power_returned_l1:
+      accuracy_decimals: 3
+      id: dsmr_phase_currently_returned_l1
+      name: "Power Produced"
+    gas_delivered:
+      id: dsmr_extra_device_delivered
+      name: "Gas Consumed"
+      state_class: total_increasing
+
+  #WaterMeter sensor part
+  - platform: pulse_meter
+    id: sensor_pulse_meter
+    name: "${name} Current Usage"
+    icon: "mdi:water-pump"
+    unit_of_measurement: "L/min"
+    internal_filter_mode: PULSE
+    internal_filter: 200ms
+    timeout: 2min
+    accuracy_decimals: 1
+    total:
+      id: sensor_pulse_meter_total
+      name: "${name} Total Consumption"
+      icon: "mdi:cube-outline"
+      unit_of_measurement: "m³"
+      state_class: total_increasing
+      device_class: water
+      accuracy_decimals: 3
+      filters:
+        - multiply: 0.001
+    pin: GPIO32
+    on_value:
+      then:
+        - light.turn_on:
+            id: light_led_green
+            flash_length: 1s
+  #HDC1080 temp & hum sensor
+  - platform: hdc1080
+    temperature:
+      id: sensor_temperature
+      name: "Temperature"
+      filters:
+        offset: -4.5
+    humidity:
+      id: sensor_humidity
+      name: "Humidity"
+      filters:
+        offset: 12
+    update_interval: 60s
+    
+text_sensor:
+  - platform: dsmr
+    identification:
+      name: ${name} Identification
+    p1_version:
+      name: ${name} Version
+    timestamp:
+      id: dsmr_timestamp
+      internal: true

@@ -1,0 +1,89 @@
+substitutions:
+  name: ceiling10
+
+esphome:
+  name: ${location}-${name}
+  friendly_name: "${name} ${location}"
+  on_loop:
+    - lambda: "vTaskDelay(10/portTICK_PERIOD_MS);"
+
+esp32:
+  board: esp32doit-devkit-v1
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+    advanced:
+      ignore_efuse_mac_crc: true
+
+output:
+  - platform: ledc
+    pin: GPIO19
+    id: output_warm
+    power_supply: power
+    min_power: 0.13
+    max_power: 0.82
+    zero_means_zero: true
+  #    frequency: 4882Hz
+
+  - platform: ledc
+    pin: GPIO21
+    id: output_cold
+    power_supply: power
+    min_power: 0.13
+    max_power: 0.82
+    zero_means_zero: true
+  #    frequency: 4882Hz
+
+  - platform: ledc
+    pin: GPIO23
+    id: output_nightlight
+    power_supply: power
+  #    frequency: 4882Hz #9765Hz
+
+  - platform: ledc
+    pin: GPIO33
+    id: output_red
+    power_supply: power
+  - platform: ledc
+    pin: GPIO26
+    id: output_green
+    power_supply: power
+  - platform: ledc
+    pin: GPIO27
+    id: output_blue
+    power_supply: power
+
+power_supply:
+  - id: power
+    pin: GPIO22
+    enable_time: 0s
+    keep_on_time: 1s
+
+light:
+  - platform: monochromatic
+    name: "${location} ${name} night light"
+    id: night_light
+    output: output_nightlight
+    gamma_correct: 0
+    on_turn_on:
+      - light.turn_off: ceiling_light
+  - platform: cwww
+    name: "${location} ${name} ceiling light"
+    id: ceiling_light
+    cold_white: output_cold
+    warm_white: output_warm
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 2700 K
+    constant_brightness: true
+    gamma_correct: 0
+    on_turn_on:
+      - light.turn_off: night_light
+  - platform: rgb
+    name: "${location} ${name} ambient light"
+    id: my_light
+    red: output_red
+    green: output_green
+    blue: output_blue
+    gamma_correct: 2.8 #0
+    effects: !include effects.yaml

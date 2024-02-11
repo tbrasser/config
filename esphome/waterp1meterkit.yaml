@@ -1,0 +1,8 @@
+ota:
+  password: !secret admin_password
+
+api:
+
+packages:
+#  defaults: !include includes/defaults.yaml  # defaults only work for wifi
+  device:   !include includes/waterp1meterkit.yaml

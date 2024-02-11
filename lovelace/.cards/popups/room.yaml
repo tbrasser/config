@@ -30,7 +30,7 @@ content:
       card_mod:
         class: invisible
     - type: tile
-      name: "Forceer lampen aan"
+      name: "Is bezet (override)"
       entity: switch.area_presence_hold_{{ room }}
       tap_action:
         action: more-info

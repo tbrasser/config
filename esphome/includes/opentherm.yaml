@@ -1,0 +1,162 @@
+substitutions:
+  name: opentherm
+
+esp8266:
+  board: d1_mini_pro
+
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+  platformio_options:
+    lib_deps:
+    - ihormelnyk/OpenTherm Library @ 1.1.4
+  includes:
+    - esphome-opentherm/
+
+captive_portal:
+
+external_components:
+  source: github://freebear-nc/esphome-opentherm@main
+
+sensor:
+
+  - platform: homeassistant
+    id: indoor_humidity
+    entity_id: sensor.area_humidity_interior
+
+  - platform: custom
+    lambda: |-    
+      OpenthermComponent *openthermComp = (OpenthermComponent*) id(opentherm);
+      return { 
+        openthermComp->boiler_temperature, 
+        openthermComp->external_temperature_sensor, 
+        openthermComp->return_temperature_sensor, 
+        openthermComp->pressure_sensor,
+        openthermComp->modulation_sensor,
+        openthermComp->heating_target_temperature_sensor
+      };
+    sensors:
+      - name: Boiler Temperature
+        unit_of_measurement: °C
+        accuracy_decimals: 1
+      - name: "External Temperature"
+        unit_of_measurement: °C
+        accuracy_decimals: 0  
+      - name: "Return Temperature"
+        unit_of_measurement: °C
+        accuracy_decimals: 1
+      - name: "Heating Water Pressure"
+        unit_of_measurement: hPa
+        accuracy_decimals: 1
+      - name: "Boiler Modulation"
+        unit_of_measurement: "%"
+        accuracy_decimals: 0
+      - name: "Heating Target Temperature"
+        unit_of_measurement: °C
+        accuracy_decimals: 1
+        
+  - platform: homeassistant
+    id: temperature_sensor
+    entity_id: sensor.occupied_rooms_average_temperature
+    filters: 
+      # Push room temperature every second to update PID parameters
+      - heartbeat: 1s  
+    name: "Actual temperature"
+    unit_of_measurement: °C
+  - platform: template
+    id: temperature_sensor_interval
+    name: "Actual temperature interval"
+    lambda: |-
+      return id(temperature_sensor).state;
+    update_interval: 1s
+  - platform: pid
+    name: "PID Climate Result"
+    type: RESULT    
+  - platform: pid
+    name: "PID Climate HEAT"
+    type: HEAT    
+  - platform: pid
+    name: "PID Climate ERROR"
+    type: ERROR    
+
+
+binary_sensor:
+  - platform: custom
+    lambda: |-
+      OpenthermComponent *openthermComp = (OpenthermComponent*) id(opentherm);
+      return {openthermComp->flame};
+    binary_sensors:
+      - name: "Flame"
+        #device_class: heat
+
+button:
+  - platform: template
+    name: "PID Climate Autotune"
+    on_press:
+      - climate.pid.autotune: pid_climate
+
+switch:
+  - platform: custom
+    lambda: |-
+      OpenthermComponent *openthermComp = (OpenthermComponent*) id(opentherm);
+      return {openthermComp->thermostatSwitch};
+    switches:
+      name: "Disable PID"
+  - platform: template
+    name: "PID Climate Autotune"
+    turn_on_action:
+      - climate.pid.autotune: pid_climate
+
+
+
+
+
+custom_component:
+  - lambda: |-
+      auto opentherm = new OpenthermComponent();
+      return {opentherm};
+    components:
+      - id: opentherm
+
+output:
+  - platform: custom
+    type: float
+    lambda: |-
+      OpenthermComponent *openthermComp = (OpenthermComponent*) id(opentherm);
+      auto opentherm_pid_output = new OpenthermFloatOutput();
+      openthermComp->set_pid_output(opentherm_pid_output);
+      App.register_component(opentherm_pid_output);     
+      return {opentherm_pid_output};
+    outputs:
+      id: pid_output
+      #min_power: 30.00%
+      #max_power: 60.00%
+
+climate:
+  - platform: custom
+    lambda: |-
+      OpenthermComponent *openthermComp = (OpenthermComponent*) id(opentherm);
+      return {
+        openthermComp->hotWaterClimate, 
+        openthermComp->heatingWaterClimate
+      };
+    climates:
+      - id: hot_water
+        name: "Hot water"
+      - id: heating_water
+        name: "Heating water"
+  - platform: pid
+    id: pid_climate
+    name: "PID Climate Controller"
+    visual:
+      min_temperature: 16 °C
+      max_temperature: 28 °C
+      temperature_step: 0.5 °C
+    sensor: temperature_sensor_interval
+    humidity_sensor: indoor_humidity
+    default_target_temperature: 20°C
+    heat_output: pid_output
+    control_parameters:
+      kp: 0.38197
+      ki: 0.01012
+      kd: 3.60387

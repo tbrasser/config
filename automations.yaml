@@ -82,31 +82,6 @@
   condition: []
   action: []
   mode: single
-- id: '1669029776875'
-  alias: Turn Bathroom fan off when humidity < 70 and light is off
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
-    - sensor.thp_badkamer_humidity
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-    below: 70
-  - platform: time_pattern
-    minutes: '15'
-  condition:
-  - condition: state
-    entity_id: light.badkamer
-    state: 'off'
-  - condition: numeric_state
-    entity_id: sensor.thp_badkamer_humidity
-    below: 70
-  action:
-  - service: fan.turn_off
-    data: {}
-  mode: single
 - id: '1669125280981'
   alias: 'Lampen aan als schoonmaakster er is '
   description: ''
@@ -258,23 +233,22 @@
       - media_player.toilet
   mode: single
 - id: '1677082011846'
-  alias: 'Notify Thomas als main internet eruit ligt '
+  alias: Notify Thomas als iets stuk gaat
   description: ''
   trigger:
   - platform: state
     entity_id:
-    - sensor.router_gateway_wan_dhcp_status
-    from: Online
+    - climate.opentherm_livingroom_central_heating
+    to: unavailable
     for:
       hours: 0
-      minutes: 5
+      minutes: 1
       seconds: 0
   condition: []
   action:
   - service: notify.mobile_app_thomas_phone
     data:
-      message: 'Glasvezel stukkie, notifying from mobile backup! '
-      title: 'Joe! '
+      message: Something important broke
   mode: single
 - id: '1679570570181'
   alias: 'Sleep mode aan als Fré iPhone Sleep mode '
@@ -382,6 +356,10 @@
     data: {}
     target:
       entity_id: media_player.toilet
+    enabled: true
+  - service: mass.play_media
+    data: {}
+    enabled: false
   mode: single
 - id: '1681162461094'
   alias: Radio Toilet uit
@@ -566,7 +544,7 @@
         \ - How much time remaining until their first meeting\n  - Anything that may
         be of interest."
 - id: '1692531095698'
-  alias: Woonkamer Tablet 2 Screen on and Screensaver off
+  alias: Woonkamer Tablet 2 Screen on when area active
   description: ''
   trigger:
   - platform: state
@@ -611,16 +589,14 @@
     - binary_sensor.tablet2_person_occupancy
     from: 'off'
     to: 'on'
-  condition:
-  - condition: state
-    entity_id: switch.tablet_2_screen
-    state: 'on'
-    enabled: false
+  condition: []
   action:
-  - service: switch.turn_off
-    data: {}
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: woonkamer
     target:
-      entity_id: switch.tablet_2_screensaver
+      device_id: bc4811bf683ce14894ea17d6f7a58885
   mode: single
 - id: '1692531439719'
   alias: Woonkamer Tablet 2 Screensaver on when no motion
@@ -633,13 +609,15 @@
     to: 'off'
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: screensaver
     target:
-      entity_id: switch.tablet_2_screensaver
+      device_id: bc4811bf683ce14894ea17d6f7a58885
   mode: single
 - id: '1693816251866'
-  alias: Keuken Tablet 1 Screensaver Uit
+  alias: Eetkamer Tablet 1 Screensaver Uit
   description: ''
   trigger:
   - platform: state
@@ -654,27 +632,6 @@
     entity_id: 76d3094050a76542cd8342f5d173ad0a
     domain: switch
   mode: single
-- id: '1702990341855'
-  alias: Bijkeuken Lamp
-  description: ''
-  trigger:
-  - type: powered
-    platform: device
-    device_id: f6e1316b821d0b0c2bd15c8ea8a7003e
-    entity_id: 6baac2f560bc64f80e727480eb7fef29
-    domain: binary_sensor
-  - type: not_powered
-    platform: device
-    device_id: f6e1316b821d0b0c2bd15c8ea8a7003e
-    entity_id: 6baac2f560bc64f80e727480eb7fef29
-    domain: binary_sensor
-  condition: []
-  action:
-  - type: toggle
-    device_id: 7049ec2aa88cd05ccf0d85608a314a93
-    entity_id: 08205f2359c9a128d39b77471518326e
-    domain: light
-  mode: single
 - id: '1703801239530'
   alias: 'Hele CV uit in sleep mode '
   description: ''
@@ -688,15 +645,21 @@
       hours: 0
       minutes: 15
       seconds: 0
-  condition: []
+  condition:
+  - condition: state
+    entity_id: binary_sensor.area_badkamer
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   action:
-  - service: climate.turn_off
-    data: {}
+  - service: climate.set_temperature
     target:
-      entity_id:
-      - climate.opentherm_livingroom_hot_water
-      - climate.opentherm_livingroom_pid_climate_controller
-      - climate.opentherm_livingroom_heating_water
+      entity_id: climate.opentherm_livingroom_central_heating
+    data:
+      hvac_mode: heat
+      temperature: 15
   mode: single
 - id: '1704309594854'
   alias: TRV Keuken Temperatuur
@@ -712,14 +675,14 @@
   trigger:
   - platform: state
     entity_id:
-    - climate.opentherm_livingroom_pid_climate_controller
+    - climate.opentherm_livingroom_central_heating
     attribute: temperature
   condition: []
   action:
   - service: climate.set_temperature
     metadata: {}
     data:
-      temperature: '{{ state_attr(''climate.opentherm_livingroom_pid_climate_controller'',
+      temperature: '{{ state_attr(''climate.opentherm_livingroom_central_heating'',
         ''temperature'') }}'
     target:
       entity_id: climate.trv_keuken
@@ -757,11 +720,6 @@
     target:
       entity_id:
       - switch.tablet_3_screen_2
-  - service: switch.turn_off
-    data: {}
-    target:
-      entity_id: switch.tablet_2_screensaver
-    enabled: false
   mode: single
 - id: '1704493042444'
   alias: Keuken Tablet 3 Screensaver weg
@@ -772,17 +730,20 @@
     - binary_sensor.tablet3_person_occupancy
     from: 'off'
     to: 'on'
-  condition:
-  - condition: state
-    entity_id: switch.tablet_2_screen
-    state: 'on'
-    enabled: false
+  condition: []
   action:
   - service: switch.turn_off
     data: {}
     target:
       entity_id:
       - switch.tablet_3_screensaver_2
+    enabled: false
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: keuken
+    target:
+      device_id: a3fef3295e374b9fba27bb62b9e484c4
   mode: single
 - id: '1704493939837'
   alias: Keuken Tablet 3 Screensaver aan
@@ -800,6 +761,13 @@
     target:
       entity_id:
       - switch.tablet_3_screensaver_2
+    enabled: false
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: screensaver
+    target:
+      device_id: a3fef3295e374b9fba27bb62b9e484c4
   mode: single
 - id: '1704838913935'
   alias: Pannenkoekenplant kamer volger
@@ -834,7 +802,25 @@
   trigger:
   - platform: state
     entity_id:
-    - climate.opentherm_livingroom_pid_climate_controller
+    - climate.opentherm_livingroom_central_heating
+    attribute: temperature
+  condition: []
+  action:
+  - service: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: '{{ state_attr(''climate.opentherm_livingroom_central_heating'',
+        ''temperature'') }}'
+    target:
+      entity_id: climate.trv_badkamer
+  mode: restart
+- id: '1705619290011'
+  alias: Sync TRV Kantoor to CV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - climate.opentherm_livingroom_central_heating
     attribute: temperature
   condition: []
   action:
@@ -844,5 +830,418 @@
       temperature: '{{ state_attr(''climate.opentherm_livingroom_pid_climate_controller'',
         ''temperature'') }}'
     target:
-      entity_id: climate.trv_badkamer
+      entity_id: climate.trv_kantoor
   mode: restart
+- id: '1705835242011'
+  alias: 'Water temp 40 notification '
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 9aefef3185c1c43c2ba0d34e37a523d3
+    entity_id: 9d31ac3196f5dd57a2479ce9b7cb4113
+    domain: sensor
+    below: 41
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_thomas_phone
+    metadata: {}
+    data:
+      message: Water temp 40
+  mode: single
+- id: '1706464369402'
+  alias: 'Eetkamer Tablet 1 Screen off when area clear '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_eetkamer
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_1_screen
+  mode: single
+- id: '1706464507417'
+  alias: 'Eetkamer Tablet 1 Screen on when area active '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.area_eetkamer
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.tablet_1_screen
+  mode: single
+- id: '1706473828197'
+  alias: 'Eetkamer Tablet 1 Screensaver off on motion '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet1_person_occupancy
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: eetkamer
+    target:
+      device_id:
+      - fca30a1dfbb3841b04ca20717e3a25e8
+  mode: single
+- id: '1706473905310'
+  alias: 'Eetkamer Tablet 1 Screensaver on when no motion '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.tablet1_person_occupancy
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: screensaver
+    target:
+      device_id:
+      - fca30a1dfbb3841b04ca20717e3a25e8
+  mode: single
+- id: '1706644618953'
+  alias: Reload 2410
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hlk_ld2410_80ad_beweging
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition: []
+  action:
+  - service: homeassistant.reload_config_entry
+    metadata: {}
+    data: {}
+    target:
+      device_id: 61c9f67ae88f0303176ff63ba4d91fc0
+  mode: single
+- id: '1706714763735'
+  alias: Hue Tap Dimmer Switch
+  description: ''
+  use_blueprint:
+    path: vandalon/Z2M - Philips Hue Tap dial switch.yaml
+    input:
+      controller: tap dial switch eetkamer
+- id: '1706716759116'
+  alias: Philips Hue Dial Switch (Zigbee2MQTT)
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: zigbee2mqtt/Philips Hue Tap Dial Switch/action
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload is match(''^(dial_rotate_|button_[1-4]_(press|hold))'')
+      and trigger.payload != '''' }}'
+  action:
+  - choose:
+    - conditions:
+      - alias: Update Last Pressed
+        condition: template
+        value_template: '{{ trigger.payload is match(''^button_[1-4]_press$'') }}'
+      sequence:
+      - alias: Prevent different buttons to be registered as double press
+        if:
+        - condition: template
+          value_template: '{{ trigger.payload | regex_replace(find=''[^1-4]'', replace='''')
+            != states(''input_text.philips_hue_dial_switch_last_pressed'') }}'
+        then:
+        - service: counter.reset
+          data: {}
+          target:
+            entity_id: counter.philips_hue_dial_switch_button_counter
+          enabled: true
+        enabled: true
+      - service: input_text.set_value
+        data:
+          value: '{{ trigger.payload | regex_replace(find=''[^1-4]'', replace='''')
+            }}'
+        target:
+          entity_id: input_text.philips_hue_dial_switch_last_pressed
+        alias: Update the input text helper with the last pressed button number
+      - service: counter.increment
+        data: {}
+        target:
+          entity_id: counter.philips_hue_dial_switch_button_counter
+        alias: Increase the counter helper with 1
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+      - service: counter.reset
+        data: {}
+        target:
+          entity_id: counter.philips_hue_dial_switch_button_counter
+        alias: Reset the counter helper
+        enabled: true
+    - conditions:
+      - alias: Double xxx2 event
+        condition: template
+        value_template: '{{ trigger.payload is match(''button_[1-4]_press_release'')
+          }}'
+      - condition: numeric_state
+        entity_id: counter.philips_hue_dial_switch_button_counter
+        above: 1
+      sequence:
+      - choose:
+        - conditions:
+          - alias: Double press button 1
+            condition: template
+            value_template: '{{ trigger.payload == ''button_1_press_release'' }}'
+          sequence:
+          - service: light.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: light.eetkamer_dimmer
+        - conditions:
+          - alias: Double press button 2
+            condition: template
+            value_template: '{{ trigger.payload == ''button_2_press_release'' }}'
+          sequence:
+          - service: media_player.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: media_player.eetkamer
+        - conditions:
+          - alias: Double press button 3
+            condition: template
+            value_template: '{{ trigger.payload == ''button_3_press_release'' }}'
+          sequence:
+          - service: light.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: light.eetkamer_hoek_links
+        - conditions:
+          - alias: Double press button 4
+            condition: template
+            value_template: '{{ trigger.payload == ''button_4_press_release'' }}'
+          sequence:
+          - service: light.turn_off
+            metadata: {}
+            data:
+              transition: 1
+            target:
+              entity_id: light.dimmer2_diningroom_ceiling_dimmer2_diningroom_ceiling
+    default:
+    - alias: Single xxx2 event
+      if:
+      - condition: template
+        value_template: '{{ trigger.payload is match(''button_[1-4]_press_release'')
+          }}'
+      then:
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 0
+          milliseconds: 250
+      - if:
+        - condition: numeric_state
+          entity_id: counter.philips_hue_dial_switch_button_counter
+          above: 1
+        then:
+        - stop: Double tap detected
+    - service: counter.reset
+      data: {}
+      target:
+        entity_id: counter.philips_hue_dial_switch_button_counter
+      enabled: true
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_text.philips_hue_dial_switch_last_pressed
+          state: '1'
+        - condition: template
+          value_template: '{{ trigger.payload is match(''^dial_rotate_'') }}'
+        sequence:
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_left'')
+                }}'
+            sequence:
+            - service: light.turn_on
+              metadata: {}
+              data:
+                brightness_step: -{{ states.sensor.philips_hue_tap_dial_switch_action_time.state
+                  }}
+              target:
+                entity_id: light.eetkamer_dimmer
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_right'')
+                }}'
+            sequence:
+            - service: light.turn_on
+              metadata: {}
+              data:
+                brightness_step: '{{ states.sensor.philips_hue_tap_dial_switch_action_time.state
+                  }}'
+                entity_id: light.eetkamer_dimmer
+      - conditions:
+        - condition: state
+          entity_id: input_text.philips_hue_dial_switch_last_pressed
+          state: '2'
+        - condition: template
+          value_template: '{{ trigger.payload is match(''^dial_rotate_'') }}'
+        sequence:
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_left'')
+                }}'
+            sequence:
+            - service: media_player.volume_set
+              data:
+                volume_level: '{{ state_attr(''media_player.global'',''volume_level'')
+                  - (states.sensor.philips_hue_tap_dial_switch_action_time.state |
+                  float / 1000  ) | round(2) }}'
+              target:
+                entity_id: media_player.global
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_right'')
+                }}'
+            sequence:
+            - service: media_player.volume_set
+              data:
+                volume_level: '{{ state_attr(''media_player.global'',''volume_level'')
+                  + (states.sensor.philips_hue_tap_dial_switch_action_time.state |
+                  float / 1000 ) | round(2) }}'
+              target:
+                entity_id: media_player.global
+      - conditions:
+        - condition: state
+          entity_id: input_text.philips_hue_dial_switch_last_pressed
+          state: '3'
+        - condition: template
+          value_template: '{{ trigger.payload is match(''^dial_rotate_'') }}'
+        sequence:
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_left'')
+                }}'
+            sequence: []
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_right'')
+                }}'
+            sequence: []
+      - conditions:
+        - condition: state
+          entity_id: input_text.philips_hue_dial_switch_last_pressed
+          state: '4'
+        - condition: template
+          value_template: '{{ trigger.payload is match(''^dial_rotate_'') }}'
+        sequence:
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_left'')
+                }}'
+            sequence: []
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload is match(''^dial_rotate_right'')
+                }}'
+            sequence: []
+      - conditions:
+        - alias: Button 1 Single Click
+          condition: template
+          value_template: '{{ trigger.payload == ''button_1_press_release'' }}'
+        sequence:
+        - service: light.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: light.eetkamer_dimmer
+      - conditions:
+        - alias: Button 1 Hold
+          condition: template
+          value_template: '{{ trigger.payload == ''button_1_hold'' }}'
+        sequence: []
+      - conditions:
+        - alias: Button 2 Single Click
+          condition: template
+          value_template: '{{ trigger.payload == ''button_2_press_release'' }}'
+        sequence:
+        - service: media_player.turn_on
+          target:
+            entity_id: media_player.eetkamer
+          data: {}
+      - conditions:
+        - alias: Button 2 Hold
+          condition: template
+          value_template: '{{ trigger.payload == ''button_2_hold'' }}'
+        sequence:
+        - service: media_player.media_next_track
+          metadata: {}
+          data: {}
+          target:
+            entity_id: media_player.eetkamer
+      - conditions:
+        - alias: Button 3 Single Click
+          condition: template
+          value_template: '{{ trigger.payload == ''button_3_press_release'' }}'
+        sequence:
+        - service: light.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: light.eetkamer_hoek_links
+      - conditions:
+        - alias: Button 3 Hold
+          condition: template
+          value_template: '{{ trigger.payload == ''button_3_hold'' }}'
+        sequence: []
+      - conditions:
+        - alias: Button 4 Single Click
+          condition: template
+          value_template: '{{ trigger.payload == ''button_4_press_release'' }}'
+        sequence:
+        - service: light.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: light.dimmer2_diningroom_ceiling_dimmer2_diningroom_ceiling
+      - conditions:
+        - alias: Button 4 Hold
+          condition: template
+          value_template: '{{ trigger.payload == ''button_4_hold'' }}'
+        sequence: []
+      enabled: true
+  mode: parallel
+  max: 10

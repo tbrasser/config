@@ -1,0 +1,102 @@
+substitutions:
+  name: dapy-neon
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+  on_boot:
+    - media_player.volume_set: 30%
+esp32:
+  board: wemos_d1_mini32
+sensor:
+  - platform: internal_temperature
+    name: "Internal Temperature"
+    on_value_range:
+      - above: 70.0
+        then:
+          - switch.turn_off: power
+          - media_player.stop
+          - light.turn_off: pinkneon
+          - light.turn_off: blueneon
+          - switch.turn_off: mode
+media_player:
+  - platform: i2s_audio
+    name: None
+    id: mediaplayer
+    dac_type: external
+    i2s_dout_pin: 25
+    mode: mono
+    on_idle:
+      - switch.turn_off: mode
+    on_play:
+      - switch.turn_on: mode
+      - switch.turn_on: power
+i2s_audio:
+  i2s_lrclk_pin: 32
+  i2s_bclk_pin: 27
+light:
+  - platform: binary
+    name: "Blue"
+    output: blue
+    id: blueneon
+  - platform: binary
+    name: "Pink"
+    output: pink
+    id: pinkneon
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 9
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: switch
+    id: powerswitch
+    on_press:
+      - switch.turn_on: power
+      - media_player.volume_set: 30%
+      - light.turn_on: pinkneon
+      - light.turn_on: blueneon
+      - switch.turn_off: mode
+    on_release:
+      - switch.turn_off: power
+      - media_player.stop
+      - light.turn_off: pinkneon
+      - light.turn_off: blueneon
+output:
+  - platform: gpio
+    id: blue
+    pin: 14
+  - platform: gpio
+    id: pink
+    pin: 23
+switch:
+  - platform: gpio
+    id: mode
+    internal: true
+    pin: 18
+  - platform: gpio
+    name: Power
+    id: power
+    pin: 33
+select:
+  - platform: template
+    name: Mode
+    id: modeselect
+    options:
+      - AM/FM Radio
+      - Media Player
+    set_action:
+      - switch.toggle: mode
+      - switch.turn_on: power
+    lambda: |-
+      if (id(mode).state) {
+        return id(modeselect).state = "Media Player";
+      }
+      else {
+        return id(modeselect).state = "AM/FM Radio";
+      }
+    update_interval: 5s
+web_server:
+  port: 80
+  version: 2

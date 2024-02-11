@@ -1,0 +1,19 @@
+substitutions:
+  name: bluetooth-hub
+
+esphome:
+  name: ${name}-${location}
+  friendly_name: "${name} ${location}"
+
+esp32:
+  board: wemos_d1_mini32
+
+uart:
+  rx_pin: GPIO10
+  baud_rate: 9600
+
+sensor:
+  - platform: pm1006
+    pm_2_5:
+      name: "2.5µm Fijnstof Concentratie"
+captive_portal:

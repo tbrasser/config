@@ -3,10 +3,9 @@ default_config:
 homeassistant: {packages: !include_dir_named packages, customize: !include customize.yaml, auth_providers: !include auth_providers.yaml}
 media_extractor:
 expose_camera_stream_source:
-frontend: {themes: !include_dir_merge_named themes, extra_module_url: ["/hacsfiles/lovelace-card-mod/card-mod.js"]}
+frontend: {themes: !include_dir_merge_named themes, extra_module_url: ["/hacsfiles/lovelace-card-mod/card-mod.js?v=20240204"]}
 http: {use_x_forwarded_for: true, trusted_proxies: [172.30.33.0/24]}
 config_editor:
-magic_areas:
 stream:
 readme:
 battery_notes:

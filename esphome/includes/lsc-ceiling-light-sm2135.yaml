@@ -1,0 +1,55 @@
+substitutions:
+  name: ceiling-lsc
+
+esphome:
+  name: ${location}-${name}
+  friendly_name: "${name} ${location}"
+
+light:
+  - platform: rgbww
+    name: Light
+    id: my_light
+    red: output_red
+    green: output_green
+    blue: output_blue
+    cold_white: output_white
+    warm_white: output_warmwhite
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 Mireds
+    warm_white_color_temperature: 2200 K
+    color_interlock: true
+    constant_brightness: true
+    gamma_correct: 0.0
+    effects: !include effects.yaml
+
+sm2135:
+  data_pin: D16
+  clock_pin: D17
+  rgb_current: 20mA
+  cw_current: 60mA
+
+output:
+  - platform: sm2135
+    id: output_red
+    channel: 2
+    max_power: 1
+  - platform: sm2135
+    id: output_green
+    channel: 0
+    max_power: 1
+  - platform: sm2135
+    id: output_blue
+    channel: 1
+    max_power: 1
+  - platform: sm2135
+    id: output_white
+    channel: 3
+    max_power: 1
+    min_power: 0.01
+    zero_means_zero: true
+  - platform: sm2135
+    id: output_warmwhite
+    channel: 4
+    max_power: 1
+    min_power: 0.01
+    zero_means_zero: true

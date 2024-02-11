@@ -1,17 +1,16 @@
+- name: main
+  position: footer
+  chip:
+    type: action
+    icon: mdi:home
+
 - name: security
   position: footer
   chip:
     type: alarm-control-panel
     entity: alarm_control_panel.alarm
     content_info: none
-    hold_action:
-      action: navigate
-      navigation_path: /config/dashboard
-- name: main
-  position: footer
-  chip:
-    type: action
-    icon: mdi:home
+
 - name: lights
   position: footer
   chip:
@@ -23,18 +22,17 @@
       action: more-info
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          {% if (expand(config.entity) | selectattr('state','eq','on') | list | count) > 0 %}
-          content: "{{ expand(config.entity) | selectattr('state','eq','on') | list | count }}";
-          {% endif %} 
-        }
+      style:
+        .: |
+          ha-card:after { {% if (expand(config.entity) | selectattr('state','eq','on') | list | count) > 0 %}content: "{{ expand(config.entity) | selectattr('state','eq','on') | list | count }}";{% endif %} }
+
 - name: devices
   position: footer
   chip:
     type: template
     icon: mdi:wrench-clock
     icon_color: blue
+
 - name: media
   position: footer
   chip:
@@ -42,29 +40,17 @@
     entity: media_player.global
     content_info: none
     icon_color: indigo
-    icon: |
-      {% set media_type = state_attr(config.entity, 'media_content_type') %}
-      {% if media_type == 'tvshow' %}
-      mdi:television-classic
-      {% elif media_type == 'movie' %}
-      mdi:movie-roll
-      {% elif media_type == 'music' %}
-      mdi:music
-      {% elif media_type == 'playlist' %}
-      mdi:music
-      {% else %}
-      mdi:play
-      {% endif %}
+    icon: "{% set media_type = state_attr(config.entity, 'media_content_type') %}{% if media_type == 'tvshow' %}mdi:television-classic{% elif media_type == 'movie' %}mdi:movie-roll{% elif media_type == 'music' %}mdi:music{% elif media_type == 'playlist' %}mdi:music{% else %}mdi:play{% endif %}"
     hold_action:
       action: more-info
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          {% if (expand('media_player.alles') | selectattr('state','ne','off') | list | count) > 0 %}
-          content: "{{ expand('media_player.alles') | selectattr('state','ne','off') | list | count }}";
-          {% endif %} 
-        }
+      style:
+        .: |
+          ha-card:after {
+            {% if (expand('media_player.alles') | selectattr('state','ne','off') | list | count) > 0 %}content: "{{ expand('media_player.alles') | selectattr('state','ne','off') | list | count }}";{% endif %} 
+          }
+
 - name: location
   position: footer
   chip:
@@ -76,12 +62,10 @@
       start_listening: true
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          {% if (states.persistent_notification | selectattr('state','eq','notifying') | list | count) > 0 %}
-          content: "{{ states.persistent_notification | selectattr('state','eq','notifying') | list | count }}";
-          {% endif %} 
-        }
+      style:
+        .: |
+          ha-card:after { {% if (states.persistent_notification | selectattr('state','eq','notifying') | list | count) > 0 %}content: "{{ states.persistent_notification | selectattr('state','eq','notifying') | list | count }}";{% endif %} }
+
 - name: finance
   position: header
   chip:
@@ -89,22 +73,12 @@
     entity: sensor.uitgegeven_vandaag
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          content: "{{ states.sensor.uitgegeven_vandaag.state|float(0)|int }}";
-        }
-    icon_color: |
-      {% if states.sensor.uitgegeven_vandaag.state|float(0) >= states.sensor.te_besteden_per_dag.state|float(0) %}
-      red
-      {% else %}
-      green
-      {% endif %}
-    icon: |
-      {% if states.sensor.te_besteden_per_dag.state|float(0) < 70 %}
-      mdi:currency-eur-off
-      {% else %}
-      mdi:currency-eur
-      {% endif %}
+      style:
+        .: |
+          ha-card:after { content: "{{ states.sensor.uitgegeven_vandaag.state|float(0)|int }}"; }
+    icon_color: "{% if states.sensor.uitgegeven_vandaag.state|float(0) >= states.sensor.te_besteden_per_dag.state|float(0) %}red{% else %}green{% endif %}"
+    icon: "{% if states.sensor.te_besteden_per_dag.state|float(0) < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
+
 - name: winston
   position: header
   chip:
@@ -115,12 +89,10 @@
     content_info: none
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          {% if states.vacuum.winston.state != "docked" %}
-          content: "{{ states.sensor.winston_current_room.state }}";
-          {% endif %} 
-        }
+      style:
+        .: |
+          ha-card:after { {% if states.vacuum.winston.state != 'docked' %}content: "{{ states.sensor.winston_current_room.state }}";{% endif %} }
+
 - name: plants
   position: header
   chip:
@@ -129,34 +101,26 @@
     icon: mdi:sprout
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          {% if (states.plant | selectattr('state','eq','problem') | list | count) > 0 %}
-          content: "{{ states.plant | selectattr('state','eq','problem') | list | count }}";
-          {% endif %}
-        }
+      style:
+        .: |
+          ha-card:after {
+            {% if (states.plant | selectattr('state','eq','problem') | list | count) > 0 %}
+            content: "{{ states.plant | selectattr('state','eq','problem') | list | count }}";
+            {% endif %}
+          }
+
 - name: climate
   position: header
   chip:
     type: template
-    icon_color: |
-      {% if state_attr('climate.opentherm_livingroom_pid_climate_controller', 'hvac_action') == "heating" %}
-      red
-      {% else %}
-      grey
-      {% endif %}
-    icon: |
-      {% if state_attr('climate.opentherm_livingroom_pid_climate_controller', 'hvac_action') == "off" %}
-      mdi:thermometer
-      {% else %}
-      mdi:thermostat
-      {% endif %}
+    icon_color: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'heating' %}red{% else %}grey{% endif %}"
+    icon: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'off' %}mdi:thermometer{% else %}mdi:thermostat{% endif %}"
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          content: "{{ states.sensor.occupied_rooms_average_temperature.state | round(1) }}";
-        }
+      style:
+        .: |
+          ha-card:after { content: "{{ states.sensor.occupied_rooms_average_temperature.state | round(1) }}"; }
+
 - name: weather
   position: header
   chip:
@@ -164,10 +128,10 @@
     entity: weather.buienradar
     card_mod:
       class: chipbadge
-      style: |
-        ha-card:after {
-          content: "{{ states.sensor.area_temperature_degc_exterior.state | round(1) }}";
-        }
+      style:
+        .: |
+          ha-card:after { content: "{{ states.sensor.area_temperature_degc_exterior.state | round(1) }}"; }
+
 - name: time
   position: header
   chip:

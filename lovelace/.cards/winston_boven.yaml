@@ -96,34 +96,35 @@ map_modes:
   - template: vacuum_follow_path
   - template: vacuum_goto
 card_mod:
-  style: |
-    .room-16-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-17-wrapper {
-      --map-card-internal-room-outline-line-color: rgba(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-18-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-19-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
-    .room-20-wrapper {
-      --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
-      --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
-      --map-card-internal-room-label-color: rgb(255, 255, 255);
-      --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
-    }
+  style:
+    .: |
+      .room-16-wrapper {
+        --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+        --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+        --map-card-internal-room-label-color: rgb(255, 255, 255);
+        --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+      }
+      .room-17-wrapper {
+        --map-card-internal-room-outline-line-color: rgba(19, 87, 148, 0);
+        --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+        --map-card-internal-room-label-color: rgb(255, 255, 255);
+        --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+      }
+      .room-18-wrapper {
+        --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+        --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+        --map-card-internal-room-label-color: rgb(255, 255, 255);
+        --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+      }
+      .room-19-wrapper {
+        --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+        --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+        --map-card-internal-room-label-color: rgb(255, 255, 255);
+        --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+      }
+      .room-20-wrapper {
+        --map-card-internal-room-outline-line-color: rgb(19, 87, 148, 0);
+        --map-card-internal-room-outline-line-color-selected: rgb(19, 87, 148, 0);
+        --map-card-internal-room-label-color: rgb(255, 255, 255);
+        --map-card-internal-room-label-color-selected: rgb(255, 255, 255);
+      }

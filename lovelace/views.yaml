@@ -15,16 +15,17 @@
             type: custom:mod-card
             card_mod:
               class: invisible
-              style: |
-                ha-card {
-                  border-radius: 0px !important;
-                  border-width: 0px !important;
-                  {% if view.name != 'weather' %} 
-                  {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
-                  {{ "{%" }} endif {{ "%}" }}
-                  {% endif %}
-                }
+              style:
+                .: |
+                  ha-card {
+                    border-radius: 0px !important;
+                    border-width: 0px !important;
+                    {% if view.name != 'weather' %} 
+                    {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
+                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    {{ "{%" }} endif {{ "%}" }}
+                    {% endif %}
+                  }
             card:
               type: vertical-stack
               cards:
@@ -48,16 +49,17 @@
             type: custom:mod-card
             card_mod:
               class: invisible
-              style: |
-                ha-card {
-                  border-radius: 0px !important;
-                  border-width: 0px !important;
-                  {% if view.name != 'weather' %} 
-                  {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
-                  {{ "{%" }} endif {{ "%}" }}
-                  {% endif %}
-                }
+              style:
+                .: |
+                  ha-card {
+                    border-radius: 0px !important;
+                    border-width: 0px !important;
+                    {% if view.name != 'weather' %} 
+                    {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
+                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    {{ "{%" }} endif {{ "%}" }}
+                    {% endif %}
+                  }
             card:
               type: vertical-stack
               cards:

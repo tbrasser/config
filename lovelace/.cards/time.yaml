@@ -1,3 +1,7 @@
+- type: todo-list
+  entity: todo.to_do
+  view_layout:
+    grid-column-end: span 2
 - initial_view: listWeek
   type: calendar
   entities:
