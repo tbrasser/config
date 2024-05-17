@@ -32,7 +32,7 @@ tiles:
       conditions: [{ entity: sensor.dagdeel, value: bier }],
     }
   - {
-      tile_id: total_clean_count,
+      tile_id: cleaning_count,
       label: dummy,
       entity: sensor.dagdeel,
       conditions: [{ entity: sensor.dagdeel, value: bier }],

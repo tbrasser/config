@@ -1,0 +1,43 @@
+rest:
+  - resource: !secret sensecap_tracker_jo
+    method: GET
+    username: !secret sensecap_api_id
+    password: !secret sensecap_api_key
+    scan_interval: 5
+    sensor:
+      - name: Sensecap Tracker Jo Latitude
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[2].measurement_value }}
+          {%- endif -%}
+      - name: Sensecap Tracker Jo Longitude
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[1].measurement_value }}
+          {%- endif -%}
+      - name: Sensecap Tracker Jo Time
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[0].time }}
+          {%- endif -%}
+  - resource: !secret sensecap_tracker_andries
+    method: GET
+    username: !secret sensecap_api_id
+    password: !secret sensecap_api_key
+    scan_interval: 5
+    sensor:
+      - name: Sensecap Tracker Andries Latitude
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[2].measurement_value }}
+          {%- endif -%}
+      - name: Sensecap Tracker Andries Longitude
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[1].measurement_value }}
+          {%- endif -%}
+      - name: Sensecap Tracker Andries Time
+        value_template: >
+          {%- if (value_json.data | length) > 0 -%}
+          {{ value_json.data[0].points[0].time }}
+          {%- endif -%}

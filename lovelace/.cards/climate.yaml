@@ -1,62 +1,59 @@
-- type: thermostat
-  entity: climate.opentherm_livingroom_central_heating
-  show_current_as_primary: false
+# lovelace_gen
+- type: vertical-stack
   view_layout:
     grid-column-end: span 2
-- type: custom:vertical-stack-in-card
   cards:
-    - type: thermostat
-      entity: climate.area_climate_keuken
-    - show_name: true
-      show_icon: true
-      type: button
-      tap_action:
-        action: toggle
-      entity: automation.sync_trv_keuken_to_cv
-      name: Sync
-      icon: mdi:link-variant
-      icon_height: 48px
-      hold_action:
-        action: none
-- type: custom:vertical-stack-in-card
-  cards:
-    - type: thermostat
-      entity: climate.area_climate_badkamer
-    - show_name: true
-      show_icon: true
-      type: button
-      tap_action:
-        action: toggle
-      entity: automation.sync_trv_badkamer_to_cv
-      name: Sync
-      icon: mdi:link-variant
-      icon_height: 48px
-      hold_action:
-        action: none
-- type: custom:vertical-stack-in-card
-  cards:
-    - type: thermostat
-      entity: climate.area_climate_kantoor
-    - show_name: true
-      show_icon: true
-      type: button
-      tap_action:
-        action: toggle
-      entity: automation.sync_trv_kantoor_to_cv
-      name: Sync
-      icon: mdi:link-variant
-      icon_height: 48px
-      hold_action:
-        action: none
-- type: history-graph
-  view_layout:
-    grid-column-end: span 2
+    - type: custom:mushroom-number-card
+      entity: number.central_configuration_preset_comfort_temp
+      icon_type: none
+      fill_container: true
+      secondary_info: none
+      layout: horizontal
+      primary_info: none
+      display_mode: buttons
+    - square: false
+      type: grid
+      columns: 2
+      cards:
+{% for room in _global.rooms %}
+        - type: conditional
+          conditions:
+            - entity: climate.{{ room.name }}
+              state_not:
+                - unavailable
+                - unknown
+          card:
+            type: tile
+            entity: climate.{{ room.name }}
+            hide_state: false
+            state_content:
+              - hvac_action
+              - current_temperature
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.navigate
+                data:
+                  path: "{{ room.name }}"
+{% endfor %}
+- type: entities
   entities:
-    - entity: sensor.occupied_rooms_average_temperature
-    - entity: sensor.area_temperature_degc_keuken
-    - entity: sensor.area_temperature_degc_toilet
-    - entity: sensor.area_temperature_degc_badkamer
-    - entity: sensor.area_temperature_degc_woonkamer
-    - entity: sensor.area_temperature_degc_eetkamer
-    - entity: sensor.area_temperature_degc_exterior
-    - entity: sensor.area_temperature_degc_kantoor
+  - entity: sensor.opentherm_livingroom_return_temperature
+    name: Retour
+    icon: mdi:water-sync
+    secondary_info: last-updated
+  - entity: sensor.opentherm_livingroom_boiler_temperature
+    name: Boiler
+    icon: mdi:water-thermometer
+    secondary_info: last-updated
+  - entity: sensor.opentherm_livingroom_boiler_modulation
+    name: Modulatie
+    icon: mdi:percent-outline
+    secondary_info: last-updated
+  - entity: sensor.opentherm_livingroom_heating_target_temperature
+    name: Doeltemperatuur
+    secondary_info: last-changed
+    icon: mdi:thermometer-water
+  state_color: true
+  view_layout:
+    grid-column-end: span 2

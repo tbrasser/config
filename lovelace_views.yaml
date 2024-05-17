@@ -3,6 +3,11 @@
   chip:
     type: action
     icon: mdi:home
+    card_mod:
+      class: chipbadge
+      style:
+        .: |
+          ha-card:after { {% if states('zone.home')|float(0) > 0 %}content: "{{ states('zone.home') }}";{% endif %} }
 
 - name: security
   position: footer
@@ -75,9 +80,9 @@
       class: chipbadge
       style:
         .: |
-          ha-card:after { content: "{{ states.sensor.uitgegeven_vandaag.state|float(0)|int }}"; }
-    icon_color: "{% if states.sensor.uitgegeven_vandaag.state|float(0) >= states.sensor.te_besteden_per_dag.state|float(0) %}red{% else %}green{% endif %}"
-    icon: "{% if states.sensor.te_besteden_per_dag.state|float(0) < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
+          ha-card:after { content: "{{ states('sensor.uitgegeven_vandaag')|float(0)|int }}"; }
+    icon_color: "{% if states('sensor.uitgegeven_vandaag')|float(0) >= states('sensor.te_besteden_per_dag')|float(0) %}red{% else %}green{% endif %}"
+    icon: "{% if states('sensor.te_besteden_per_dag')|float(0) < 70 %}mdi:currency-eur-off{% else %}mdi:currency-eur{% endif %}"
 
 - name: winston
   position: header
@@ -91,7 +96,7 @@
       class: chipbadge
       style:
         .: |
-          ha-card:after { {% if states.vacuum.winston.state != 'docked' %}content: "{{ states.sensor.winston_current_room.state }}";{% endif %} }
+          ha-card:after { {% if states('vacuum.winston') != 'docked' %}content: "{{ states('sensor.winston_current_room') }}";{% endif %} }
 
 - name: plants
   position: header
@@ -113,14 +118,22 @@
   position: header
   chip:
     type: template
-    icon_color: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'heating' %}red{% else %}grey{% endif %}"
-    icon: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'off' %}mdi:thermometer{% else %}mdi:thermostat{% endif %}"
+    #icon_color: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'heating' %}red{% else %}grey{% endif %}"
+    #icon: "{% if state_attr('climate.opentherm_livingroom_central_heating', 'hvac_action') == 'off' %}mdi:thermometer{% else %}mdi:thermostat{% endif %}"
+    content: |
+      {% set temp = states('sensor.target_for_cv') | float(none) %}
+      {% if temp is not none %}
+      {{ temp | round(1) }}
+      {% endif %}
     card_mod:
       class: chipbadge
       style:
         .: |
-          ha-card:after { content: "{{ states.sensor.occupied_rooms_average_temperature.state | round(1) }}"; }
-
+          {% set temp = states('sensor.occupied_rooms_average_temperature') | float(none) %}
+          {% if temp is not none %}
+          ha-card:after { content: "{{ temp | round(1) }}"; }
+          {% endif %}
+          
 - name: weather
   position: header
   chip:
@@ -130,7 +143,10 @@
       class: chipbadge
       style:
         .: |
-          ha-card:after { content: "{{ states.sensor.area_temperature_degc_exterior.state | round(1) }}"; }
+          {% set temp = states('sensor.area_temperature_degc_exterior') | float(none) %}
+          {% if temp is not none %}
+          ha-card:after { content: "{{ temp | round(1) }}"; }
+          {% endif %}
 
 - name: time
   position: header

@@ -31,8 +31,11 @@
 !lovelace/*.yaml
 !lovelace/.cards/
 !lovelace/.cards/*.yaml
+lovelace/.cards/location.yaml
 !lovelace/.cards/popups/
 !lovelace/.cards/popups/*.yaml
+!lovelace/filters/
+!lovelace/filters/*.yaml
 !themes/
 !themes/transparent.yaml
 

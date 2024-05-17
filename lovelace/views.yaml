@@ -3,7 +3,11 @@
 {% if view.name != 'main' %}
 - type: panel
   path: '{{ view.name }}'
-  subview: false
+  subview: true
+  back_path: main
+  {% if view.name != 'weather' %}
+  animated_background: none
+  {% endif %}
   cards:
     - type: vertical-stack
       cards:
@@ -21,9 +25,11 @@
                     border-radius: 0px !important;
                     border-width: 0px !important;
                     {% if view.name != 'weather' %} 
-                    {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    background:
+                    {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
+                      center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1920x1080/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                     {% endif %}
                   }
             card:
@@ -33,12 +39,16 @@
                   - .cards/sticky.yaml
                   - view: {{ view.name }}
                     position: both
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include 
-                    - .cards/layout.yaml
-                    - sticky: header
-                  cards: !include
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: header
+                  card_param: cards
+                  filter: !include filters/{{ view.name }}.yaml
+                  entities: !include
                     - .cards/{{ view.name }}.yaml
                     - orientation: landscape
         - type: conditional
@@ -55,9 +65,11 @@
                     border-radius: 0px !important;
                     border-width: 0px !important;
                     {% if view.name != 'weather' %} 
-                    {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                    background:
+                    {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
+                      center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1080x1920/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                     {% endif %}
                   }
             card:
@@ -67,12 +79,16 @@
                   - .cards/sticky.yaml
                   - view: {{ view.name }}
                     position: header
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include 
-                    - .cards/layout.yaml
-                    - sticky: both
-                  cards: !include .cards/{{ view.name }}.yaml
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: both
+                  card_param: cards
+                  filter: !include filters/{{ view.name }}.yaml
+                  entities: !include .cards/{{ view.name }}.yaml
                 - !include
                   - .cards/sticky.yaml
                   - view: {{ view.name }}

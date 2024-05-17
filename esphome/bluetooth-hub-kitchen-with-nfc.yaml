@@ -1,7 +1,0 @@
-substitutions:
-  location: kitchen
-  
-packages:
-  defaults: !include includes/defaults.yaml
-  device:   !include includes/bluetooth-hub.yaml
-  sensor:   !include includes/nfc.yaml

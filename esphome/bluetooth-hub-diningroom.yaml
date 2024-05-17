@@ -4,7 +4,6 @@ substitutions:
 packages:
   defaults: !include includes/defaults.yaml
   blehub:   !include includes/bluetooth-hub.yaml
-  # plants:   !include includes/plants.yaml
 
 uart:
   rx_pin: GPIO10
@@ -15,5 +14,6 @@ sensor:
     pm_2_5:
       name: "2.5µm Fijnstof Concentratie"
 
-# wifi:
-#   use_address: 10.9.8.94
+button:
+  - platform: restart
+    name: button restart

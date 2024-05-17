@@ -7,6 +7,9 @@ conditions:
     state_not: unavailable
   - entity: sensor.{{ timer }}_timer
     state_not: idle
+  - entity: sensor.{{ timer }}_timer
+    state_not: unknown
 card:
   type: custom:timer-bar-card
   entity: sensor.{{ timer }}_timer
+  mushroom:

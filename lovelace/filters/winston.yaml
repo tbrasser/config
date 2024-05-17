@@ -1,0 +1,4 @@
+exclude:
+  - state: unavailable
+  - hidden_by: integration
+  - hidden_by: user

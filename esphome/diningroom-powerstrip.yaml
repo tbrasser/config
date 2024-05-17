@@ -1,9 +1,6 @@
 substitutions:
-  location: diningroom-links
+  location: diningroom
 
 packages:
   defaults: !include includes/defaults.yaml
   device:   !include includes/powerstrip.yaml
-
-#wifi:
-#  use_address: 10.9.8.95

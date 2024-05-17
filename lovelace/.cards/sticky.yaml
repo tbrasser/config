@@ -9,20 +9,20 @@ card_mod:
         z-index: 999;
         position: sticky;
         position: -webkit-sticky;
-        {% if position == "footer" %}
+{% if position == "footer" %}
         bottom: 0 !important;
-        {% else %}
+{% else %}
         top: 0 !important;
-        {% endif %}
+{% endif %}
       }
       ha-card {
         background: none;
         margin: 0;
-        {% if position == "footer" %}
+{% if position == "footer" %}
         padding: 0 4px 4px 4px;
-        {% else %}
+{% else %}
         padding: 4px 4px 0 4px;
-        {% endif %}
+{% endif %}
         --ha-card-border-width: 0 !important;
         --chip-border-width: 1px;
         --chip-height: 48px; 
@@ -30,25 +30,25 @@ card_mod:
       }
 chips:
   {% for headerview in _global.views %}
-  {% if (headerview.position == position) or (position == "both") %}
-  {% if headerview.name == view %} # on current view
-  {% if view == "main" %}
+    {% if (headerview.position == position) or (position == "both") %}
+      {% if headerview.name == view %} # on current view
+        {% if view == "main" %}
   - type: menu
-  {% else %}
+        {% else %}
   - type: template  # create a back button on current view chip
     icon: mdi:arrow-left
-    {% if 'entity' in headerview.chip %}
+          {% if 'entity' in headerview.chip %}
     entity: {{ headerview.chip.entity }}
-    {% endif %}
-    {% if 'icon_color' in headerview.chip %}
+          {% endif %}
+          {% if 'icon_color' in headerview.chip %}
     icon_color: {{ headerview.chip.icon_color|tojson }}
-    {% endif %}
-    {% if 'card_mod' in headerview.chip %}
+          {% endif %}
+          {% if 'card_mod' in headerview.chip %}
     card_mod: {{ headerview.chip.card_mod|tojson }}
-    {% endif %}
-    {% if 'hold_action' in headerview.chip %}
+          {% endif %}
+          {% if 'hold_action' in headerview.chip %}
     hold_action: {{ headerview.chip.hold_action|tojson }}
-    {% endif %}
+          {% endif %}
     tap_action:
       action: fire-dom-event
       browser_mod:
@@ -56,14 +56,14 @@ chips:
         data:
           browser_id: THIS
           code: window.history.back()
-  {% endif %} 
-  {% else %} # not on the view
+        {% endif %} 
+      {% else %} # not on the view
   - tap_action:
       action: navigate
       navigation_path: {{ headerview.name }}
-    {% for key in headerview.chip|list %}
+        {% for key in headerview.chip|list %}
     {{ key }}: {{ headerview.chip[key]|tojson }}
-    {% endfor %}
-  {% endif %}
-  {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
   {% endfor %}

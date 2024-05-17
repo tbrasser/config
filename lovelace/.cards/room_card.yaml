@@ -7,9 +7,9 @@ card_mod:
         height: 68px;
         {{ "{%" }} set entity = 'light.{{ room }}_lights' {{ "%}" }}
         {{ "{%" }} if is_state(entity, 'on') {{ "%}" }}
-        {{ "{%" }} set r = state_attr(entity, 'rgb_color')[0] {{ "%}" }}
-        {{ "{%" }} set g = state_attr(entity, 'rgb_color')[1] {{ "%}" }}
-        {{ "{%" }} set b = state_attr(entity, 'rgb_color')[2] {{ "%}" }}
+        {{ "{%" }} set r = state_attr(entity, 'rgb_color')[0]|default(255) {{ "%}" }}
+        {{ "{%" }} set g = state_attr(entity, 'rgb_color')[1]|default(197) {{ "%}" }}
+        {{ "{%" }} set b = state_attr(entity, 'rgb_color')[2]|default(143) {{ "%}" }}
         background: rgba({{ "{{" }}r{{ "}}" }}, {{ "{{" }}g{{ "}}" }}, {{ "{{" }}b{{ "}}" }},0.1);
         {{ "{%" }} else {{ "%}" }}background: none;{{ "{%" }} endif {{ "%}" }}
       }
@@ -152,4 +152,5 @@ cards:
         chip:
           type: template
           entity: 'sensor.area_temperature_degc_{{ room }}'
-          content: '{{ "{{" }} states.sensor.area_temperature_degc_{{ room }}.state | round(0) {{ "}}" }}°C'
+          content: |
+            {{ "{{" }} states('sensor.area_temperature_degc_{{ room }}') | round(0) {{ "}}" }}°C

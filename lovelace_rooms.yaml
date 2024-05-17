@@ -1,26 +1,4 @@
-# Required configuration to feed lovelace_gen
-# Example room:
 
-# - name: myroom
-#   icon: hue:room-mine
-#   color: pink
-#   areas: # map home-assistant area or areas to lovelace_gen room
-#     - myroom
-#     [- otherarea]
-#   cards:
-#     - entity: media_player.myroommedia
-#     - entity: plant.myplant
-#       battery: sensor.myplant_battery  # optional
-#     - entity: light.mylight
-#       name: My light  # 'short/friendly name', will be prefixed with room name when away from the room view
-#       [type: onoff]   # Lights that only can be toggled don't need a lot of space
-#     - entity: input_datetime.mytimer
-#       days: 4        # interval in days
-#       confirmation:   # follows browser_mod popup confirmation scheme :)
-#         text: Have you really done the thing?
-#     - entity: sensor.somesensor  # all other domains will be inserted as-is
-#       type: tile
-#       #
 - name: woonkamer
   icon: hue:room-living
   color: red
@@ -28,18 +6,21 @@
     - woonkamer
   cards:
     - entity: media_player.woonkamer
-    # - entity: light.lsc_g125_gold
-    #   name: Plafond
-    # - entity: light.woonkamer_tafeltje
-    # - entity: light.nachtkastje
-    #   name: Tafeltje
-    - entity: light.woonkamer_bureaulamp
-      name: Bureaulamp
+    - type: custom:mod-card
+      card:
+        type: custom:mini-media-player
+        entity: media_player.dapy
+        sound_mode: full
+        source: full
+        artwork: full-cover
+        max_volume: '30'
+        min_volume: '1'
+        volume_step: '1'
+        name: DAPY NEON
+      view_layout:
+        grid-column-end: span 2
     - type: tile
       entity: switch.ps5_606_power
-    - entity: plant.bananenplant
-      battery: sensor.plant_sensor_1de8_battery
-
 - name: eetkamer
   areas:
     - eetkamer
@@ -47,61 +28,11 @@
   color: orange
   cards:
     - entity: media_player.eetkamer
-    - entity: light.powerstrip_diningroom_rechts_stopcontact_2
-      name: Lavalamp
-      type: onoff
     - entity: input_datetime.kattenbak
       type: custom:lovelace_gen-timer
       days: 3
       confirmation:
         text: Geen kakkiejakkie meer?
-    # - type: custom:mod-card
-    #   card:
-    #     type: custom:mini-media-player
-    #     entity: media_player.dapy
-    #     sound_mode: full
-    #     source: full
-    #     artwork: full-cover
-    #     max_volume: '30'
-    #     min_volume: '1'
-    #     volume_step: '1'
-    #     name: DAPY NEON
-    #   view_layout:
-    #     grid-column-end: span 2
-    # - entity: light.dapy_neon_radio_blue
-    #   name: Dapy Blue
-    #   type: onoff
-    # - entity: light.dapy_neon_radio_pink
-    #   name: Dapy Pink
-    #   type: onoff
-    # - entity: light.diningroom_ceiling10_ceiling_light
-    #   name: Tafel Fel
-    # - entity: light.diningroom_ceiling10_night_light
-    #   name: Tafel Dim
-    # - entity: light.diningroom_ceiling10_ambient_light
-    #   name: Plafond Sfeer
-    # - entity: light.sofa
-    #   name: Bank Plafond
-    - entity: light.dimmer2_diningroom_ceiling_dimmer2_diningroom_ceiling
-      name: Plafond
-    - entity: light.eetkamer_hoek_links
-      name: Hoek
-    # - entity: light.stopcontact_2
-    #   name: Staande Lamp
-    #   type: onoff
-    # - entity: light.eetkamer_kamerlamp
-    #   name: Kamerlamp
-    # - entity: light.stopcontact_4
-    #   name: Lavalamp
-    #   type: onoff
-    # - entity: light.leeshoek
-    #   name: Leeshoek
-    - entity: plant.sierpeper
-      battery: sensor.plant_sensor_b2f8_battery
-
-  # - entity: plant.yucca_2
-    #  battery: sensor.plant_sensor_1455_battery
-
 - name: keuken
   areas:
     - keuken
@@ -111,10 +42,6 @@
     - entity: media_player.keuken
     - entity: light.keuken_vier
       name: Aanrecht
-    - entity: light.keuken_drie
-      name: Eiland
-    # - type: tile
-    #   entity: switch.fontein_power # todo: create automation that warns if water is not running
     - entity: input_datetime.drinkfontein
       days: 5
       confirmation:
@@ -127,29 +54,12 @@
    #   days: 60
    #   confirmation:
    #     text: Schoongemaakt en ontkalkt?
-    # - entity: plant.laurier
-    #  battery: sensor.plant_sensor_1455_battery
-    - type: custom:mushroom-template-card
-      primary: Fijnstof
-      secondary: "{{ states(entity) }} µg/m³"
-      icon: mdi:blur
-      entity: sensor.bluetooth_hub_diningroom_2_5_m_fijnstof_concentratie
-      icon_color: "{% if states(entity)|float < 75 %}green{% elif states(entity)|float < 100 %}yellow{% else %}red{% endif %}"
-      multiline_secondary: false
-      fill_container: true
-      tap_action:
-        action: more-info
-    - entity: plant.pannenkoekenplant
-      battery: sensor.plant_sensor_f38a_battery
-
 - name: bijkeuken
   areas:
     - bijkeuken
   color: light-blue
   icon: hue:room-laundry
   cards:
-    - entity: light.bijkeuken_plafond
-      name: Plafond
     - entity: input_datetime.droger
       days: 30
       confirmation:
@@ -290,45 +200,13 @@
               top: 74%
               transform: "translate(-100%,-50%)"
 
-# - name: gang
-#   areas: []
-#   color: light-blue
-#   icon: hue:room-hallway
-#   cards:
-#     - entity: light.hallway_upstairs
-#       name: Boven
-#     - entity: light.gang_beneden
-#       name: Beneden
-
-# - name: opslag
-#   icon: hue:room-storage
-#   color: pink
-#   areas:
-#     - opslag
-#   #    - bijkeuken
-#   cards:
-#     - entity: media_player.opslag
-#     - entity: light.ceiling_lsc_storage_light
-#       name: Plafond
-
 - name: slaapkamer
   icon: hue:room-bedroom
   color: purple
   areas:
     - slaapkamer
-    - inloopkast
   cards:
     - entity: media_player.slaapkamer
-    - entity: light.slaapkamer_plafond
-      name: Plafond
-#    - entity: light.nachtkastje
-#      name: Nachtkastje
-    - entity: light.slaapkamer_nachtkastje_fre
-      name: Nachtkastje Fre
-    - entity: light.nachtkastje_thomas
-      name: Nachtkastje Tho
-    - entity: plant.tabaksplant
-      battery: sensor.plant_sensor_f56c_battery
 
 - name: kantoor
   icon: hue:room-office
@@ -336,17 +214,8 @@
   areas:
     - kantoor
   cards:
-    # - entity: media_player.kantoor
-    # - entity: light.ceiling_lsc_office_light
-    #   name: Plafond
-    # - entity: light.bureaulamp_kantoor
-    #   name: Bureau
-    # - type: tile
-    #   entity: sensor.octoprint_current_state
     - type: tile
       entity: sensor.hp_envy_pro_6400_series
-    - entity: plant.pannenkoekenplant_2
-      battery: sensor.plant_sensor_1283_battery
 - name: toilet
   icon: hue:room-toilet
   color: brown
@@ -354,9 +223,6 @@
     - toilet
   cards:
     - entity: media_player.toilet
-    - entity: light.toilet
-      name: Plafond
-
 - name: badkamer
   icon: hue:room-bathroom
   color: blue
@@ -364,43 +230,27 @@
     - badkamer
   cards:
     - entity: media_player.badkamer
-    # - entity: light.badkamer
-    #   name: Plafond
-    # - entity: light.shelly_1l_bathroom_lamp
-    #   name: Spiegel
-    #   type: onoff
-    # - type: tile
-    #   entity: binary_sensor.shower_in_use
-    # - type: tile
-    #   entity: fan.relais
-    - entity: plant.hoya_puber
-      battery: sensor.plant_sensor_f607_battery
+    - type: tile
+      entity: fan.mini1g3_kitchen4_relais
 
 - name: tuin
   icon: phu:garden
   color: teal
   areas:
     - tuin
-    - voortuin
-  cards:
-    # - entity: light.kerstboom
-    #   name: Voortuin
-    #   type: onoff
-    # - type: tile
-    #   entity: binary_sensor.front_door_ding_2
-    - entity: light.tuin_lampjes
-      name: Lampjes
-      type: onoff
-    # - entity: light.tuin_strip
-    #   name: Ledstrip
+  cards: []
 
-- name: trap
+- name: overloop
   icon: hue:room-stairs
   color: amber
   areas:
+    - overloop
     - trap
-  cards:
-    - entity: light.trap_boven
-      name: Boven
-    - name: Hobbykamer
-      entity: light.trap_beneden
+  cards: []
+  
+- name: hal
+  color: purple
+  icon: None
+  areas:
+    - hal
+  cards: []

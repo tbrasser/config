@@ -1,0 +1,36 @@
+include:
+  - domain: light
+    state: 'off'
+    area: '*'
+    options:
+      type: custom:mushroom-light-card
+      secondary_info: none
+      card_mod:
+        style:
+          mushroom-state-info$: |
+            .primary {
+              white-space: normal !important;
+            }
+  - domain: light
+    state: 'on'
+    area: '*'
+    options:
+      type: custom:mushroom-light-card
+      show_brightness_control: true
+      use_light_color: true
+      show_color_temp_control: true
+      show_color_control: true
+      view_layout:
+        grid-column-end: span 2
+      card_mod:
+        style:
+          mushroom-state-info$: |
+            .primary {
+              white-space: normal !important;
+            }
+exclude: 
+  - state: unavailable
+  - hidden_by: integration
+  - hidden_by: user
+  - entity_category: config
+  - entity_category: diagnostic

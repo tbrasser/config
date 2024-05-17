@@ -1,5 +1,9 @@
-emulated_hue: # for harmony home control buttons
+emulated_hue:  # shows configured lights on an emulated hue bridge so harmony remote can control them
   expose_by_default: false
+  host_ip: !secret host_ip
+  listen_port: 8300
+  exposed_domains:
+    - light
   entities:
     light.diningroom_ceiling10_night_light:
       name: "Eetkamer plafond"
@@ -39,6 +43,7 @@ media_player:
         service: switch.turn_on
         target:
           entity_id: switch.mi_tv_woonkamer
+
   # - platform: universal
   #   name: eetkamer
   #   unique_id: eetkamer
@@ -65,6 +70,7 @@ media_player:
   #   attributes:
   #     source: media_player.eetkamer_androidtv|source
   #     source_list: media_player.eetkamer_androidtv|source_list
+
   - platform: universal
     name: dapy
     unique_id: dapy
@@ -72,7 +78,7 @@ media_player:
     children:
       - media_player.dapy_neon_radio
     state_template: |-
-      {% if states.switch.dapy_neon_radio_power.state %}{% if states.select.dapy_neon_radio_mode.state == 'Media Player' %}{{ states.media_player.dapy.state }}{% else %}playing{% endif %}{% else %}off{% endif %}
+      {% if states('switch.dapy_neon_radio_power') %}{% if states('select.dapy_neon_radio_mode') == 'Media Player' %}{{ states('media_player.dapy') }}{% else %}playing{% endif %}{% else %}off{% endif %}
     commands:
       turn_on:
         service: switch.turn_on
@@ -91,6 +97,7 @@ media_player:
     attributes:
       source: select.dapy_neon_radio_mode
       source_list: select.dapy_neon_radio_mode|options
+
   - platform: universal
     name: global
     unique_id: global
@@ -102,12 +109,13 @@ media_player:
       - media_player.slaapkamer
       - media_player.badkamer
       - media_player.toilet
-  - platform: universal
-    name: slaapkamer
-    unique_id: slaapkamer
-    browse_media_entity: media_player.slaapkamer_cast
-    children:
-      - media_player.beamer_cast
-      - media_player.beamer_jellyfin
-      - media_player.slaapkamer_cast
-      - media_player.beamer_androidtv
+
+  # - platform: universal
+  #   name: slaapkamer
+  #   unique_id: slaapkamer
+  #   browse_media_entity: media_player.slaapkamer_cast
+  #   children:
+  #     - media_player.beamer_cast
+  #     - media_player.beamer_jellyfin
+  #     - media_player.slaapkamer_cast
+  #     - media_player.beamer_androidtv

@@ -22,16 +22,14 @@ It is built using the following components:
 - magic_areas
 - alarmo
 - adaptive_lighting
-- esphome (libretuya fork)
-- frigate (with webrtc)
+- esphome
+- frigate
 
 Inspiration from:
 
 - mushroom
 - dwains dashboard
 - homekit infused
-
-Currently in the midst of refactoring the lovelace_gen global vars in `lovelace_rooms.yaml`.
 
 ### Lovelace / Frontend
 
@@ -61,7 +59,7 @@ cards:
               .: |
                 ha-card {
                   {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                  background: center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
                   {{ "{%" }} endif {{ "%}" }}
                 }
           card:
@@ -91,7 +89,7 @@ cards:
               .: |
                 ha-card {
                   {{ "{%" }} if expand('media_player.alles')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                  background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                  background: center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.alles')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
                   {{ "{%" }} endif {{ "%}" }}
                 }
           card:

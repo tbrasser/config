@@ -17,14 +17,16 @@ It is built using the following components:
 
 - card_mod
 - layout_card
+- auto-entities
 - browser_mod
 - lovelace_gen
 - magic_areas
 - alarmo
 - adaptive_lighting
-- esphome (libretuya fork)
-- frigate (with webrtc)
-
+- esphome
+- frigate
+- music assistant
+  
 Inspiration from:
 
 - mushroom

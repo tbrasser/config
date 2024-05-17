@@ -1,0 +1,6 @@
+exclude: []
+  # - state: unavailable
+  # - hidden_by: integration
+  # - hidden_by: user
+  # - entity_category: config
+  # - entity_category: diagnostic

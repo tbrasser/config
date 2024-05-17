@@ -2,7 +2,7 @@
   type: module
 - url: /local/style.css
   type: css
-- url: /local/style.js?v=20231027
+- url: /local/style.js?v=20240413
   type: module
 - url: /local/persistentsettings.js?v=20230615
   type: module
@@ -15,13 +15,11 @@
   type: module
 - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
   type: module
-- url: /hacsfiles/mushroom-strategy/mushroom-strategy.js
-  type: module
 - url: /hacsfiles/lovelace-animated-background/animated-background.js?v=20230408
   type: module
 - url: /hacsfiles/clock-weather-card/clock-weather-card.js
   type: module
-- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=20240204
+- url: /hacsfiles/lovelace-flower-card/flower-card.js?v=20240508
   type: module
 - url: /hacsfiles/lovelace-home-feed-card/lovelace-home-feed-card.js
   type: module
@@ -31,8 +29,6 @@
   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
 - type: module
   url: /hacsfiles/kiosk-mode/kiosk-mode.js
-- type: module
-  url: /hacsfiles/lovelace-q-card/q-card.js
 - type: module
   url: /hacsfiles/hass-hue-icons/hass-hue-icons.js
 - type: module
@@ -69,7 +65,15 @@
   type: module
 - url: /hacsfiles/Bubble-Card/bubble-pop-up.js
   type: module
+- url: /hacsfiles/ha-sankey-chart/ha-sankey-chart.js
+  type: module
 - url: /hacsfiles/better-thermostat-ui-card/better-thermostat-ui-card.js
+  type: module
+- url: /hacsfiles/ha-tdv-bar/ha-tdv-bar.js
+  type: module
+- url: /hacsfiles/week-planner-card/week-planner-card.js
+  type: module
+- url: /hacsfiles/battery-state-card/battery-state-card.js
   type: module
 #- url: /hacsfiles/lovelace-card-mod/card-mod.js?v=666
 #  type: module

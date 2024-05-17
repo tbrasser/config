@@ -1,7 +1,0 @@
-# lovelace_gen
-type: custom:flower-card
-view_layout:
-  grid-column-end: span 2
-entity: {{ entity }}
-#battery_sensor: {{ battery }}
-show_bars: [temperature, moisture, illuminance, conductivity]

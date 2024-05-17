@@ -43,22 +43,3 @@ reset_reminder:
       datetime: '{{ now() + timedelta(days=dagen) }}'
     target:
       entity_id: '{{ entity_id }}'
-start_url:
-  alias: Load tablet homepage
-  sequence:
-  - service: browser_mod.navigate
-    data_template:
-      browser_id:
-      - '{{ browser_id }}'
-      path: /lovelace/{% if browser_id == 'tablet1' %}keuken{% elif browser_id ==
-        'tablet2' %}eetkamer{% elif browser_id == 'tablet3' %}woonkamer{% else %}main{%
-        endif %}
-create_groups:
-  alias: Create Groups
-  sequence:
-  - service: group.set
-    data_template:
-      object_id: all_lights
-      entities: '{{ states.light | map(attribute=''entity_id'') | join('','') }}'
-  mode: single
-  icon: mdi:group

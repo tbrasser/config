@@ -1,5 +1,5 @@
 substitutions:
-  location: bathroom
+  location: bedroom
 
 packages:
   defaults: !include includes/defaults.yaml

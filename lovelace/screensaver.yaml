@@ -2,6 +2,7 @@
 - type: panel
   path: screensaver
   subview: true
+  back_path: main
   animated_background: none
   cards:
     - type: vertical-stack
@@ -20,17 +21,46 @@
                   ha-card {
                     border-radius: 0px !important;
                     border-width: 0px !important;
+                    background:
                     {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                      center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' ),
+                      black;
+                    {{ "{%" }} else {{ "%}" }}
+                      black;
                     {{ "{%" }} endif {{ "%}" }}
                   }
             card:
               type: vertical-stack
               cards:
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include .cards/layout.yaml
-                  cards:
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include .cards/layout.yaml
+                  card_param: cards
+                  filter:
+                    {# include:
+                      - domain: light
+                        area: keuken
+                        state: 'off'
+                        options:
+                          type: custom:mushroom-light-card
+                      - domain: light
+                        area: keuken
+                        state: 'on'
+                        options:
+                          type: custom:mushroom-light-card
+                          view_layout:
+                            grid-column-end: span 2
+                      - domain: plant
+                        options:
+                          type: entity
+                          view_layout:
+                            grid-column-end: span 2 #}
+                    exclude:
+                      - state: unavailable
+                      - hidden_by: user
+                  entities:
                     - type: custom:clock-weather-card
                       entity: weather.openweathermap
                       # sun_entity: sun.sun
@@ -67,39 +97,35 @@
                             }
                       view_layout:
                         grid-column-end: span 2
-                    - initial_view: listWeek
-                      type: calendar
-                      entities:
-                        - calendar.samen
-                        - calendar.ical_familywall
-                        - calendar.ical_familywall_tasks
+                    - type: custom:week-planner-card
+                      calendars:
+                        - entity: calendar.ical_familywall
+                        - entity: calendar.samen
+                 #   - initial_view: listWeek
+                  #    type: calendar
+                   #   entities:
+                     #   - calendar.samen
+                  #      - calendar.ical_familywall
+                 #       - calendar.ical_familywall_tasks
                       view_layout:
-                        grid-column-end: span 2
-                      card_mod:
-                        style:
-                          ha-full-calendar:
-                            $: |
-                              .header {
-                                display: none !important;
-                              }
-                              @media (orientation: landscape) {
-                                #calendar {
-                                  min-height: 100vh !important;
-                                }
-                              }
-                              @media (orientation: portrait) {
-                                #calendar {
-                                  min-height: 50vh !important;
-                                }
-                              } 
-                              .fc-day-past .fc-daygrid-day-events {
-                                opacity: 1 !important;
-                              }
-                              .fc .fc-daygrid-event {
-                                padding 0px !important;
-                                margin 0px !important;
-                                height: 15px !important;
-                              }
+                        grid-column-end: span 4
+                  #    card_mod:
+                  #      style:
+                 #         ha-full-calendar:
+                   #         $: |
+                      #        .header { display: none !important; }
+                   #           @media (orientation: landscape) {
+                   #             #calendar { min-height: 100vh !important; }
+                   #           }
+                  #            @media (orientation: portrait) {
+                  #              #calendar { min-height: 50vh !important; }
+                 #             } 
+                 #             .fc-day-past .fc-daygrid-day-events { opacity: 1 !important; }
+                   #           .fc .fc-daygrid-event {
+                     #           padding 0px !important;
+                    #            margin 0px !important;
+                   #             height: 15px !important;
+                   #           }
                     - type: conditional
                       view_layout:
                         grid-column-end: span 2
@@ -207,6 +233,7 @@
                         type: tile
                         entity: vacuum.winston
                     - !include .cards/washer_active.yaml
+                    - !include .cards/dishwasher_active.yaml
                     {% for room in _global.rooms %}
                     - !include
                       - .cards/timer_active.yaml
@@ -215,4 +242,3 @@
                       - .cards/timer_active.yaml
                       - timer: {{ room.name }}_2
                     {% endfor %}
-              

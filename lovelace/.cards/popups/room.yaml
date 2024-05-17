@@ -1,7 +1,7 @@
 # lovelace_gen
 title: "{{ room|capitalize }} instellingen"
-size: wide
-style: |
+size: fullscreen
+{# style: |
   --popup-min-width: 360px;
   --popup-max-width: 540px;
   --popup-border-width: var(--ha-card-border-width, 2px);
@@ -9,7 +9,7 @@ style: |
   --popup-border-radius: 28px;
   --popup-background-color: var(--primary-background-color);
   --popup-padding-x: 0px;
-  --popup-padding-y: 0px;
+  --popup-padding-y: 0px; #}
 content:
   type: custom:vertical-stack-in-card
   card_mod:
@@ -38,3 +38,12 @@ content:
         action: toggle
       card_mod:
         class: invisible
+    - type: custom:auto-entities
+      card:
+        chart_type: line
+        period: 5minute
+        type: statistics-graph
+        stat_types: [mean]
+        title: Temperatuur
+      filter:
+        template: '{{ "{{" }} state_attr("sensor.area_temperature_degc_{{ room }}", "sensors") {{ "}}" }}'

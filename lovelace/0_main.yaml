@@ -2,13 +2,12 @@
 - type: panel
   path: main
   title: Main
+  animated_background: none
   cards:
     - type: vertical-stack
       cards:
         - type: conditional
-          conditions:
-            - condition: screen
-              media_query: '(orientation: portrait)'
+          conditions: [{condition: screen, media_query: '(orientation: portrait)'}]
           card:
             type: custom:mod-card
             card_mod:
@@ -18,40 +17,48 @@
                   ha-card {
                     border-radius: 0px !important;
                     border-width: 0px !important;
+                    background:
                     {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                      center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1920x1080/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                   }
             card:
               type: vertical-stack
               cards:
                 - !include
                   - .cards/sticky.yaml
-                  - view: main
-                    position: header
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include
-                    - .cards/layout.yaml
-                    - sticky: both
-                  cards:
+                  - {view: main, position: header}
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: both
+                  card_param: cards
+                  filter:
+                    include:
+                      - domain: vacuum
+                        not:
+                          state: docked
+                        options:
+                          type: tile
+                          features:
+                            - type: vacuum-commands
+                              commands: [start_pause, stop, clean_spot, locate, return_home]
+                          view_layout:
+                            grid-column-end: span 2
+                    exclude:
+                      - state: unavailable
+                      - hidden_by: integration
+                      - hidden_by: user
+                      - entity_category: config
+                      - entity_category: diagnostic
+                  entities:
                     - !include
                       - .cards/media_player_active.yaml
                       - entity: media_player.global
-                    - type: conditional
-                      view_layout:
-                        grid-column-end: span 2
-                      conditions:
-                        - entity: vacuum.winston
-                          state_not: docked
-                        - entity: vacuum.winston
-                          state_not: unavailable
-                      card:
-                        type: tile
-                        entity: vacuum.winston
-                        features:
-                          - type: vacuum-commands
-                            commands: [start_pause, stop, clean_spot, locate, return_home]
                     - !include .cards/washer_active.yaml
                     {% for room in _global.rooms %}
                     - !include
@@ -86,41 +93,50 @@
                   ha-card {
                     border-radius: 0px !important;
                     border-width: 0px !important;
+                    background:
                     {{ "{%" }} if expand('media_player.global')|selectattr("attributes.entity_picture","defined")| list | count > 0 {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                      center / contain no-repeat fixed url( '{{ "{{" }} expand('media_player.global')|selectattr("attributes.entity_picture","defined")|map(attribute="attributes")|groupby("entity_picture")|first|first|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1080x1920/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                   }
             card:
               type: vertical-stack
               cards:
                 - !include
                   - .cards/sticky.yaml
-                  - view: main
-                    position: both
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include
-                    - .cards/layout.yaml
-                    - sticky: header
-                  cards:
+                  - {view: main, position: both}
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: header
+                  card_param: cards
+                  filter:
+                    include:
+                      - domain: vacuum
+                        not:
+                          state: docked
+                        options:
+                          type: tile
+                          features:
+                            - type: vacuum-commands
+                              commands: [start_pause, stop, clean_spot, locate, return_home]
+                          view_layout:
+                            grid-column-end: span 2
+                    exclude:
+                      - state: unavailable
+                      - hidden_by: integration
+                      - hidden_by: user
+                      - entity_category: config
+                      - entity_category: diagnostic
+                  entities:
                     - !include
                       - .cards/media_player_active.yaml
                       - entity: media_player.global
-                    - type: conditional
-                      view_layout:
-                        grid-column-end: span 2
-                      conditions:
-                        - entity: vacuum.winston
-                          state_not: docked
-                        - entity: vacuum.winston
-                          state_not: unavailable
-                      card:
-                        type: tile
-                        entity: vacuum.winston
-                        features:
-                          - type: vacuum-commands
-                            commands: [start_pause, stop, clean_spot, locate, return_home]
                     - !include .cards/washer_active.yaml
+                    - !include .cards/dishwasher_active.yaml
                     {% for room in _global.rooms %}
                     - !include
                       - .cards/timer_active.yaml

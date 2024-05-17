@@ -7,7 +7,6 @@
   entities:
     # - calendar.samen
     - calendar.ical_familywall
-    - calendar.ical_familywall_tasks
     - calendar.samen
   view_layout:
     grid-column-end: span 2
@@ -32,19 +31,13 @@
     grid-column-end: span 2
 - type: tile
   entity: input_boolean.sleep_mode
-- type: button
-  name: Reload
-  icon: mdi:reload
-  tap_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.javascript
-      data:
-        browser_id: THIS
-        code: lovelace_reload();
-- type: button
-  name: Screensaver
-  icon: mdi:tablet-dashboard
-  tap_action:
-    action: navigate
-    navigation_path: /lovelace/screensaver
+- type: tile
+  entity: input_boolean.party
+- type: entities
+  entities:
+    - entity: input_text.achtergrond_zoekterm_en_comma_gescheiden
+      name: Achtergrond Tags
+      secondary_info: none
+  show_header_toggle: false
+  view_layout:
+    grid-column-end: span 2

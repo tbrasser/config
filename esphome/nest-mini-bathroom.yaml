@@ -1,0 +1,9 @@
+substitutions:
+  location: bathroom
+
+packages:
+  defaults: !include includes/defaults.yaml
+  device:   !include includes/onju-voice.yaml
+button:
+  - platform: restart
+    name: Restart Button

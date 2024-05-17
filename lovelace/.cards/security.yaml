@@ -49,7 +49,7 @@
       extension: '101'
       secret: !secret sippassword
       icon: mdi:face-man
-      entity: binary_sensor.thomas_phone
+      entity: binary_sensor.thomas-phone
     #  camera: camera.thomas_phone
     - person: person.woonkamer
       name: Woonkamer
@@ -57,21 +57,21 @@
       secret: !secret sippassword
       icon: hue:room-living
       entity: binary_sensor.area_woonkamer
-      camera: camera.tablet3
+      camera: camera.tablet2
     - person: person.eetkamer
       name: Eetkamer
       extension: '103'
       secret: !secret sippassword
       icon: hue:room-dining
       entity: binary_sensor.area_eetkamer
-      camera: camera.tablet2
+      camera: camera.tablet1
     - person: person.keuken
       name: Keuken
       extension: '104'
       secret: !secret sippassword
       icon: hue:room-kitchen
       entity: binary_sensor.area_keuken
-      camera: camera.tablet1
+      camera: camera.tablet3
   view_layout:
     grid-column-end: span 2
 # - type: glance
@@ -90,12 +90,17 @@
 #     - entity: binary_sensor.voordeur_contact
 #   state_color: true
 #   columns: 2
-- camera_view: live
-  type: picture-glance
-  entities:
-    - entity: binary_sensor.area_interior
-  camera_image: camera.birdseye
-  title: ' '
+- type: custom:frigate-card
+  cameras:
+    - camera_entity: camera.birdseye
+  view:
+    default: live
+  menu:
+    buttons:
+      cameras:
+        enabled: false
+      live:
+        enabled: false
   view_layout:
     grid-column-end: span 2
 #- type: custom:frigate-card

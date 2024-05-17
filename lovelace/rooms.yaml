@@ -3,7 +3,9 @@
 - type: panel
   path: "{{ room.name }}"
   title: "{{ room.name|title }}"
-  subview: false
+  subview: true
+  back_path: main
+  animated_background: none
   cards:
     - type: vertical-stack
       cards:
@@ -20,9 +22,11 @@
                   ha-card {
                     border-radius: 0px !important;
                     border-width: 0px !important;
+                    background:
                     {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                      center / contain no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1920x1080/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                   }
             card:
               type: vertical-stack
@@ -31,40 +35,88 @@
                   - .cards/sticky.yaml
                   - view: {{ room.name }}
                     position: both
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include 
-                    - .cards/layout.yaml
-                    - sticky: header
-                  cards:
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: header
+                  card_param: cards
+                  filter:
+                    template: |-
+                      {{ "{%" }} if is_state('sensor.winston_current_room', '{{ room.name }}') {{ "-%}" }}
+                      {{ "{{" }}
+                          {
+                            'type': 'tile',
+                            'entity': 'vacuum.winston',
+                            'view_layout': { 'grid-column-end': 'span 2' }
+                          }
+                      {{ "}}" }},
+                      {{ "{%-" }} endif {{ "%}" }}
+                    include:
+                      - domain: climate
+                        options:
+                          type: tile
+                          name: Verwarming
+                          hide_state: false
+                          state_content:
+                            - hvac_action
+                            - current_temperature
+                          tap_action:
+                            action: fire-dom-event
+                            browser_mod:
+                              service: browser_mod.navigate
+                              data:
+                                path: climate
+                      - domain: light
+                        state: 'off'
+                        options:
+                          type: custom:mushroom-light-card
+                      - domain: light
+                        state: 'on'
+                        options:
+                          type: custom:mushroom-light-card
+                          show_brightness_control: true
+                          use_light_color: true
+                          show_color_temp_control: true
+                          show_color_control: true
+                          view_layout:
+                            grid-column-end: span 2
+                      - domain: plant
+                        options:
+                          type: custom:flower-card
+                          #battery_sensor: {{ battery }}
+                          show_bars: [temperature, moisture, illuminance, conductivity]
+                          view_layout:
+                            grid-column-end: span 2
+                    exclude:
+                      - not:
+                          area: {{ room.name }}
+                      - state: unavailable
+                      - hidden_by: integration
+                      - hidden_by: user
+                      - entity_category: config
+                      - entity_category: diagnostic
+                  entities:
                     - type: conditional
-                      view_layout:
-                        grid-column-end: span 2
                       conditions:
-                        - entity: sensor.winston_current_room
-                          state: {{ room.name }}
-                        - entity: vacuum.winston
-                          state_not: docked
+                        - entity: sensor.area_pm25_mg_m3_{{ room.name }}
+                          state: #_not:
+                            - -5
+                            #- unavailable
+                            #- unknown
                       card:
-                        type: tile
-                        entity: vacuum.winston
-                        features:
-                          - type: vacuum-commands
-                            commands: [start_pause, stop, clean_spot, locate, return_home]
-                    - type: conditional
-                      conditions:
-                        - entity: climate.area_climate_{{ room.name }}
-                          state:
-                            - heat
-                            - "off"
-                            - cool
-                            - heat_cool
-                      card:
-                        entity: climate.area_climate_{{ room.name }}
-                        name: ""
-                        type: custom:mushroom-climate-card
-                        collapsible_controls: true
-                        show_temperature_control: true
+                        type: custom:mushroom-template-card
+                        primary: Fijnstof
+                        secondary: '{{ "{{" }} states(entity) {{ "}}" }} µg/m³'
+                        icon: mdi:blur
+                        entity: sensor.area_pm25_mg_m3_{{ room.name }}
+                        icon_color: '{{ "{%" }} if states(entity)|float < 75 {{ "%}" }}green{{ "{%" }} elif states(entity)|float < 100 {{ "%}" }}yellow{{ "{%" }} else {{ "%}" }}red{{ "{%" }} endif {{ "%}" }}'
+                        multiline_secondary: false
+                        fill_container: true
+                        tap_action:
+                          action: more-info
                     {% for card in room.cards if 'cards' in room %}
                     {% if card.entity|truncate(5, True, '', 0) == 'media' %}
                     - !include
@@ -80,20 +132,7 @@
                       - .cards/media_player_inactive.yaml
                       - entity: {{ card.entity }}
                     {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
-                    - !include
-                      - .cards/light_active.yaml
-                      - entity: {{ card.entity }}
-                        name: {{ card.name|capitalize }}
-                        type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-                    - !include
-                      - .cards/light_inactive.yaml
-                      - entity: {{ card.entity }}
-                        name: {{ card.name|capitalize }}
                     {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
-                    - !include
-                      - .cards/plant.yaml
-                      - entity: {{ card.entity }}
-                        battery: {{ card.battery }}
                     {% elif 'days' in card %}
                     - !include
                       - .cards/device_timer.yaml
@@ -119,9 +158,11 @@
                   ha-card {
                     border-radius: 0px !important;
                     border-width: 0px !important;
+                    background:
                     {{ "{%" }} if state_attr( "media_player.{{ room.name }}", "entity_picture" ) != none {{ "%}" }}
-                    background: center / cover no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' );
+                      center / contain no-repeat fixed url( '{{ "{{" }} state_attr( "media_player.{{ room.name }}", "entity_picture" )|replace('MaxWidth=150&', '') {{ "}}" }}' ),
                     {{ "{%" }} endif {{ "%}" }}
+                      center / cover no-repeat fixed url( 'https://source.unsplash.com/featured/1080x1920/?{{ "{{" }} states('input_text.achtergrond_zoekterm_en_comma_gescheiden') {{ "}}" }}' );
                   }
             card:
               type: vertical-stack
@@ -130,40 +171,89 @@
                   - .cards/sticky.yaml
                   - view: {{ room.name }}
                     position: header
-                - type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout: !include 
-                    - .cards/layout.yaml
-                    - sticky: both
-                  cards:
+                - type: custom:auto-entities
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout: !include
+                      - .cards/layout.yaml
+                      - sticky: both
+                  card_param: cards
+                  filter:
+                    template: |-
+                      {{ "{%" }} if is_state('sensor.winston_current_room', '{{ room.name }}') {{ "-%}" }}
+                      {{ "{{" }}
+                          {
+                            'type': 'tile',
+                            'entity': 'vacuum.winston',
+                            'view_layout': { 
+                              'grid-column-end': 'span 2'
+                            }
+                          }
+                      {{ "}}" }},
+                      {{ "{%-" }} endif {{ "%}" }}
+                    include:
+                      - domain: climate
+                        options:
+                          type: tile
+                          name: Verwarming
+                          hide_state: false
+                          state_content:
+                            - hvac_action
+                            - current_temperature
+                          tap_action:
+                            action: fire-dom-event
+                            browser_mod:
+                              service: browser_mod.navigate
+                              data:
+                                path: climate
+                      - domain: light
+                        state: 'off'
+                        options:
+                          type: custom:mushroom-light-card
+                      - domain: light
+                        state: 'on'
+                        options:
+                          type: custom:mushroom-light-card
+                          show_brightness_control: true
+                          use_light_color: true
+                          show_color_temp_control: true
+                          show_color_control: true
+                          view_layout:
+                            grid-column-end: span 2
+                      - domain: plant
+                        options:
+                          type: custom:flower-card
+                          #battery_sensor: {{ battery }}
+                          show_bars: [temperature, moisture, illuminance, conductivity]
+                          view_layout:
+                            grid-column-end: span 2
+                    exclude:
+                      - not:
+                          area: {{ room.name }}
+                      - state: unavailable
+                      - hidden_by: integration
+                      - hidden_by: user
+                      - entity_category: config
+                      - entity_category: diagnostic
+                  entities:
                     - type: conditional
-                      view_layout:
-                        grid-column-end: span 2
                       conditions:
-                        - entity: sensor.winston_current_room
-                          state: {{ room.name }}
-                        - entity: vacuum.winston
-                          state_not: docked
+                        - entity: sensor.area_pm25_mg_m3_{{ room.name }}
+                          state: #_not:
+                            - -5 #unavailable
+                            #- unknown
                       card:
-                        type: tile
-                        entity: vacuum.winston
-                        features:
-                          - type: vacuum-commands
-                            commands: [start_pause, stop, clean_spot, locate, return_home]
-                    - type: conditional
-                      conditions:
-                        - entity: climate.area_climate_{{ room.name }}
-                          state:
-                            - heat
-                            - "off"
-                            - cool
-                            - heat_cool
-                      card:
-                        entity: climate.area_climate_{{ room.name }}
-                        name: ""
-                        type: custom:mushroom-climate-card
-                        collapsible_controls: true
-                        show_temperature_control: true 
+                        type: custom:mushroom-template-card
+                        primary: Fijnstof
+                        secondary: '{{ "{{" }} states(entity) {{ "}}" }} µg/m³'
+                        icon: mdi:blur
+                        entity: sensor.area_pm25_mg_m3_{{ room.name }}
+                        icon_color: '{{ "{%" }} if states(entity)|float < 75 {{ "%}" }}green{{ "{%" }} elif states(entity)|float < 100 {{ "%}" }}yellow{{ "{%" }} else {{ "%}" }}red{{ "{%" }} endif {{ "%}" }}'
+                        multiline_secondary: false
+                        fill_container: true
+                        tap_action:
+                          action: more-info
                     {% for card in room.cards if 'cards' in room %}
                     {% if card.entity|truncate(5, True, '', 0) == 'media' %}
                     - !include
@@ -179,20 +269,7 @@
                       - .cards/media_player_inactive.yaml
                       - entity: {{ card.entity }}
                     {% elif card.entity|truncate(5, True, '', 0) == 'light' %}
-                    - !include
-                      - .cards/light_active.yaml
-                      - entity: {{ card.entity }}
-                        name: {{ card.name|capitalize }}
-                        type: {% if 'type' in card %}{{ card.type }}{% else %}else{% endif %}
-                    - !include
-                      - .cards/light_inactive.yaml
-                      - entity: {{ card.entity }}
-                        name: {{ card.name|capitalize }}
                     {% elif card.entity|truncate(5, True, '', 0) == 'plant' %}
-                    - !include
-                      - .cards/plant.yaml
-                      - entity: {{ card.entity }}
-                        battery: {{ card.battery }}
                     {% elif 'days' in card %}
                     - !include
                       - .cards/device_timer.yaml

@@ -3,5 +3,3 @@ substitutions:
 packages:
   defaults: !include includes/defaults.yaml
   neonradio: !include includes/dapy-neon-radio.yaml
-wifi:
-  use_address: 10.9.8.21

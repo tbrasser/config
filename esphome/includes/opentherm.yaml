@@ -130,7 +130,8 @@ output:
     outputs:
       id: pid_output
       #min_power: 30.00%
-      #max_power: 60.00%
+      max_power: 0.5
+      zero_means_zero: true
 
 climate:
   - platform: custom
@@ -149,14 +150,14 @@ climate:
     id: pid_climate
     name: "PID Climate Controller"
     visual:
-      min_temperature: 16 °C
-      max_temperature: 28 °C
-      temperature_step: 0.5 °C
+      min_temperature: 15
+      max_temperature: 28
+      temperature_step: 0.5
     sensor: temperature_sensor_interval
     humidity_sensor: indoor_humidity
-    default_target_temperature: 20°C
+    default_target_temperature: 20
     heat_output: pid_output
     control_parameters:
-      kp: 0.38197
-      ki: 0.01012
-      kd: 3.60387
+      kp: 0.4
+      #ki: 0.01
+      #kd: 3.4

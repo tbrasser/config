@@ -19,7 +19,9 @@ function resizeAllGridItems () {
   if (!ssc || !ssc.shadowRoot) return
   var vss = ssc.shadowRoot.querySelector('ha-card > hui-vertical-stack-card')
   if (!vss || !vss.shadowRoot) return
-  var layc = vss.shadowRoot.querySelector('#root > layout-card')
+  var layc = vss.shadowRoot.querySelector('#root > layout-card')  
+  if (!layc || !layc.shadowRoot) 
+  var layc = vss.shadowRoot.querySelector('#root > auto-entities > layout-card')
   if (!layc || !layc.shadowRoot) return
   var gridl = layc.shadowRoot.querySelector('grid-layout')
   if (!gridl || !gridl.shadowRoot) return
@@ -31,7 +33,7 @@ function resizeAllGridItems () {
   }
 }
 
-var Ht = '1.0.4'
+var Ht = '1.0.5'
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
 console.groupEnd()

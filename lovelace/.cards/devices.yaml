@@ -16,3 +16,18 @@
 {% endif %}
 {% endfor %}
 {% endfor %}
+- type: custom:battery-state-card
+  secondary_info: '{attributes.battery_type_and_quantity}'
+  round: 0
+  filter:
+    include:
+      - name: entity_id
+        value: '*_battery_plus'
+  bulk_rename:
+    - from: Batterij+
+  sort:
+    - state
+    - name
+  collapse: 5
+  view_layout:
+    grid-column-end: span 2

@@ -1,0 +1,12 @@
+template: >-
+  {% for plant in states.plant -%} {% set entity_id = plant.entity_id -%} {%
+  set name = entity_id | replace("plant.", "sensor.") -%} {% set temperature =
+  name + "_temperature" -%} {% set battery = state_attr(temperature,
+  "external_sensor") | replace("_temperature", "_battery") -%} {{{ 
+    'type': 'custom:flower-card', 
+    'battery_sensor': battery, 
+    'entity': entity_id,
+    'view_layout': {
+      'grid-column-end': 'span 2'
+    }
+  }}}, {%- endfor %}

@@ -5,31 +5,31 @@ template:
         unique_id: te_besteden_per_dag
         unit_of_measurement: "Eur"
         state: >
-          {% set current_balance = states.sensor.bunq_joint_account.state|float(none) %}
+          {% set current_balance = states('sensor.bunq_joint_account')|float(none) %}
           {% set days_till_salary = (25 - now().day) %}
           {% if days_till_salary < 1 %}
             {% set days_till_salary = days_till_salary + 30 %}
           {% endif %}
-          {{ ((current_balance + states.sensor.uitgegeven_vandaag.state|float(0) + states.input_number.offset_rekening.state|float(0)) / (days_till_salary + 1)) | round(0) }}
+          {{ ((current_balance + states('sensor.uitgegeven_vandaag')|float(0) + states('input_number.offset_rekening')|float(0)) / (days_till_salary + 1)) | round(0) }}
   - sensor:
       - name: "uitgegeven_vandaag"
         unit_of_measurement: "Eur"
         unique_id: uitgegeven_vandaag
         state: >
           {% set ns = namespace(spend_today = 0) %}
-          {%- for transaction in states.sensor.bunq_joint_account.attributes.transactions -%}
+          {%- for transaction in state_attr('sensor.bunq_joint_account', 'transactions') -%}
           {% if as_datetime(transaction.created).date() == now().date() -%}
           {% set ns.spend_today = ns.spend_today - ([-1000, transaction.amount, 0]|sort)[1] %}
           {%- endif %}
           {%- endfor %}
-          {% set ns.spend_today = ns.spend_today|float(0) + states.sensor.nutskosten_vandaag.state|float(0) %}
+          {% set ns.spend_today = ns.spend_today|float(0) %}
           {{ ns.spend_today| round(0) }}
       - name: "binnengekomen"
         unit_of_measurement: "Eur"
         unique_id: binnengekomen
         state: >
           {% set ns = namespace(spend_today = 0) %}
-          {%- for transaction in states.sensor.bunq_joint_account.attributes.transactions -%}
+          {%- for transaction in state_attr('sensor.bunq_joint_account', 'transactions') -%}
           {% set ns.spend_today = ns.spend_today - ([0, transaction.amount, 10000]|sort)[1] %}
           {%- endfor %}
           {{ ns.spend_today| round(0) }}

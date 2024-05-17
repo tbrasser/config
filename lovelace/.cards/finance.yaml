@@ -1,25 +1,44 @@
-# - type: tile
-#   entity: sensor.bunq_t_f
-#   name: Balans
-# - type: gauge
-#   entity: sensor.te_besteden_per_dag
-#   max: 100
-#   needle: false
-#   severity:
-#     green: 70
-#     yellow: 60
-#     red: 50
-#   min: 0
-#   unit: €
-#   name: Budget 
-# - type: tile
-#   entity: sensor.uitgegeven_vandaag
-# - type: custom:mushroom-number-card
-#   entity: input_number.offset_rekening
-#   display_mode: buttons
+- height: 60
+  unit_prefix: ''
+  round: 1
+  convert_units_to: ''
+  co2_intensity_entity: sensor.co2_signal_co2_intensity
+  gas_co2_intensity: 2351.6459999999997
+  min_box_height: 15
+  min_box_distance: 5
+  show_states: true
+  show_units: true
+  sections:
+    - entities:
+      - type: entity
+        children:
+          - sensor.area_power_w_eetkamer
+          - sensor.area_power_w_keuken
+          - overig
+        entity_id: sensor.waterp1meterkit_power_consumed
+    - entities:
+      - type: entity
+        entity_id: sensor.area_power_w_eetkamer
+      - type: entity
+        entity_id: sensor.area_power_w_keuken
+      - type: remaining_parent_state
+        entity_id: overig
+        name: Rest
+  energy_date_selection: true
+  type: custom:sankey-chart
+  min_state: 0
+  wide: true
+  show_names: true
+  view_layout:
+    grid-column-end: span 2
 - type: energy-date-selection
   view_layout:
     grid-column-end: span 2
+- type: energy-distribution
+  link_dashboard: true
+  view_layout:
+    grid-column-end: span 2
+- type: energy-carbon-consumed-gauge
 - type: energy-usage-graph
   view_layout:
     grid-column-end: span 2
@@ -27,6 +46,38 @@
   view_layout:
     grid-column-end: span 2
 - type: energy-sources-table
+  card_mod:
+    style:
+      .: |
+        ha-card.type-energy-sources-table mwc-data-table {
+          --primary-background-color: none;
+          --secondary-background-color: none;
+        }
+  view_layout:
+    grid-column-end: span 2
+- type: energy-devices-graph
+  view_layout:
+    grid-column-end: span 2
+- type: energy-devices-detail-graph
   view_layout:
     grid-column-end: span 2
 
+- type: tile
+  entity: sensor.bunq_joint_account
+  name: Balans
+- type: gauge
+  entity: sensor.te_besteden_per_dag
+  max: 100
+  needle: false
+  severity:
+    green: 70
+    yellow: 60
+    red: 50
+  min: 0
+  unit: €
+  name: Budget 
+- type: tile
+  entity: sensor.uitgegeven_vandaag
+- type: custom:mushroom-number-card
+  entity: input_number.offset_rekening
+  display_mode: buttons
