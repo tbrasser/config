@@ -33,7 +33,7 @@ Inspiration from:
 - dwains dashboard
 - homekit infused
 
-Currently in the midst of refactoring the lovelace_gen global vars in `lovelace_rooms.yaml`.
+Currently in the midst of refactoring from using only the lovelace_gen global vars towards auto generating cards with auto-entities using areas/floors/labels/domains
 
 ### Lovelace / Frontend
 
@@ -67,7 +67,7 @@ cards:
             - type: custom:layout-card
               layout_type: custom:grid-layout
               layout: !include .cards/layout.yaml
-              cards: !include
+              cards: !include # changed this recently using auto-entities, please check actual code for current state.
                 - .cards/<viewname>.yaml
                 - orientation: landscape
         `(orientation: portrait)':
