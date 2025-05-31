@@ -146,6 +146,11 @@ var observers = {
       })
       
       if (shouldResize) {
+        // Stop initial detection if it's still running
+        if (window.initialDetection && window.initialDetection.interval) {
+          window.initialDetection.stop()
+        }
+        
         // Debounce mutation-triggered resizes
         clearTimeout(observers.mutationTimeout)
         observers.mutationTimeout = setTimeout(function() {
@@ -214,7 +219,7 @@ var observers = {
   }
 }
 
-var Ht = '1.1.5'
+var Ht = '1.1.6'
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
 console.log('Optimizations: Cached DOM, comprehensive observers, event-driven layout, 5s fallback')
@@ -225,6 +230,46 @@ observers.init()
 
 // Keep click handler for manual triggers
 document.onclick = resizeAllGridItems
+
+// Initial grid detection with retry mechanism
+var initialDetection = {
+  attempts: 0,
+  maxAttempts: 50, // Try for up to 5 seconds (50 * 100ms)
+  interval: null,
+  
+  start: function() {
+    this.attempts = 0
+    this.interval = setInterval(this.check.bind(this), 100)
+    // Also try immediately
+    this.check()
+  },
+  
+  check: function() {
+    this.attempts++
+    var grid = findGridElement()
+    
+    if (grid && grid.children && grid.children.length > 0) {
+      // Grid found and has items - resize and stop checking
+      resizeAllGridItems()
+      this.stop()
+      console.log('Masonry: Initial grid layout applied after', this.attempts * 100, 'ms')
+    } else if (this.attempts >= this.maxAttempts) {
+      // Max attempts reached - stop checking
+      this.stop()
+      console.log('Masonry: Initial grid detection timeout after', this.maxAttempts * 100, 'ms')
+    }
+  },
+  
+  stop: function() {
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+  }
+}
+
+// Make globally accessible for observers
+window.initialDetection = initialDetection
 
 // Event listeners for layout-affecting changes
 window.addEventListener("load", function(event) {
@@ -258,5 +303,5 @@ if (document.fonts) {
   });
 }
 
-// Initial resize
-resizeAllGridItems()
+// Start initial detection
+initialDetection.start()
