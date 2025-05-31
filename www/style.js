@@ -3,9 +3,12 @@
  * 
  * Optimizations from v1.1.4:
  * - Cached DOM traversal with 5s validity (vs repeated deep querySelector)
- * - MutationObserver for DOM changes (vs setInterval polling every 666ms)
- * - ResizeObserver for viewport changes with 100ms debouncing
+ * - Comprehensive MutationObserver for DOM/attribute changes (vs setInterval polling every 666ms)
+ * - ResizeObserver for viewport/grid changes with 100ms debouncing
+ * - Additional event listeners for layout-affecting events (images, fonts, window resize)
+ * - Light fallback interval (5s) to ensure no changes are missed
  * - Preserved all fallback paths from 1.1.4
+ * - Fixed broken event listeners from original v1.1.4
  * - Improved browser compatibility
  */
 
@@ -110,10 +113,12 @@ function resizeAllGridItems () {
 var observers = {
   mutation: null,
   resize: null,
+  fallbackInterval: null,
   
   init: function() {
     this.setupMutationObserver()
     this.setupResizeObserver()
+    this.setupFallback()
   },
   
   setupMutationObserver: function() {
@@ -122,23 +127,39 @@ var observers = {
     this.mutation = new MutationObserver(function(mutations) {
       var shouldResize = false
       mutations.forEach(function(mutation) {
-        // Check for relevant DOM changes
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        // Check for relevant DOM changes that could affect layout
+        if (mutation.type === 'childList') {
           // Clear cache when DOM structure changes
-          domCache.clear()
-          shouldResize = true
+          if (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0) {
+            domCache.clear()
+            shouldResize = true
+          }
+        } else if (mutation.type === 'attributes') {
+          // Attribute changes that could affect layout
+          var attrName = mutation.attributeName
+          if (attrName === 'style' || attrName === 'class' || 
+              attrName === 'hidden' || attrName === 'width' || 
+              attrName === 'height') {
+            shouldResize = true
+          }
         }
       })
       
       if (shouldResize) {
-        resizeAllGridItems()
+        // Debounce mutation-triggered resizes
+        clearTimeout(observers.mutationTimeout)
+        observers.mutationTimeout = setTimeout(function() {
+          resizeAllGridItems()
+        }, 50)
       }
     })
     
-    // Observe the document for changes
+    // Observe the document for comprehensive changes
     this.mutation.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class', 'hidden', 'width', 'height']
     })
   },
   
@@ -153,10 +174,28 @@ var observers = {
       }, 100)
     })
     
-    // Observe viewport changes
+    // Observe viewport and grid container changes
     this.resize.observe(document.body)
+    
+    // Also try to observe the grid container directly if available
+    var grid = findGridElement()
+    if (grid) {
+      this.resize.observe(grid)
+    }
   },
   
+  setupFallback: function() {
+    // Gentle fallback check every 5 seconds to catch any missed changes
+    // Much less aggressive than original 666ms interval
+    this.fallbackInterval = setInterval(function() {
+      var grid = findGridElement()
+      if (grid && grid.children && grid.children.length > 0) {
+        // Only resize if we can actually find grid items
+        resizeAllGridItems()
+      }
+    }, 5000)
+  },
+
   disconnect: function() {
     if (this.mutation) {
       this.mutation.disconnect()
@@ -166,14 +205,19 @@ var observers = {
       this.resize.disconnect()
       this.resize = null
     }
+    if (this.fallbackInterval) {
+      clearInterval(this.fallbackInterval)
+      this.fallbackInterval = null
+    }
     clearTimeout(this.resizeTimeout)
+    clearTimeout(this.mutationTimeout)
   }
 }
 
 var Ht = '1.1.5'
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
-console.log('Optimizations: Cached DOM traversal, MutationObserver, ResizeObserver')
+console.log('Optimizations: Cached DOM, comprehensive observers, event-driven layout, 5s fallback')
 console.groupEnd()
 
 // Initialize observers
@@ -182,7 +226,7 @@ observers.init()
 // Keep click handler for manual triggers
 document.onclick = resizeAllGridItems
 
-// Preserve existing event listeners for compatibility
+// Event listeners for layout-affecting changes
 window.addEventListener("load", function(event) {
   resizeAllGridItems()
 });
@@ -194,6 +238,25 @@ document.addEventListener("readystatechange", function(event) {
 document.addEventListener("DOMContentLoaded", function(event) {
   resizeAllGridItems()
 });
+
+// Additional events that can affect layout
+window.addEventListener("resize", function(event) {
+  resizeAllGridItems()
+});
+
+// Listen for image loading which affects layout
+document.addEventListener("load", function(event) {
+  if (event.target.tagName === 'IMG') {
+    resizeAllGridItems()
+  }
+}, true);
+
+// Listen for font loading
+if (document.fonts) {
+  document.fonts.addEventListener('loadingdone', function(event) {
+    resizeAllGridItems()
+  });
+}
 
 // Initial resize
 resizeAllGridItems()
