@@ -14,25 +14,31 @@ function resizeAllGridItems () {
   var hapv = har.shadowRoot.querySelector('#view > hui-view > hui-panel-view')
   if (!hapv || !hapv.shadowRoot) return
   var verts = hapv.shadowRoot.querySelector('hui-card > hui-vertical-stack-card')
-  if(!verts || !verts.shadowRoot)
-  var verts = hapv.shadowRoot.querySelector('hui-vertical-stack-card')
-  if(!verts || !verts.shadowRoot) return
+  if(!verts || !verts.shadowRoot) {
+    var verts = hapv.shadowRoot.querySelector('hui-vertical-stack-card')
+    if(!verts || !verts.shadowRoot) return
+  }
   var ssc = verts.shadowRoot.querySelector('#root > hui-conditional-card > mod-card')
-  if (!ssc || !ssc.shadowRoot)
-  var ssc = verts.shadowRoot.querySelector('#root > hui-card:nth-child(2) > hui-conditional-card > hui-card > mod-card')
-  if (!ssc || !ssc.shadowRoot)
-  var ssc = verts.shadowRoot.querySelector('#root > hui-card:nth-child(1) > hui-conditional-card > hui-card > mod-card')
-  if (!ssc || !ssc.shadowRoot) return
+  if (!ssc || !ssc.shadowRoot) {
+    var ssc = verts.shadowRoot.querySelector('#root > hui-card:nth-child(2) > hui-conditional-card > hui-card > mod-card')
+    if (!ssc || !ssc.shadowRoot) {
+      var ssc = verts.shadowRoot.querySelector('#root > hui-card:nth-child(1) > hui-conditional-card > hui-card > mod-card')
+      if (!ssc || !ssc.shadowRoot) return
+    }
+  }
   var vss = ssc.shadowRoot.querySelector('ha-card > hui-vertical-stack-card')
   if (!vss || !vss.shadowRoot) return
   var layc = vss.shadowRoot.querySelector('#root > layout-card')  
-  if (!layc || !layc.shadowRoot)
-  var layc = vss.shadowRoot.querySelector('#root > auto-entities > layout-card')
-  if (!layc || !layc.shadowRoot)
-  var layc = vss.shadowRoot.querySelector('#root > hui-card:nth-child(2) > auto-entities > layout-card')
-  if (!layc || !layc.shadowRoot)
-  var layc = vss.shadowRoot.querySelector('#root > hui-card:nth-child(1) > auto-entities > layout-card')
-  if (!layc || !layc.shadowRoot) return
+  if (!layc || !layc.shadowRoot) {
+    var layc = vss.shadowRoot.querySelector('#root > auto-entities > layout-card')
+    if (!layc || !layc.shadowRoot) {
+      var layc = vss.shadowRoot.querySelector('#root > hui-card:nth-child(2) > auto-entities > layout-card')
+      if (!layc || !layc.shadowRoot) {
+        var layc = vss.shadowRoot.querySelector('#root > hui-card:nth-child(1) > auto-entities > layout-card')
+        if (!layc || !layc.shadowRoot) return
+      }
+    }
+  }
   var gridl = layc.shadowRoot.querySelector('grid-layout')
   if (!gridl || !gridl.shadowRoot) return
   var grid = gridl.shadowRoot.querySelector('#root')
@@ -43,6 +49,15 @@ function resizeAllGridItems () {
   }
 }
 
+function resizeAllGridItemsWithDelay() {
+  // Initial attempt
+  resizeAllGridItems()
+  // Retry after a short delay to handle card_mod timing issues
+  setTimeout(function() {
+    resizeAllGridItems()
+  }, 100)
+}
+
 var Ht = '1.1.4'
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
@@ -51,13 +66,13 @@ document.onclick = resizeAllGridItems
 setInterval(resizeAllGridItems, 666)
 
 window.addEventListener("load", (event) => {
-  resizeAllGridItems;
+  resizeAllGridItemsWithDelay();
 });
 
 document.addEventListener("readystatechange", (event) => {
-  resizeAllGridItems;
+  resizeAllGridItemsWithDelay();
 });
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  resizeAllGridItems;
+  resizeAllGridItemsWithDelay();
 });
