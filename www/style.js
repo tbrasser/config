@@ -1,3 +1,14 @@
+/**
+ * Masonry for Grid Layout - Optimized version
+ * 
+ * Optimizations from v1.0.5:
+ * - Cached DOM traversal with 5s validity (vs repeated deep querySelector)
+ * - MutationObserver for DOM changes (vs setInterval polling every 1.3s)
+ * - ResizeObserver for viewport changes with 100ms debouncing
+ * - Fixed syntax error in layout-card fallback logic
+ * - Improved browser compatibility
+ */
+
 function resizeGridItem (item) {
   var rowSpan = Math.ceil(item.getBoundingClientRect().height) + 8
   item.style.gridRowEnd = 'span ' + rowSpan
