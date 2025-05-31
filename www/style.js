@@ -3,8 +3,10 @@
  * 
  * Optimizations from v1.1.4:
  * - Cached DOM traversal with 5s validity (vs repeated deep querySelector)
+ * - Individual grid item ResizeObserver for precise height change detection
  * - Comprehensive MutationObserver for DOM/attribute changes (vs setInterval polling every 666ms)
- * - ResizeObserver for viewport/grid changes with 100ms debouncing
+ * - URL/path change detection for single-page app navigation
+ * - ResizeObserver for viewport/grid changes with debouncing
  * - Additional event listeners for layout-affecting events (images, fonts, window resize)
  * - Light fallback interval (5s) to ensure no changes are missed
  * - Preserved all fallback paths from 1.1.4
@@ -114,18 +116,23 @@ var observers = {
   mutation: null,
   resize: null,
   fallbackInterval: null,
+  gridItemObservers: [], // Track individual grid item observers
   
   init: function() {
     this.setupMutationObserver()
     this.setupResizeObserver()
+    this.setupURLChangeObserver()
     this.setupFallback()
   },
   
   setupMutationObserver: function() {
-    if (this.mutation) return
+    if (!window.MutationObserver || this.mutation) return
     
+    var self = this
     this.mutation = new MutationObserver(function(mutations) {
       var shouldResize = false
+      var shouldRefreshObservers = false
+      
       mutations.forEach(function(mutation) {
         // Check for relevant DOM changes that could affect layout
         if (mutation.type === 'childList') {
@@ -133,6 +140,7 @@ var observers = {
           if (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0) {
             domCache.clear()
             shouldResize = true
+            shouldRefreshObservers = true
           }
         } else if (mutation.type === 'attributes') {
           // Attribute changes that could affect layout
@@ -149,6 +157,14 @@ var observers = {
         // Stop initial detection if it's still running
         if (window.initialDetection && window.initialDetection.interval) {
           window.initialDetection.stop()
+        }
+        
+        // Refresh grid item observers if needed
+        if (shouldRefreshObservers) {
+          clearTimeout(observers.observerRefreshTimeout)
+          observers.observerRefreshTimeout = setTimeout(function() {
+            self.setupGridItemObservers()
+          }, 100)
         }
         
         // Debounce mutation-triggered resizes
@@ -179,13 +195,109 @@ var observers = {
       }, 100)
     })
     
-    // Observe viewport and grid container changes
+    // Observe viewport changes
     this.resize.observe(document.body)
     
-    // Also try to observe the grid container directly if available
+    // Setup grid item observers
+    this.setupGridItemObservers()
+  },
+  
+  setupGridItemObservers: function() {
+    if (!window.ResizeObserver) return
+    
+    // Clear existing grid item observers
+    this.clearGridItemObservers()
+    
     var grid = findGridElement()
-    if (grid) {
-      this.resize.observe(grid)
+    if (grid && grid.children) {
+      // Observe each grid item individually for height changes
+      for (var i = 0; i < grid.children.length; i++) {
+        var item = grid.children[i]
+        if (item) {
+          var itemObserver = new ResizeObserver(function(entries) {
+            // Debounce individual item resize events
+            clearTimeout(observers.itemResizeTimeout)
+            observers.itemResizeTimeout = setTimeout(function() {
+              // Only resize the specific items that changed
+              entries.forEach(function(entry) {
+                resizeGridItem(entry.target)
+              })
+            }, 50)
+          })
+          
+          itemObserver.observe(item)
+          this.gridItemObservers.push(itemObserver)
+        }
+      }
+      
+      // Also observe the grid container itself
+      if (this.resize) {
+        this.resize.observe(grid)
+      }
+    }
+  },
+  
+  clearGridItemObservers: function() {
+    this.gridItemObservers.forEach(function(observer) {
+      observer.disconnect()
+    })
+    this.gridItemObservers = []
+  },
+  
+  setupURLChangeObserver: function() {
+    // Listen for URL/path changes that might affect layout
+    var self = this
+    
+    // Handle back/forward navigation
+    window.addEventListener('popstate', function(event) {
+      // Clear cache and re-detect grid on navigation
+      domCache.clear()
+      self.clearGridItemObservers()
+      
+      // Delayed execution to allow DOM to update after navigation
+      setTimeout(function() {
+        self.setupGridItemObservers()
+        resizeAllGridItems()
+      }, 100)
+    })
+    
+    // Handle hash changes
+    window.addEventListener('hashchange', function(event) {
+      // Clear cache and re-detect grid on hash change
+      domCache.clear()
+      self.clearGridItemObservers()
+      
+      // Delayed execution to allow DOM to update
+      setTimeout(function() {
+        self.setupGridItemObservers()
+        resizeAllGridItems()
+      }, 100)
+    })
+    
+    // Intercept pushState/replaceState for single-page app navigation
+    var originalPushState = history.pushState
+    var originalReplaceState = history.replaceState
+    
+    history.pushState = function() {
+      originalPushState.apply(history, arguments)
+      // Clear cache and re-detect grid on programmatic navigation
+      domCache.clear()
+      self.clearGridItemObservers()
+      setTimeout(function() {
+        self.setupGridItemObservers()
+        resizeAllGridItems()
+      }, 100)
+    }
+    
+    history.replaceState = function() {
+      originalReplaceState.apply(history, arguments)
+      // Clear cache and re-detect grid on programmatic navigation
+      domCache.clear()
+      self.clearGridItemObservers()
+      setTimeout(function() {
+        self.setupGridItemObservers()
+        resizeAllGridItems()
+      }, 100)
     }
   },
   
@@ -210,19 +322,22 @@ var observers = {
       this.resize.disconnect()
       this.resize = null
     }
+    this.clearGridItemObservers()
     if (this.fallbackInterval) {
       clearInterval(this.fallbackInterval)
       this.fallbackInterval = null
     }
     clearTimeout(this.resizeTimeout)
     clearTimeout(this.mutationTimeout)
+    clearTimeout(this.itemResizeTimeout)
+    clearTimeout(this.observerRefreshTimeout)
   }
 }
 
-var Ht = '1.1.6'
+var Ht = '1.1.7'
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
-console.log('Optimizations: Cached DOM, comprehensive observers, event-driven layout, 5s fallback')
+console.log('Optimizations: Cached DOM, individual grid item observers, URL change detection, event-driven layout, 5s fallback')
 console.groupEnd()
 
 // Initialize observers
@@ -249,7 +364,8 @@ var initialDetection = {
     var grid = findGridElement()
     
     if (grid && grid.children && grid.children.length > 0) {
-      // Grid found and has items - resize and stop checking
+      // Grid found and has items - setup observers and resize
+      observers.setupGridItemObservers()
       resizeAllGridItems()
       this.stop()
       console.log('Masonry: Initial grid layout applied after', this.attempts * 100, 'ms')
