@@ -73,6 +73,7 @@ function resizeAllGridItems () {
 }
 
 var Ht = '1.1.5'
+
 console.groupCollapsed(`%cMASONRY-GRID-LAYOUT ${Ht} IS RUNNING`, 'color: purple; font-weight: bold')
 console.log('Readme:', 'https://github.com/tbrasser/config')
 console.groupEnd()
@@ -94,4 +95,5 @@ document.addEventListener("readystatechange", function(event) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
   resizeAllGridItems()
+
 });
